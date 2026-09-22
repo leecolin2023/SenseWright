@@ -1,0 +1,130 @@
+{
+  "skill_name": "document-intelligence-suite",
+  "eval_version": "0.1",
+  "evals": [
+    {
+      "id": 1,
+      "name": "deep-read-faithful",
+      "prompt": "请深读这份材料，告诉我作者到底是怎么一步步推出结论的。不要评价作者对不对，也不要引入外部资料。",
+      "expected_route": [
+        "D"
+      ],
+      "expected_output": "忠实恢复作者从固定工作流问题、到不确定决策点、再到混合架构结论的推进，并保留公告例子的认知作用。",
+      "files": [
+        "evals/fixtures/agent-workflow-argument.md"
+      ],
+      "assertions": [
+        "输出忠实解释材料主线，没有把独立批评混入 Deep Read。",
+        "输出保留“概括公告 vs 判断可靠性”例子及其对论证的作用。",
+        "输出没有把材料未提供的外部事实写成作者结论。"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "review-material-differences",
+      "prompt": "请独立审阅这份企业知识助手方案。不要为了显得深入而罗列所有可能问题，只指出会改变方案决策或风险判断的关键问题。",
+      "expected_route": [
+        "R"
+      ],
+      "expected_output": "先准确重建方案，再聚焦权限、grounding/eval、成功指标等真正改变风险或实施方向的差异。",
+      "files": [
+        "evals/fixtures/enterprise-assistant-proposal.md"
+      ],
+      "assertions": [
+        "输出先准确重建草案的目标和关键设计，再进行独立判断。",
+        "输出识别“向量数据库 + 大模型即可显著降低幻觉”缺少充分支撑，且不会把证据不足写成必然错误。",
+        "输出优先指出权限继承或保密边界、版本冲突处理、评测与成功指标等会改变实施决策的问题，而不是泛化 checklist。"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "learning-build-model",
+      "prompt": "我想真正学会 Agent 里的 State 和 Feedback，不要只总结材料。请帮我形成以后分析其他 Agent 系统也能复用的理解，并告诉我下一步最值得补的知识缺口。",
+      "expected_route": [
+        "L"
+      ],
+      "expected_output": "从材料重建 State/Feedback 的系统关系和事件链，形成可迁移知识模型，并识别少量关键 gap。",
+      "files": [
+        "evals/fixtures/state-feedback-note.md"
+      ],
+      "assertions": [
+        "输出形成 State 与 Feedback 的关系模型，而不是按原文顺序复述。",
+        "输出使用至少一个事件链说明观察、动作、状态变化和反馈如何连接。",
+        "输出只提出会阻塞进一步使用的少量 Knowledge Gap，并说明为什么值得继续补。"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "deep-read-plus-review",
+      "prompt": "先把这份方案本身讲清楚，再独立判断它目前最需要改的地方。忠实理解和独立审阅要分开，不要让批评改写原方案。",
+      "expected_route": [
+        "D",
+        "R"
+      ],
+      "expected_output": "D 与 R 组合：先忠实解释方案，再独立审阅关键问题；两个分支都以原材料为依据。",
+      "files": [
+        "evals/fixtures/enterprise-assistant-proposal.md"
+      ],
+      "assertions": [
+        "输出能够区分“方案原本怎么说”和“独立审阅认为哪里需要改变”。",
+        "忠实理解部分不提前混入审阅结论。",
+        "若运行 transcript 可见上下文构造，Review 不应只消费 Deep Read 的摘要作为唯一输入。"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "deep-read-plus-learning",
+      "prompt": "先告诉我这份 State / Feedback 材料到底讲了什么，然后基于它帮我建立一套自己的 Agent 状态管理理解框架。",
+      "expected_route": [
+        "D",
+        "L"
+      ],
+      "expected_output": "先忠实恢复材料，再重组成用户可迁移的知识模型，两者角色清楚。",
+      "files": [
+        "evals/fixtures/state-feedback-note.md"
+      ],
+      "assertions": [
+        "输出同时完成忠实深读与知识模型重构，且两部分目的可区分。",
+        "Learning 部分不是简单复制 Deep Read 的结构。",
+        "材料未支持的扩展如果出现，会被明确标成推断或外部补充，而不是伪装成原文结论。"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "learning-plus-review",
+      "prompt": "我既想学会这份 Agent 工作流观点，也想知道这个观点本身有没有值得质疑的地方。请形成我的理解框架，同时独立审阅它。",
+      "expected_route": [
+        "L",
+        "R"
+      ],
+      "expected_output": "形成可迁移的 Workflow vs Agent 判断框架，同时独立评价原论证的证据与边界。",
+      "files": [
+        "evals/fixtures/agent-workflow-argument.md"
+      ],
+      "assertions": [
+        "Learning 形成可迁移的判断模型，不只是复述观点。",
+        "Review 能区分材料中的论证、例子与尚未被证明的普遍结论。",
+        "两个任务的输出不会互相吞并为单一摘要或单一批评。"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "all-three-modes",
+      "prompt": "对这份企业知识助手方案做三件事：先忠实讲清楚，再帮我真正理解企业 Agent 系统里为什么权限、评测和反馈重要，最后独立审阅这份方案。三种任务不要互相污染。",
+      "expected_route": [
+        "D",
+        "L",
+        "R"
+      ],
+      "expected_output": "D/L/R 三路组合并最终自然合并，保持 source-centered / learner-centered / judgment-centered 的边界。",
+      "files": [
+        "evals/fixtures/enterprise-assistant-proposal.md"
+      ],
+      "assertions": [
+        "输出覆盖忠实理解、知识模型和独立审阅三种不同目标。",
+        "三种目标之间边界清楚，不把审阅意见伪装成原文，也不把学习模型误写成作者原意。",
+        "最终合并后的内容对用户形成理解与行动有帮助，而不是机械打印内部路由标签。"
+      ]
+    }
+  ]
+}

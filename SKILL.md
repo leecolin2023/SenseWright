@@ -1,10 +1,9 @@
 ---
 name: document-intelligence-suite
-version: v2.3
-summary: 用一个统一入口管理“忠实深读、独立审阅、系统学习”三种认知任务；Router 只判断用户要什么，具体复杂度与专项逻辑交给对应子 Skill。
+description: Route document and knowledge-work tasks among faithful deep reading, independent review, and systematic learning. Use when the user wants to understand what source material says, evaluate whether a document or argument is sound or decision-useful, build a reusable mental model from a topic or source, or combine those goals. Keep routing separate from content production and let each selected sub-skill read the raw source independently.
 ---
 
-# Document Intelligence Suite V2.3
+# Document Intelligence Suite V2.3.1
 
 ## 核心设计
 

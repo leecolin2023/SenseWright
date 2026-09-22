@@ -1,0 +1,16 @@
+{
+  "eval_version": "0.1",
+  "baselines": [
+    {
+      "name": "old_skill",
+      "type": "git_commit",
+      "ref": "ffdb60e1f27ae99011d18c29c683dc747cec64f1",
+      "description": "Document Intelligence Suite V2.3 immediately before Agent Skills metadata compatibility and Eval V0.1 were added."
+    },
+    {
+      "name": "without_skill",
+      "type": "no_skill",
+      "description": "Optional control for experiments measuring the value of the entire suite rather than only the delta from the previous version."
+    }
+  ]
+}

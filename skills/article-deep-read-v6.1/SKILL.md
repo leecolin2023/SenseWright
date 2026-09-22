@@ -1,7 +1,6 @@
 ---
 name: article-deep-read
-version: v6.1
-summary: 忠实压缩文章和长文档：保留作者真实推进、关键机制、故事/比喻的认知作用与术语定义；长文按结构和跨章节关系处理，而不是逐章拼摘要。
+description: Faithfully understand and compress articles or long documents while preserving the author's real progression, key mechanisms, useful stories or analogies, terminology, and important boundaries. Use when the user primarily wants to know what source material says or how the author reaches a conclusion, without independent critique or external fact-checking.
 ---
 
 # Deep Read V6.1 — Simplified

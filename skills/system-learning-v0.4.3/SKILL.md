@@ -1,7 +1,6 @@
 ---
 name: system-learning
-version: v0.4.3
-summary: 面向复杂知识与真实工作的学习 Skill。先建立自己的知识模型，再识别阻塞下一步的关键缺口，最后根据用户要拿知识做什么，将同一知识模型转换为笔记、学习问题、会议议题、实施步骤或决策输入。
+description: Turn a concept, system, person, event, method, question, or source material into a reusable knowledge model, identify the few gaps that block real use, and project the model into the user's next action. Use when the user wants to truly learn or understand something for future reasoning, meetings, implementation, or decisions rather than merely summarize or critique a source.
 ---
 
 # System Learning V0.4.3 — Knowledge → Gap → Use

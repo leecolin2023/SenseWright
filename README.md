@@ -1,34 +1,110 @@
-# Document Intelligence Suite V2.3
+# Document Intelligence Suite V2.3.1
 
-V2.3 在 V2.2 的精简架构上增加 **L — Learning**，实现一个入口统一管理三种认知任务。
+Document Intelligence Suite 用一个统一入口管理三种彼此独立的认知任务：
 
-## 三种模式
+- **D — Deep Read V6.1**：source-centered，忠实理解与压缩原材料。
+- **R — Vibe Review V0.9**：judgment-centered，独立审阅材料是否成立、是否足以支持决策。
+- **L — System Learning V0.4.3**：learner-centered，建立可复用知识模型并投影到下一步使用。
 
-- **D — Deep Read V6.1**：原材料中心，忠实理解与压缩。
-- **R — Vibe Review V0.9**：判断中心，独立审阅与实质差异。
-- **L — System Learning V0.4.3**：学习者中心，`Build Model → Find Gaps → Project to Use`。
+核心原则：
+
+> **统一管理，不融合认知任务。Router 只判断“走哪条路”，具体认知工作由子 Skill 完成。**
 
 ## 为什么不把三个 Skill 合成一个大文件
 
-统一管理 ≠ 混合认知任务。
+Deep Read 要忠实作者；Review 要能离开作者框架独立判断；Learning 则允许重组材料形成自己的知识模型。三种目标存在天然张力，强行揉成一个 Prompt 容易相互污染。
 
-Deep Read 要忠实作者；Review 要能离开作者框架独立判断；Learning 则允许重组材料，形成自己的知识模型。三种目标存在天然张力，强行揉成一个 Prompt 会互相污染。
+因此项目采用：
 
-因此 V2.3 的做法是：
+> **一个 Suite / 一个根入口 / 三个内部 Skill。**
 
-> **一个 Suite / 一个根入口 / 三个内部模块。**
+复合任务不新增 Skill 类型，而是组合已有能力：D + R、D + L、L + R、D + L + R。多路执行默认直接读取 Raw Source，不把上一路的压缩输出作为下一路的唯一输入。
 
-用户只需要保存、安装或维护整个 `document-intelligence-suite-v2.3`，不需要分别管理三个独立 Skill。
+## Agent Skills 标准兼容
 
-## 复合任务
+V2.3.1 将所有 `SKILL.md` 的 YAML frontmatter 收敛到跨工具最小公共集：
 
-不为每种组合继续新增 Skill：
+~~~yaml
+---
+name: skill-name
+description: What the skill does and when it should be used.
+---
+~~~
 
-- D + R：总结并审阅
-- D + L：先忠实读懂，再形成自己的理解
-- L + R：学习主题，同时评价输入材料
-- D + L + R：三路直接读原材料，最后合并
+- `name` 是稳定的 Skill 标识。
+- `description` 同时描述能力与触发场景，用于 Skill discovery / triggering。
+- 版本号不再放进 frontmatter，而由标题、目录与 `CHANGELOG.md` 管理。
+- 不再使用自定义 `summary` 字段，减少不同 Agent Runtime 对 metadata 处理不一致的风险。
+
+本地校验：
+
+~~~bash
+python scripts/validate_skills.py
+~~~
+
+## Evaluation Workflow V0.1
+
+从 V2.3.1 开始，评测成为 Skill 演进的一等公民：
+
+~~~text
+test cases
+   ↓
+with-skill  ───────┐
+                   ├─> assertions + human review
+baseline / old-skill┘
+   ↓
+grading + timing
+   ↓
+benchmark
+   ↓
+failure analysis
+   ↓
+next iteration
+~~~
+
+V0.1 遵循五个原则：
+
+1. 同一批 case 同时跑 with-skill 与 baseline。
+2. 对既有 Skill 的改进，优先使用“改动前版本”作为 baseline。
+3. 客观可验证结果使用 assertions；主观质量保留 human review。
+4. 保存 token 与 duration，避免只看质量不看成本。
+5. 新版本回放历史 case，形成 regression。
+
+首个 old-skill baseline 固定为 `ffdb60e1f27ae99011d18c29c683dc747cec64f1`。
+
+### 评测资产
+
+~~~text
+evals/
+├── README.md
+├── evals.json
+├── triggering.json
+├── baselines.json
+└── fixtures/
+
+scripts/
+├── validate_skills.py
+├── validate_evals.py
+├── init_eval_workspace.py
+└── aggregate_benchmark.py
+~~~
+
+### 开始一次迭代
+
+~~~bash
+python scripts/validate_skills.py
+python scripts/validate_evals.py
+python scripts/init_eval_workspace.py --iteration 1 --baseline old_skill
+~~~
+
+完成两组运行并保存输出、transcript、grading 与 timing 后：
+
+~~~bash
+python scripts/aggregate_benchmark.py .eval-workspace/iteration-1
+~~~
+
+详细约定见 `evals/README.md`。
 
 ## 使用
 
-以根目录 `SKILL.md` 作为唯一入口。
+以根目录 `SKILL.md` 作为唯一入口。子 Skill 位于 `skills/`，普通用户无需单独维护三个入口。

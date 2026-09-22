@@ -1,7 +1,6 @@
 ---
 name: vibe-review
-version: v0.9
-summary: 通用独立审阅：先准确理解任务与作者论证，再暂时放下作者结论独立思考，最后只报告会改变理解、决策或行动的实质差异。专项检查按触发启用，不跑固定模板森林。
+description: Independently review a document, argument, plan, architecture, or proposal after first reconstructing what it is trying to accomplish and how its case works. Use when the user asks whether material is sound, sufficient, well-reasoned, decision-useful, or worth changing. Surface only material differences that would change understanding, confidence, priority, action, risk, or boundaries.
 ---
 
 # Vibe Review V0.9 — Simplified Independent Review

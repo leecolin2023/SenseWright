@@ -1,0 +1,86 @@
+{
+  "skill_name": "document-intelligence-suite",
+  "eval_version": "0.1",
+  "queries": [
+    {
+      "query": "请帮我深读这篇论文，保留作者真正的推理过程，不要只给结论",
+      "should_trigger": true
+    },
+    {
+      "query": "这份方案到底有没有逻辑漏洞？请独立审一遍",
+      "should_trigger": true
+    },
+    {
+      "query": "我想真正学会 RAG 里的 rerank，帮我建立可复用的理解框架",
+      "should_trigger": true
+    },
+    {
+      "query": "先总结这份材料，再判断作者结论是否站得住",
+      "should_trigger": true
+    },
+    {
+      "query": "基于这份材料先读懂，再帮我形成自己的知识模型",
+      "should_trigger": true
+    },
+    {
+      "query": "我既想学这个概念，也想知道输入材料哪里不严谨",
+      "should_trigger": true
+    },
+    {
+      "query": "请对附件做深读、学习和独立审阅三件事，但不要互相污染",
+      "should_trigger": true
+    },
+    {
+      "query": "这篇长文到底怎么从前面的事实推到最后方案的？",
+      "should_trigger": true
+    },
+    {
+      "query": "这个命题我是不是一开始就问错了？帮我先校验前提再真正学懂",
+      "should_trigger": true
+    },
+    {
+      "query": "这份架构方案是否足以支持当前决策？只讲会改变决策的差异",
+      "should_trigger": true
+    },
+    {
+      "query": "把这段话润色得更正式一点",
+      "should_trigger": false
+    },
+    {
+      "query": "根据这份材料帮我写一封给领导的邮件",
+      "should_trigger": false
+    },
+    {
+      "query": "把 PDF 转成 Word 并保持原格式",
+      "should_trigger": false
+    },
+    {
+      "query": "帮我写一个 FastAPI 接口",
+      "should_trigger": false
+    },
+    {
+      "query": "搜索今天最新的 AI 新闻并做摘要",
+      "should_trigger": false
+    },
+    {
+      "query": "把这份会议录音转成文字",
+      "should_trigger": false
+    },
+    {
+      "query": "根据附件直接生成一份 PPT",
+      "should_trigger": false
+    },
+    {
+      "query": "帮我把英文合同完整翻译成中文",
+      "should_trigger": false
+    },
+    {
+      "query": "检查这段 Python 代码为什么报错并修复",
+      "should_trigger": false
+    },
+    {
+      "query": "从这个 Excel 里统计每个部门的人数并画图",
+      "should_trigger": false
+    }
+  ]
+}
