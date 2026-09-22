@@ -1,5 +1,13 @@
 # Changelog
 
+## V2.5.0 — Asymmetric Collaboration
+- 将四种 Skill 的协作关系从“基本独立”收敛为 **非对称协作**。
+- Deep Read V6.1 与 Vibe Review V0.9 保持严格 source isolation：两者只面向 Raw Source / 用户直接要求，不读取任何 sibling Skill 输出，D 与 R 之间也不传递结果。
+- System Learning 升级至 **V0.4.4**：允许选择性参考 D / R / Q 结果，但明确 `Reference ≠ Evidence`、`Transform, don't copy`、`Selective, not mandatory`。
+- Questioning 升级至 **V0.1.1**：允许把 D / R / L 结果作为 inquiry signal，并优先把新确认的信息与未解决 Gap 回流给 Learning。
+- Router 增加轻量 Reference Selection：仅当目标包含 L / Q 时考虑 sibling reference；当前不引入 Shared Blackboard 或 Artifact Registry。
+- Eval 增加 `reference_context` 元数据与静态边界检查，并增加 Learning / Questioning 的 selective-reference case；D / R case 若配置 reference context 将直接校验失败。
+
 ## V2.4.0 — Questioning
 - 新增 **Q — Questioning V0.1**，形成 D / R / L / Q 四种认知模式。
 - Questioning 采用 `Gap → Probe → Update` 循环：先识别当前最大不确定性，默认一次只问一个高信息价值问题，再根据回答更新认知状态与下一问。

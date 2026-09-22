@@ -3,7 +3,7 @@ name: questioning
 description: Use adaptive, high-information questioning to clarify a fuzzy problem, surface assumptions, evidence, mechanisms, alternatives, or missing information, and conduct interviews where each next question depends on the previous answer. Use when the user asks what to ask next, wants to think a problem through via questions, prepare an interview with probes, or explicitly wants one-question-at-a-time inquiry instead of an immediate answer.
 ---
 
-# Questioning V0.1 — Gap → Probe → Update
+# Questioning V0.1.1 — Gap → Probe → Update
 
 ## 目标
 
@@ -24,9 +24,31 @@ Questioning 通过少量、高信息价值的连续追问，把一个模糊问�
 - 用户主要想建立“自己的知识模型” → Learning。
 - 用户主要想知道“接下来应该问什么，并通过追问把问题想清楚” → Questioning。
 
-Questioning 可以承接 Learning 找到的 Knowledge Gap，但不依赖 Learning 的压缩结果作为唯一 Context；有原材料时仍应保留原材料与当前对话状态。
+Questioning 可以承接 Learning 找到的 Knowledge Gap，也可以选择性参考 Deep Read / Review 的已有发现；有原材料时仍应保留原材料与当前对话状态。Sibling result 只是 inquiry signal，不自动成为已确认事实。
 
 ---
+
+
+## Optional Prior Findings
+
+Questioning 可以选择性吸收已有 Skill 结果，用它们帮助选择“下一问”，但不直接继承这些结果的结论。
+
+可参考：
+
+- **Deep Read**：哪些结构、概念、论证链值得进一步澄清；
+- **Review**：哪些不确定性、风险、证据缺口值得求证；
+- **Learning**：哪些 Knowledge Gap 最值得继续问。
+
+消费规则：
+
+1. **Prior finding 是 inquiry signal，不是 truth**。
+2. **只选最能减少当前不确定性的 reference**，不要把所有 sibling findings 机械转成问题清单。
+3. **下一问必须重新服务于 Questioning 目标**，而不是复述别的 Skill。
+4. Questioning 获得用户/专家的新回答后，应区分：
+   - 新确认的信息；
+   - 仍未验证的判断；
+   - 新出现的 Gap。
+5. 当后续需要回到 Learning 时，优先传递“新确认的信息 + 未解决 Gap”，而不是整段 Questioning 推理。
 
 ## 二、核心原则
 

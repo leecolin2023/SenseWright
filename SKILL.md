@@ -1,22 +1,39 @@
 ---
 name: sensewright
-description: Route complex information and knowledge-work tasks among faithful deep reading, independent review, systematic learning, and adaptive questioning. Use when the user wants to understand what source material says, evaluate whether a document or argument is sound or decision-useful, build a reusable mental model, discover what to ask next, conduct an interview with follow-up probes, or combine those goals. Keep routing separate from content production and preserve source boundaries across modes.
+description: Route complex information and knowledge-work tasks among faithful deep reading, independent review, systematic learning, and adaptive questioning. Use when the user wants to understand source material, judge whether a document or argument is sound, build a reusable knowledge model, discover what to ask next, or combine those goals. Deep Read and Review remain source-isolated; Learning and Questioning may selectively use prior skill outputs as attributed reference context rather than inherited truth.
 ---
 
-# SenseWright V2.4.0
+# SenseWright V2.5.0
 
 ## 核心设计
 
-> **统一管理，不融合认知任务。**
+> **统一入口，独立职责，非对称协作。**
 
-只维护一个 Suite、一个入口 `SKILL.md`。内部保留四种彼此独立的认知模式：
+SenseWright 维护四种认知模式：
 
 - **D — Deep Read**：忠实理解原材料。
 - **R — Review**：独立评价原材料。
-- **L — Learning**：把材料、问题或主题转化为自己的知识模型，并继续进入使用。
-- **Q — Questioning**：找到当前最值得知道的下一件事，通过连续追问减少关键不确定性。
+- **L — Learning**：把材料、问题或主题转化为自己的知识模型。
+- **Q — Questioning**：找到当前最值得知道的下一件事，通过追问减少关键不确定性。
 
-Router 只判断“当前需要哪种认知能力”，不提前替子 Skill 做内容生成。
+四个 Skill 不处在同一种协作关系中：
+
+- **D / R 是 source-facing**：严格面向原始材料，彼此隔离，也不消费 L / Q 的结果。
+- **L / Q 是 knowledge-facing**：仍以原始材料、用户事实和当前任务为主要依据，但可以选择性参考已经产生的其他 Skill 结果。
+
+---
+
+## Router 只做两件事
+
+### 1. Route Selection
+
+判断当前任务需要 D / R / L / Q 中的哪一种或哪几种认知能力。
+
+### 2. Reference Selection
+
+只有当目标包含 **L 或 Q** 时，才判断已有 sibling result 是否值得作为可选参考。
+
+Router 不解释材料、不生成结论，也不建立共享黑板。
 
 ---
 
@@ -32,6 +49,15 @@ Router 只判断“当前需要哪种认知能力”，不提前替子 Skill 做
 
 **判断标准：用户的中心对象是“原材料本身”。**
 
+### Context Policy
+
+Deep Read 只读取：
+- Raw Source；
+- 用户对当前 Deep Read 任务的直接要求；
+- 必要的原始用户上下文。
+
+**不得读取或消费 Review / Learning / Questioning 的输出。**
+
 ---
 
 ## R — Review / 独立审阅
@@ -46,6 +72,17 @@ Router 只判断“当前需要哪种认知能力”，不提前替子 Skill 做
 
 **判断标准：用户的中心任务是“判断这份材料的质量或决策价值”。**
 
+### Context Policy
+
+Review 只读取：
+- Raw Source；
+- 用户对当前 Review 任务的直接要求；
+- 必要的原始用户上下文。
+
+即使 Deep Read 已经运行过，**Review 也不得读取 Deep Read 输出**。同样不读取 Learning / Questioning 的结果。
+
+> Review 必须审原材料，不审别的 Skill 对原材料的表示。
+
 ---
 
 ## L — Learning / 系统学习
@@ -56,14 +93,16 @@ Router 只判断“当前需要哪种认知能力”，不提前替子 Skill 做
 - 找出还卡在哪里、下一步应该学什么或验证什么；
 - 把知识进一步转成会议问题、实施步骤或决策输入。
 
-→ 使用 `skills/system-learning-v0.4.3/SKILL.md`
+→ 使用 `skills/system-learning-v0.4.4/SKILL.md`
 
-**判断标准：用户的中心对象是“自己的知识模型”，原材料只是输入。**
+**判断标准：用户的中心对象是“自己的知识模型”。**
 
-如果用户提供了文章/文件来学习：
-- 可以重组材料，不必服从原目录；
-- 但不得把材料未支持的外部知识偷偷写成材料结论；
-- 只有用户要求研究、核实、扩展时，才引入外部信息，并区分来源、推断和原材料内容。
+Learning 的主要依据仍是 Raw Source / 用户事实 / 当前任务，但可以选择性参考已有：
+- Deep Read：作者结构、概念、机制等 source reconstruction；
+- Review：关键分歧、不确定性、风险等 judgment；
+- Questioning：用户新确认的事实、尚未解决的 Gap。
+
+这些内容是 **Reference Context**，不是自动继承的事实或结论。
 
 ---
 
@@ -73,52 +112,91 @@ Router 只判断“当前需要哪种认知能力”，不提前替子 Skill 做
 - 不要马上给答案，而是通过连续追问把问题想清楚；
 - 判断“下一步最值得问什么”；
 - 为访谈、专家交流或需求调研设计主问题与追问；
-- 根据上一轮回答动态决定下一问，而不是拿固定问题清单机械执行；
+- 根据上一轮回答动态决定下一问；
 - 把模糊判断逐步推进到事实、证据、机制、边界或可验证行动。
 
-→ 使用 `skills/questioning-v0.1/SKILL.md`
+→ 使用 `skills/questioning-v0.1.1/SKILL.md`
 
 **判断标准：用户的中心任务是“通过提问减少关键不确定性”。**
 
-默认一次只推进一个最重要的问题；只有用户明确要求访谈提纲或问题清单时，才一次输出多个主问题及必要 Probe。
+Questioning 可以选择性参考：
+- D：哪些结构、概念或论证值得进一步澄清；
+- R：哪些不确定性、风险或证据缺口值得求证；
+- L：哪些 Knowledge Gap 最值得继续问。
+
+Reference 只用于选择下一问，不自动成为 Q 已确认的事实。
 
 ---
 
-## “读懂、学会、继续问”的边界
+## 非对称协作规则
 
-按用户当前目标判断：
+~~~text
+Raw Source / User Context
+        │
+   ┌────┴────┐
+   ▼         ▼
+Deep Read   Review
+   D         R
+[isolated] [isolated]
+   │         │
+   └────┬────┘
+        │ optional references
+        ▼
+     Learning
+        L
+        │
+        │ knowledge gaps / model
+        ▼
+   Questioning
+        Q
+        │
+        │ newly confirmed answers
+        └──────────────► Learning
+~~~
 
-- “这篇文章到底说了什么？” → **D**
-- “作者为什么这样推到这个结论？” → **D**
-- “这份材料哪里站不住？” → **R**
-- “这个概念我到底应该怎么理解？” → **L**
-- “基于这篇文章，帮我建立一套自己的知识框架。” → **L**
-- “我还缺什么知识？” → 通常 **L**
-- “不要回答，先问我最重要的一个问题，和我一起想清楚。” → **Q**
-- “我要访谈研发负责人，帮我准备主问题和追问。” → **Q**
-- “先帮我建立理解，再通过追问把剩余不确定性问清楚。” → **L + Q**
+允许：
+- D → L
+- R → L
+- D → Q
+- R → Q
+- L → Q
+- Q → L（主要传递用户新确认的信息、事实或仍未解决的 Gap）
 
-只有当不同路由会明显改变交付方式、而上下文又无法判断时才询问。
+禁止：
+- 任何 Skill → D
+- 任何 Skill → R
+- D ↔ R 之间直接传递结果
 
 ---
 
-## 复合意图：组合，不制造 Skill 组合爆炸
+## Reference Context 的三条规则
 
-D / R / L 仍按用户目标自由组合。
+### 1. Reference ≠ Evidence
 
-Q 不为每个组合新增新 Skill 名称，而是作为“继续询问和获取新信息”的能力叠加到已有任务上。例如：
+Sibling output 只能作为参考、线索、假设或 Gap。涉及原文事实时仍回到 Raw Source；涉及外部事实时仍需要相应证据。
 
-- 读懂后继续追问 → **D + Q**
-- 学习后围绕 Knowledge Gap 连续追问 → **L + Q**
-- 审阅后把关键不确定性转成专家访谈 → **R + Q**
-- 单独把一个模糊问题问清楚 → **Q**
+### 2. Transform, don't copy
 
-执行原则：
-1. D / R / L 各路尽量直接读取原始材料，不让某一路的压缩结果成为另一路唯一输入；
-2. Q 维护当前对话中的认知状态，根据新回答更新下一问；
-3. 有原材料时，Q 应保持原材料可访问，不把其他分支的解释误当成原文事实；
-4. Q 可以使用 D / R / L 的阶段性结果作为工作状态，但需要继续区分“原材料”“已有判断”“用户新回答”；
-5. 最后按用户目标自然合并，不强制打印内部路由过程。
+L / Q 必须按照自己的任务目标重新解释 reference，而不是复制 sibling output。
+
+### 3. Selective, not mandatory
+
+“存在某个 sibling result”不等于“必须注入当前 Context”。只有它能明显改善当前 Learning / Questioning 时才选择。
+
+---
+
+## 复合意图
+
+不新增 DQ / RLQ / DRLQ 等组合 Skill。
+
+例如：
+- 总结 + 审阅 → D + R，但两路严格隔离；
+- 总结 + 学习 → D + L，L 可选择性参考 D；
+- 审阅 + 学习 → R + L，L 可选择性参考 R；
+- 学习 + 追问 → L + Q；
+- 审阅后准备专家访谈 → R + Q。
+
+组合只表示任务中需要多种能力，不改变各 Skill 自己的 Context Policy。
 
 ---
 
@@ -129,25 +207,10 @@ Q 不为每个组合新增新 Skill 名称，而是作为“继续询问和获�
 - **L 是 learner-centered**：建立用户以后还能继续使用的知识模型。
 - **Q 是 inquiry-centered**：选择最有信息价值的下一问，并根据回答持续更新。
 
-不要因为四者放在同一个 Suite 里，就把它们融合成一个大 Prompt。
-
----
-
-## 长文与复杂任务
-
-Router 不自建 Document Map、不跑 Claim Coverage、不重复实现 Learning 或 Questioning 的内部框架。
-
-把原材料、对话状态和用户目标交给对应子 Skill，由子 Skill 自己决定：
-- 是否启用长文结构处理；
-- 是否检查命题前提；
-- 是否重构知识模型；
-- 是否触发专项审阅；
-- 是否澄清概念、追事实、查证据、追机制或停止继续提问。
-
 ---
 
 ## 最终原则
 
-> **用户只管理一个 Skill；SenseWright 内部根据认知目标切换模式。**
+> **D / R 独立面对 Source；L / Q 可以从已有认知成果中学习，但 Reference 永远不是 inherited truth。**
 
-统一的是入口、路由和管理方式，不是不同任务的思维过程。
+用户只管理一个 SenseWright；内部负责路由、边界和可选参考。

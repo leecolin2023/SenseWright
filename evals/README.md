@@ -18,6 +18,29 @@ V0.1 当前使用 22 个 query：12 个应触发、10 个不应触发。负样�
 
 assertions 只写尽量客观、可复核的要求；文风、洞察力等主观质量继续交给 human review。
 
+### Reference Context
+
+V2.5.0 在 Eval metadata 中增加可选 `reference_context`，用于验证非对称协作：
+
+~~~json
+"reference_context": [
+  {
+    "source_skill": "R",
+    "file": "evals/fixtures/reference-review-agent-workflow.md",
+    "purpose": "optional_reference"
+  }
+]
+~~~
+
+规则：
+- 只有 expected route 包含 **L 或 Q** 的 case 才允许声明 `reference_context`；
+- 纯 D / R case 若配置 reference context，静态校验直接失败；
+- reference 的目标是测试“选择性吸收”，不是把 sibling output 当 source。
+
+Eval 当前重点验证：
+- **Source isolation**：D / R 不消费 sibling result；
+- **Selective reference**：L / Q 能利用真正有价值的 prior finding，同时不继承为事实或结论。
+
 ### Questioning V0.1
 
 Q 的首个 Eval 暂时只测试 **第一问质量**，不假装已经覆盖完整多轮 Agent Loop：

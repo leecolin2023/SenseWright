@@ -40,6 +40,7 @@ def main():
             "eval_name": name,
             "prompt": case["prompt"],
             "files": case["files"],
+            "reference_context": case.get("reference_context", []),
             "expected_route": case["expected_route"],
             "expected_output": case["expected_output"],
             "assertions": case["assertions"]

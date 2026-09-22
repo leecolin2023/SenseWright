@@ -33,6 +33,18 @@ def main():
             if not (ROOT / rel).exists():
                 errors.append(f"{prefix}: fixture does not exist: {rel}")
 
+        references = case.get("reference_context", [])
+        if references and not any(x in {"L", "Q"} for x in case.get("expected_route", [])):
+            errors.append(f"{prefix}: reference_context is only allowed when expected_route includes L or Q")
+        for ref in references:
+            if ref.get("source_skill") not in {"D", "R", "L", "Q"}:
+                errors.append(f"{prefix}: invalid reference source_skill")
+            rel = ref.get("file")
+            if not rel or not (ROOT / rel).exists():
+                errors.append(f"{prefix}: reference fixture does not exist: {rel}")
+            if not ref.get("purpose"):
+                errors.append(f"{prefix}: reference purpose is required")
+
     trigger = load("triggering.json").get("queries", [])
     positives = sum(q.get("should_trigger") is True for q in trigger)
     negatives = sum(q.get("should_trigger") is False for q in trigger)

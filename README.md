@@ -1,68 +1,106 @@
-# SenseWright V2.4.0
+# SenseWright V2.5.0
 
 **Agent skills for making sense of complex information.**
 
-SenseWright is a modular agent skill system that chooses the right cognitive approach for understanding, reviewing, learning from, and questioning complex information.
+SenseWright is a modular agent skill system for understanding, reviewing, learning from, and questioning complex information.
 
-SenseWright 用一个统一入口管理四种彼此独立、可以组合的认知任务：
+V2.5.0 引入 **Asymmetric Collaboration / 非对称协作**：
 
-- **D — Deep Read V6.1**：source-centered，忠实理解与压缩原材料。
-- **R — Vibe Review V0.9**：judgment-centered，独立审阅材料是否成立、是否足以支持决策。
-- **L — System Learning V0.4.3**：learner-centered，建立可复用知识模型并投影到下一步使用。
-- **Q — Questioning V0.1**：inquiry-centered，找到高信息价值的下一问，并根据回答持续更新。
+- **D — Deep Read V6.1**：source-facing，严格从原始材料忠实理解。
+- **R — Vibe Review V0.9**：source-facing，严格从原始材料独立审阅。
+- **L — System Learning V0.4.4**：knowledge-facing，可选择性参考已有认知结果来构建用户自己的知识模型。
+- **Q — Questioning V0.1.1**：knowledge-facing，可选择性利用已有发现和 Knowledge Gap 来决定下一问。
 
 核心原则：
 
-> **统一管理，不融合认知任务。Router 只判断“当前需要哪种认知能力”，具体复杂度与专项逻辑交给子 Skill。**
+> **D and R reason in isolation; L and Q learn from context.**
 
-## 四种模式为什么独立
-
-四个模式的完成标准不同：
-
-- Deep Read 的终点是“我理解原材料了”；
-- Review 的终点是“我知道哪些判断值得信到什么程度”；
-- Learning 的终点是“我形成了以后还能复用的知识模型”；
-- Questioning 的终点是“我知道当前最值得问什么，并通过回答减少了关键不确定性”。
-
-Questioning 不是“生成更多问题”。它运行一个轻量闭环：
+## Architecture
 
 ~~~text
-Current Model
-    ↓
-Critical Uncertainty
-    ↓
-Probe
-    ↓
-Answer
-    ↓
-Update State
-    ↓
-Next Probe / Stop
+Raw Source / User Context
+        │
+   ┌────┴────┐
+   ▼         ▼
+Deep Read   Review
+   D         R
+[isolated] [isolated]
+   │         │
+   └────┬────┘
+        │ optional references
+        ▼
+     Learning
+        L
+        │
+        │ knowledge model / gaps
+        ▼
+   Questioning
+        Q
+        │
+        │ newly confirmed answers
+        └──────────────► Learning
 ~~~
 
-内部参考 critical questioning 与访谈式 probing 的思想，但不把任何问题分类当成固定 Checklist。
+### Source-facing Skills
+
+Deep Read 和 Review 保持严格隔离：
+
+- 都直接读取 Raw Source；
+- D 不读取 R/L/Q 的结果；
+- R 不读取 D/L/Q 的结果；
+- 即使 D 已经做完，R 也不能基于 D 的摘要审阅。
+
+这样避免把“另一个 Skill 对 Source 的表示”误当成 Source 本身。
+
+### Knowledge-facing Skills
+
+Learning 和 Questioning 可以选择性吸收已有结果。
+
+Learning 可参考：
+- D 的 source reconstruction；
+- R 的 material differences / uncertainty / risks；
+- Q 中用户新确认的事实和未解决 Gap。
+
+Questioning 可参考：
+- D 暴露出的关键结构或概念；
+- R 暴露出的关键不确定性；
+- L 形成的 Knowledge Gap。
+
+但所有 sibling output 都属于 **Reference Context**：
+
+> **Reference ≠ Evidence. Transform, don't copy. Selective, not mandatory.**
 
 ## Router
 
-根 `SKILL.md` 是唯一入口：
+根 `SKILL.md` 是唯一入口。Router 只做两层轻量决策：
+
+1. **Route Selection**：当前任务需要 D / R / L / Q 哪些能力；
+2. **Reference Selection**：仅当目标包含 L / Q 时，从已经存在的 sibling results 中选择真正有帮助的参考。
+
+当前项目不引入 Shared Blackboard、Artifact Registry 或额外协作 runtime。V2.5.0 先把 Context Policy 固定在 Skill 契约和 Eval 中。
+
+## L ↔ Q：唯一允许形成反馈环的区域
 
 ~~~text
-User Intent
+Learning
    ↓
-SenseWright Router
-   ├── D — Deep Read
-   ├── R — Review
-   ├── L — Learning
-   └── Q — Questioning
+Knowledge Gap
+   ↓
+Questioning
+   ↓
+New Answer / New Evidence
+   ↓
+Learning
+   ↓
+Updated Knowledge Model
 ~~~
 
-Q 可以单独使用，也可以叠加在其他模式之后：
+Q 回流给 L 的重点应是：
+- 用户或专家新确认的信息；
+- 新证据；
+- 仍未解决的 Gap。
 
-- D + Q：先读懂，再围绕材料继续追问；
-- R + Q：先审阅，再把关键不确定性转成访谈问题；
-- L + Q：先形成知识模型，再围绕 Knowledge Gap 连续追问。
-
-不新增 `DQ / RQ / LQ / DRLQ` 等新的 Skill 文件，避免组合爆炸。
+不是把 Questioning 的整段内部推理原样回灌。
 
 ## Skills
 
@@ -72,15 +110,26 @@ skills/
 │   └── SKILL.md
 ├── vibe-review-v0.9/
 │   └── SKILL.md
-├── system-learning-v0.4.3/
+├── system-learning-v0.4.4/
 │   └── SKILL.md
-└── questioning-v0.1/
+└── questioning-v0.1.1/
     └── SKILL.md
 ~~~
 
+## Evaluation Workflow V0.1
+
+Eval 继续验证原有任务质量，并增加两类架构回归：
+
+- **Source isolation**：D / R 不消费 sibling results；
+- **Selective reference**：L / Q 可以利用有价值的 prior finding，但不能复制或把 sibling judgment 当成原材料事实。
+
+`evals.json` 允许为 L / Q case 提供可选的 `reference_context`。D / R case 不允许配置该字段，静态校验会直接失败。
+
+当前 Eval 仍是 runner-neutral 的实验协议，不自动执行模型调用。
+
 ## Agent Skills 标准兼容
 
-所有 `SKILL.md` 的 YAML frontmatter 使用跨工具最小公共集：
+所有 `SKILL.md` frontmatter 使用跨工具最小公共集：
 
 ~~~yaml
 ---
@@ -89,51 +138,13 @@ description: What the skill does and when it should be used.
 ---
 ~~~
 
-- `name`：稳定的 Skill 标识；
-- `description`：同时描述能力与触发场景，用于 Skill discovery / triggering；
-- 版本信息放在标题、目录与 `CHANGELOG.md`，不放入自定义 frontmatter 字段。
-
-本地静态校验：
+本地校验：
 
 ~~~bash
 python scripts/validate_skills.py
+python scripts/validate_evals.py
 ~~~
-
-## Evaluation Workflow V0.1
-
-评测遵循：
-
-~~~text
-test cases
-   ↓
-with-skill  ───────┐
-                   ├─> assertions + human review
-baseline / old-skill┘
-   ↓
-grading + timing
-   ↓
-benchmark
-   ↓
-failure analysis
-   ↓
-next iteration
-~~~
-
-当前 Eval 已覆盖 D / R / L / Q 及部分组合路由。Q 的 V0.1 首先测试“第一问质量”：
-
-- 是否默认只推进一个关键问题；
-- 是否优先澄清真正的歧义；
-- 是否避免诱导性问题；
-- 是否避免在提问之前先替用户回答。
-
-多轮适应性、停止条件和访谈长链路将在后续迭代增加。
-
-首个长期 old-skill baseline 仍固定为：
-
-`ffdb60e1f27ae99011d18c29c683dc747cec64f1`
-
-详细评测约定见 `evals/README.md`。
 
 ## 使用
 
-以根目录 `SKILL.md` 作为唯一入口。普通用户不需要单独管理四个子 Skill。
+以根目录 `SKILL.md` 作为唯一入口。普通用户无需单独管理四个子 Skill。

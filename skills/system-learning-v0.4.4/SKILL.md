@@ -3,7 +3,7 @@ name: system-learning
 description: Turn a concept, system, person, event, method, question, or source material into a reusable knowledge model, identify the few gaps that block real use, and project the model into the user's next action. Use when the user wants to truly learn or understand something for future reasoning, meetings, implementation, or decisions rather than merely summarize or critique a source.
 ---
 
-# System Learning V0.4.3 — Knowledge → Gap → Use
+# System Learning V0.4.4 — Knowledge → Gap → Use
 
 ## Suite 集成边界
 
@@ -12,9 +12,31 @@ description: Turn a concept, system, person, event, method, question, or source 
 - 若用户主要问“原文讲了什么”，交给 Deep Read。
 - 若用户主要问“这份材料哪里有问题”，交给 Review。
 - 若用户主要问“我应该怎样理解、学会并使用它”，使用本 Skill。
-- 与 Deep Read / Review 联合执行时，尽量直接读取原始材料，不依赖其他分支的结论。
+- 与其他 Skill 联合执行时，Raw Source / 用户事实 / 当前任务仍是主要依据。
+- 可以选择性读取 Deep Read、Review、Questioning 已产生的结果，但只能作为 **Reference Context**，不能自动继承为事实或结论。
 - 当用户指定以附件/材料为学习基础时，材料未支持的内容不得静默用常识补齐；只有在用户要求研究、核实、扩展时才引入外部信息，并明确区分。
 
+
+
+## Optional Reference Context
+
+Learning 的目标是形成用户自己的知识模型，因此可以利用已经产生的认知成果，但保持非对称边界。
+
+可参考：
+
+- **Deep Read**：作者结构、关键概念、机制、案例等 source reconstruction；
+- **Review**：关键分歧、证据薄弱处、风险、替代解释等 judgment；
+- **Questioning**：用户/专家新确认的信息、仍未解决的 Gap。
+
+三个规则：
+
+1. **Reference ≠ Evidence**：如果某项内容涉及“原文到底说了什么”，仍回到 Raw Source；如果涉及外部事实，仍需要相应证据。
+2. **Transform, don't copy**：Sibling result 应改变 Learning 的注意力、结构或 Knowledge Gap，而不是被原样复制进知识模型。
+3. **Selective, not mandatory**：只有 reference 能明显改善当前学习任务时才使用；不为了“利用已有结果”强行塞满 Context。
+
+尤其注意：
+
+> Review 的判断可以提醒 Learning “哪里值得谨慎”，但不能被写成作者原话；Questioning 的新回答只有在它确实来自用户、专家或新证据时，才可作为新的已确认信息进入 Knowledge Model。
 
 ## 目标
 

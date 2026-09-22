@@ -68,7 +68,7 @@
       "assertions": [
         "输出能够区分“方案原本怎么说”和“独立审阅认为哪里需要改变”。",
         "忠实理解部分不提前混入审阅结论。",
-        "若运行 transcript 可见上下文构造，Review 不应只消费 Deep Read 的摘要作为唯一输入。"
+        "若运行 transcript 可见上下文构造，Deep Read 与 Review 都应直接读取原始材料；Review 不得读取或消费 Deep Read 输出，Deep Read 也不得读取 Review 输出。"
       ]
     },
     {
@@ -142,6 +142,61 @@
         "问题优先澄清“不愿意用”的具体含义，或要求一个足以界定问题的真实案例，而不是直接进入原因分析。",
         "问题保持中性，不把安全、权限、成本、能力等假设偷偷塞进诱导性问句。",
         "在获得用户新信息之前，不先替用户回答“银行业务部门为什么不愿意用 Agent”。"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "learning-selective-reference",
+      "prompt": "基于原始材料帮我真正学会这个 Agent 工作流观点。这里还有一份之前的独立 Review 结果，你可以在有帮助时参考，但不要把 Review 的判断写成作者原话，也不要只是复制 Review。",
+      "expected_route": [
+        "L"
+      ],
+      "expected_output": "Learning 仍以原始材料建立可迁移模型，同时选择性利用 Review 暴露的关键边界来改善知识结构，并保持 source 与 sibling judgment 的来源边界。",
+      "files": [
+        "evals/fixtures/agent-workflow-argument.md"
+      ],
+      "reference_context": [
+        {
+          "source_skill": "R",
+          "file": "evals/fixtures/reference-review-agent-workflow.md",
+          "purpose": "optional_reference"
+        }
+      ],
+      "assertions": [
+        "Learning 的主体知识模型仍能从原始材料独立成立，而不是把 Review 当作主要材料。",
+        "如果 Review 中关于“示例不足以证明普遍结论”的提醒有助于学习，输出会把它转化为对结构性原则与适用边界的理解，而不是原样复制。",
+        "输出不会把 Review 的判断写成作者原话或原材料已经证明的事实。",
+        "存在 reference context 不意味着必须逐条使用；输出只吸收真正有助于当前知识模型的部分。"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "questioning-selective-reference",
+      "prompt": "我要访谈企业知识助手的研发负责人。已有 Review 和 Learning 分别留下了一些发现。请利用真正有价值的 prior findings，先只给我一个最值得问的问题，不要把所有发现机械改成问题清单。",
+      "expected_route": [
+        "Q"
+      ],
+      "expected_output": "Questioning 从 prior findings 中选择最关键的权限执行不确定性形成一个中性、高信息价值问题，同时不把 prior finding 当作已经证实的事实。",
+      "files": [
+        "evals/fixtures/enterprise-assistant-proposal.md"
+      ],
+      "reference_context": [
+        {
+          "source_skill": "R",
+          "file": "evals/fixtures/reference-review-enterprise-assistant.md",
+          "purpose": "inquiry_signal"
+        },
+        {
+          "source_skill": "L",
+          "file": "evals/fixtures/reference-learning-enterprise-assistant.md",
+          "purpose": "knowledge_gap"
+        }
+      ],
+      "assertions": [
+        "第一轮只提出一个主要问题，而不是把所有 prior findings 逐条改写成问题。",
+        "问题能够利用已有发现聚焦最关键的不确定性，例如 Agent 执行时到底继承谁的权限或身份上下文。",
+        "问题保持中性，不把“权限设计一定有问题”等 sibling judgment 当成已证实事实。",
+        "Questioning 对 prior findings 做选择和重构，而不是简单复制 Review 或 Learning 的措辞。"
       ]
     }
   ]
