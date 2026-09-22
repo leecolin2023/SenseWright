@@ -5,7 +5,7 @@
       "name": "old_skill",
       "type": "git_commit",
       "ref": "ffdb60e1f27ae99011d18c29c683dc747cec64f1",
-      "description": "Document Intelligence Suite V2.3 immediately before Agent Skills metadata compatibility and Eval V0.1 were added."
+      "description": "Frozen V2.3 baseline retained unchanged across the SenseWright brand migration. This commit predates Agent Skills metadata compatibility and Eval V0.1."
     },
     {
       "name": "without_skill",

@@ -1,4 +1,4 @@
-name: skill-ci
+name: sensewright-ci
 
 on:
   push:

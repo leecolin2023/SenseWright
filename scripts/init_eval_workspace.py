@@ -25,7 +25,7 @@ def main():
     iteration.mkdir(parents=True, exist_ok=True)
     manifest = {
         "iteration": args.iteration,
-        "skill_name": "document-intelligence-suite",
+        "skill_name": "sensewright",
         "baseline": args.baseline,
         "cases": []
     }

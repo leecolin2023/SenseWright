@@ -1,6 +1,10 @@
-# Document Intelligence Suite V2.3.1
+# SenseWright V2.3.2
 
-Document Intelligence Suite 用一个统一入口管理三种彼此独立的认知任务：
+**Agent skills for making sense of complex information.**
+
+SenseWright is a modular agent skill system that chooses the right cognitive approach for understanding, reviewing and learning from information.
+
+SenseWright 用一个统一入口管理三种彼此独立的认知任务：
 
 - **D — Deep Read V6.1**：source-centered，忠实理解与压缩原材料。
 - **R — Vibe Review V0.9**：judgment-centered，独立审阅材料是否成立、是否足以支持决策。

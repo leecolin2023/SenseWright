@@ -1,9 +1,9 @@
 ---
-name: document-intelligence-suite
+name: sensewright
 description: Route document and knowledge-work tasks among faithful deep reading, independent review, and systematic learning. Use when the user wants to understand what source material says, evaluate whether a document or argument is sound or decision-useful, build a reusable mental model from a topic or source, or combine those goals. Keep routing separate from content production and let each selected sub-skill read the raw source independently.
 ---
 
-# Document Intelligence Suite V2.3.1
+# SenseWright V2.3.2
 
 ## 核心设计
 

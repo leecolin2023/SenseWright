@@ -1,4 +1,4 @@
-# Evaluation Workflow V0.1
+# SenseWright Eval V0.1
 
 V0.1 不建立某一家模型供应商专用 benchmark 平台，而是先固定 **Skill 迭代的最小证据链**。
 

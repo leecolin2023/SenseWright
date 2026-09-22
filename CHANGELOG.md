@@ -1,5 +1,12 @@
 # Changelog
 
+## V2.3.2 — SenseWright brand migration
+- 项目正式更名为 **SenseWright**。
+- 根 Skill 标识统一迁移为 `sensewright`。
+- README、Eval metadata、workspace manifest、CI 和当前主分支中的品牌引用统一迁移到 SenseWright。
+- 三个内部 Skill 名称与版本保持不变，避免品牌迁移与认知逻辑变更混在一起。
+- Eval V0.1 的 frozen baseline commit `ffdb60e1f27ae99011d18c29c683dc747cec64f1` 保持不变，品牌迁移不重写历史，也不破坏 old-skill 对照基线。
+
 ## V2.3.1
 - 将根 Skill 与三个子 Skill 的 frontmatter 统一为 `name` + `description`，兼容当前 Agent Skills 核心 metadata 约定。
 - 将版本信息从 YAML frontmatter 移回文档标题 / CHANGELOG，减少自定义 metadata 对跨 Runtime 可移植性的影响。

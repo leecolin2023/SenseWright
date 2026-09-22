@@ -7,7 +7,7 @@ description: Turn a concept, system, person, event, method, question, or source 
 
 ## Suite 集成边界
 
-本 Skill 在 Document Intelligence Suite 中承担 **L — Learning**：目标是形成用户自己的知识模型，而不是忠实复述原材料，也不是评价文档质量。
+本 Skill 在 SenseWright 中承担 **L — Learning**：目标是形成用户自己的知识模型，而不是忠实复述原材料，也不是评价文档质量。
 
 - 若用户主要问“原文讲了什么”，交给 Deep Read。
 - 若用户主要问“这份材料哪里有问题”，交给 Review。

@@ -31,6 +31,8 @@ def main():
     for path in paths:
         try:
             meta = parse_frontmatter(path)
+            if path == ROOT / "SKILL.md" and meta.get("name") != "sensewright":
+                errors.append(f"{path.relative_to(ROOT)}: root skill name must be sensewright")
             if set(meta) != {"name", "description"}:
                 errors.append(f"{path.relative_to(ROOT)}: frontmatter must contain only name + description")
             if not NAME_RE.fullmatch(meta.get("name", "")):
