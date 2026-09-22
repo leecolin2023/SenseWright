@@ -45,6 +45,18 @@ def main():
             if not ref.get("purpose"):
                 errors.append(f"{prefix}: reference purpose is required")
 
+        gold_units = case.get("gold_review_units", [])
+        if gold_units and "R" not in case.get("expected_route", []):
+            errors.append(f"{prefix}: gold_review_units is only allowed for Review evals")
+        seen_units = set()
+        for unit in gold_units:
+            unit_id = unit.get("id")
+            if not unit_id or not unit.get("description"):
+                errors.append(f"{prefix}: each gold review unit needs id and description")
+            if unit_id in seen_units:
+                errors.append(f"{prefix}: duplicate gold review unit id: {unit_id}")
+            seen_units.add(unit_id)
+
     trigger = load("triggering.json").get("queries", [])
     positives = sum(q.get("should_trigger") is True for q in trigger)
     negatives = sum(q.get("should_trigger") is False for q in trigger)

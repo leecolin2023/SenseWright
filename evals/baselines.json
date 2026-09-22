@@ -11,6 +11,12 @@
       "name": "without_skill",
       "type": "no_skill",
       "description": "Optional control for experiments measuring the value of the entire suite rather than only the delta from the previous version."
+    },
+    {
+      "name": "review_v0_9",
+      "type": "git_commit",
+      "ref": "46ec079238fd58e6771ebbb1234d170ed7f68087",
+      "description": "Frozen SenseWright V2.5.0 baseline immediately before Vibe Review V0.10. Use for coverage-before-materiality regression comparisons."
     }
   ]
 }

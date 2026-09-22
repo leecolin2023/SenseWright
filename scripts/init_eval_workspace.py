@@ -41,6 +41,7 @@ def main():
             "prompt": case["prompt"],
             "files": case["files"],
             "reference_context": case.get("reference_context", []),
+            "gold_review_units": case.get("gold_review_units", []),
             "expected_route": case["expected_route"],
             "expected_output": case["expected_output"],
             "assertions": case["assertions"]

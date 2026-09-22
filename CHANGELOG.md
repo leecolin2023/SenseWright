@@ -1,5 +1,14 @@
 # Changelog
 
+## V2.5.1 — Review Coverage
+- Vibe Review 从 **V0.9** 升级为 **V0.10**，SenseWright 总体非对称协作架构保持不变。
+- Review 新增 **Coverage Before Materiality**：先把 Raw Source 拆成 Atomic Review Units，完成 source-span coverage reconciliation，再进入判断。
+- Atomization 阶段禁止提前按“重点 / 重要性”筛选；分类只发生在原子单元形成之后，用于决定审阅方式和深度。
+- 原子化必须保留条件、例外、因果、前后依赖、责任转移和范围限定，避免为了 coverage 把关系拆没。
+- 所有 Unit 都进入 Review，但允许 adaptive depth；Materiality 从审阅选择器后移为 reporting filter。
+- 取消“重复细节抽样”策略：重复内容先逐一进入 coverage，确认一致后才能聚类处理。
+- Eval 新增 Review coverage fixture、Gold Atomic Review Units 和漏审回归；新增 `review_v0_9` baseline 指向升级前 V2.5.0 commit。
+
 ## V2.5.0 — Asymmetric Collaboration
 - 将四种 Skill 的协作关系从“基本独立”收敛为 **非对称协作**。
 - Deep Read V6.1 与 Vibe Review V0.9 保持严格 source isolation：两者只面向 Raw Source / 用户直接要求，不读取任何 sibling Skill 输出，D 与 R 之间也不传递结果。

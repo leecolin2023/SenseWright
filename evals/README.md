@@ -18,6 +18,30 @@ V0.1 当前使用 22 个 query：12 个应触发、10 个不应触发。负样�
 
 assertions 只写尽量客观、可复核的要求；文风、洞察力等主观质量继续交给 human review。
 
+### Review Coverage / Atomic Review Units
+
+Vibe Review V0.10 增加 coverage-oriented eval。
+
+Review case 可以声明可选的 `gold_review_units`：
+
+~~~json
+"gold_review_units": [
+  {"id": "U01", "description": "一个可独立审阅的语义单元"}
+]
+~~~
+
+它的作用不是要求最终答案逐条打印，而是让 grader / human review 有一个 coverage 基准。
+
+Review coverage 重点看三件事：
+- **Unit Recall**：原材料中的 Gold Atomic Review Units 是否进入审阅；
+- **Relation Preservation**：条件、例外、冲突、依赖等是否在拆解后仍被保留；
+- **Selective Reporting**：内部完整 coverage 是否仍能收敛为面向用户的重点发现。
+
+当前 `review-atomic-coverage` fixture 故意把问题分散在数字、控制流程、例外和结论中，用来捕捉“先挑重点、后审阅”导致的漏审。
+
+升级前 Review V0.9 baseline：
+`46ec079238fd58e6771ebbb1234d170ed7f68087`
+
 ### Reference Context
 
 V2.5.0 在 Eval metadata 中增加可选 `reference_context`，用于验证非对称协作：
