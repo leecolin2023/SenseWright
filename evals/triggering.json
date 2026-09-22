@@ -43,6 +43,14 @@
       "should_trigger": true
     },
     {
+      "query": "不要直接回答，先问我一个最重要的问题，和我一起把这个事情想清楚",
+      "should_trigger": true
+    },
+    {
+      "query": "我要访谈研发负责人，帮我设计主问题，并根据对方回答继续追问",
+      "should_trigger": true
+    },
+    {
       "query": "把这段话润色得更正式一点",
       "should_trigger": false
     },

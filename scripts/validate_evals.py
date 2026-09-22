@@ -25,7 +25,7 @@ def main():
         if case.get("name") in names:
             errors.append(f"{prefix}: duplicate name")
         names.add(case.get("name"))
-        if any(x not in {"D", "R", "L"} for x in case.get("expected_route", [])):
+        if any(x not in {"D", "R", "L", "Q"} for x in case.get("expected_route", [])):
             errors.append(f"{prefix}: invalid expected_route")
         if not case.get("assertions"):
             errors.append(f"{prefix}: assertions must not be empty")

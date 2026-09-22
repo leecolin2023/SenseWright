@@ -8,15 +8,26 @@ V0.1 不建立某一家模型供应商专用 benchmark 平台，而是先固定 
 
 `triggering.json` 检查根 Skill 的 `description` 是否覆盖真正应该触发的场景，同时避开相邻但不属于本 Suite 的任务。
 
-V0.1 使用 20 个 query，正负样本各 10 个。负样本优先使用 near-miss，而不是完全无关问题。
+V0.1 当前使用 22 个 query：12 个应触发、10 个不应触发。负样本优先使用 near-miss，而不是完全无关问题。
 
 触发行为依赖具体 Agent Runtime，因此仓库保存 test set 与结果，但不假设不同 Runtime 的 discovery 机制完全一致。
 
 ### Task Quality
 
-`evals.json` 覆盖 D / R / L 与主要复合路由。每个 case 包含 prompt、files、expected_route、expected_output、assertions。
+`evals.json` 覆盖 D / R / L / Q 与主要复合路由。每个 case 包含 prompt、files、expected_route、expected_output、assertions。
 
 assertions 只写尽量客观、可复核的要求；文风、洞察力等主观质量继续交给 human review。
+
+### Questioning V0.1
+
+Q 的首个 Eval 暂时只测试 **第一问质量**，不假装已经覆盖完整多轮 Agent Loop：
+
+- 默认是否只推进一个关键问题；
+- 是否优先澄清问题定义或追真实案例；
+- 是否避免把答案藏进诱导性问题；
+- 是否在获得新信息前避免提前回答。
+
+多轮 `Answer → State Update → Next Probe`、停止条件和长访谈稳定性留给后续版本。
 
 ## 2. Baseline 策略
 

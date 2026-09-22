@@ -1,5 +1,13 @@
 # Changelog
 
+## V2.4.0 — Questioning
+- 新增 **Q — Questioning V0.1**，形成 D / R / L / Q 四种认知模式。
+- Questioning 采用 `Gap → Probe → Update` 循环：先识别当前最大不确定性，默认一次只问一个高信息价值问题，再根据回答更新认知状态与下一问。
+- 引入 Clarify / Reason / Evidence / Assumption / Alternative / Mechanism / Boundary / Missing / Action 等 Question Lens，但明确仅按需触发，不执行固定 Checklist。
+- 增加访谈式 Probe：优先把抽象观点追到 Situation / Reason / Action / Result / Reflection。
+- Router 增加 Q 路由，并把 Q 设计为可叠加能力，不为 D+Q、R+Q、L+Q 等组合新增独立 Skill，避免组合爆炸。
+- Eval V0.1 增加 Q 路由合法性与“第一问质量”case；当前先验证找准第一问，后续再扩展多轮适应性与停止条件。
+
 ## V2.3.2 — SenseWright brand migration
 - 项目正式更名为 **SenseWright**。
 - 根 Skill 标识统一迁移为 `sensewright`。
