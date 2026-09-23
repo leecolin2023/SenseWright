@@ -128,20 +128,20 @@
     },
     {
       "id": 8,
-      "name": "questioning-first-probe",
-      "prompt": "不要急着解释原因，也不要一次给我问题清单。和我一起把“为什么银行业务部门不愿意用 Agent”这个问题问清楚。先只问我当前最值得回答的一个问题。",
+      "name": "learning-adaptive-probe",
+      "prompt": "我想真正理解“为什么银行业务部门不愿意用 Agent”。这个判断来自我的工作感受，但“不愿意用”本身还很模糊。不要急着列原因；如果当前信息不足以建立可靠的知识模型，先问我一个最有信息价值的问题。",
       "expected_route": [
-        "Q"
+        "L"
       ],
-      "expected_output": "先识别“不愿意用”这一表述仍然模糊，优先通过一个中性、高信息价值的问题澄清具体含义或要求一个真实案例，而不是直接给原因清单。",
+      "expected_output": "Learning 先识别当前 Context Gap，必要时用一个中性、高信息价值的 probe 澄清“不愿意用”的具体含义或真实案例，再据此更新知识模型，而不是直接凭常识列原因。",
       "files": [
-        "evals/fixtures/questioning-bank-agent-context.md"
+        "evals/fixtures/learning-bank-agent-context.md"
       ],
       "assertions": [
-        "第一轮默认只推进一个主要问题，而不是一次列出多个问题清单。",
-        "问题优先澄清“不愿意用”的具体含义，或要求一个足以界定问题的真实案例，而不是直接进入原因分析。",
-        "问题保持中性，不把安全、权限、成本、能力等假设偷偷塞进诱导性问句。",
-        "在获得用户新信息之前，不先替用户回答“银行业务部门为什么不愿意用 Agent”。"
+        "Learning 能识别“不愿意用”仍是未定义清楚的观察，而不是直接把它当成已经解释完成的事实。",
+        "如果需要用户信息，默认只推进一个最有信息价值的问题，而不是一次生成问题清单。",
+        "Probe 保持中性，不把安全、权限、成本、能力等候选原因提前塞进诱导性问句。",
+        "提问的目的明确服务于 Knowledge Model 更新，而不是为了测试用户会不会。"
       ]
     },
     {
@@ -171,12 +171,12 @@
     },
     {
       "id": 10,
-      "name": "questioning-selective-reference",
-      "prompt": "我要访谈企业知识助手的研发负责人。已有 Review 和 Learning 分别留下了一些发现。请利用真正有价值的 prior findings，先只给我一个最值得问的问题，不要把所有发现机械改成问题清单。",
+      "name": "learning-expert-probe-from-references",
+      "prompt": "我要继续理解企业知识助手里的权限设计，并准备访谈研发负责人。已有 Review 发现和我之前 Learning 形成的 Knowledge Gap。请只选当前最值得向研发确认的一问，帮助我减少关键不确定性；不要把所有 prior findings 机械改成问题清单。",
       "expected_route": [
-        "Q"
+        "L"
       ],
-      "expected_output": "Questioning 从 prior findings 中选择最关键的权限执行不确定性形成一个中性、高信息价值问题，同时不把 prior finding 当作已经证实的事实。",
+      "expected_output": "Learning 把已有 Review finding 与 Knowledge Gap 转成一个高信息价值的专家确认问题，服务于知识模型更新，同时不把 prior finding 当成已经证实的事实。",
       "files": [
         "evals/fixtures/enterprise-assistant-proposal.md"
       ],
@@ -193,10 +193,10 @@
         }
       ],
       "assertions": [
-        "第一轮只提出一个主要问题，而不是把所有 prior findings 逐条改写成问题。",
-        "问题能够利用已有发现聚焦最关键的不确定性，例如 Agent 执行时到底继承谁的权限或身份上下文。",
-        "问题保持中性，不把“权限设计一定有问题”等 sibling judgment 当成已证实事实。",
-        "Questioning 对 prior findings 做选择和重构，而不是简单复制 Review 或 Learning 的措辞。"
+        "Learning 能把专家访谈视为补齐 Knowledge Gap 的 Project to Use，而不是独立 Questioning 任务。",
+        "第一轮只选择一个最影响当前知识模型的问题，例如执行动作时继承谁的身份与权限。",
+        "问题保持中性，不把“权限设计一定有问题”等 prior judgment 当成事实。",
+        "Prior findings 被重新解释为需要求证的不确定性，而不是原样复制。"
       ]
     },
     {
@@ -287,6 +287,52 @@
         "Review 能识别由 20 人、2 周、11→9 分钟的试点结果直接推到“全行减少 50% 且可直接全面推广”的结论存在证据强度和外推边界问题。",
         "Review 不应只审上述已知问题；从 transcript / Review Map 可见时，应能证明其余 Gold Atomic Review Units 也进入了 coverage，而不是只围绕显眼问题做抽样。",
         "最终回答以 Material findings 为主，不因为内部全覆盖而机械逐条输出 17 个 Review Units。"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "practice-token-transfer",
+      "prompt": "我已经学过“大模型为什么基于 token”。不要重新给我讲一遍答案，请用一个真实的模型设计场景检验我是不是真的理解。一次只推进一个主要任务，等我回答后再根据表现继续。",
+      "expected_route": [
+        "P"
+      ],
+      "expected_output": "Practice 把已有 Token Knowledge Model 转成一个需要用户做判断的设计场景，例如字符级、词级或 subword 方案选择；第一轮只提出一个主要任务，不提前泄漏标准答案。",
+      "files": [],
+      "reference_context": [
+        {
+          "source_skill": "L",
+          "file": "evals/fixtures/reference-learning-token-model.md",
+          "purpose": "knowledge_model"
+        }
+      ],
+      "assertions": [
+        "输出不重新完整解释为什么 LLM 使用 token，而是立即进入需要用户做判断的情境。",
+        "场景能够检验 vocabulary size、sequence length、表示粒度或计算成本之间至少一个真实 trade-off。",
+        "第一轮只推进一个主要任务，并要求用户说明为什么，而不是一次抛出多道面试题。",
+        "问题不把标准答案写进题干；Learning reference 被转换成 performance task，而不是被复述。"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "practice-token-adaptive-stress",
+      "prompt": "上一轮你问我为什么不直接一个汉字一个 token。我回答：理论上可以，但序列会更长，会更快消耗 context，也会增加 attention 计算。继续测试我，不要重复上一题，也不要先给答案。一次只改变一个关键条件。",
+      "expected_route": [
+        "P"
+      ],
+      "expected_output": "Practice 根据上一轮已经掌握的字符级序列长度问题，改变一个新条件继续 stress，例如转到英语字符级的词表/序列 trade-off、词级 vocabulary explosion 或具体 tokenizer 方案比较，而不是重复解释原题。",
+      "files": [],
+      "reference_context": [
+        {
+          "source_skill": "L",
+          "file": "evals/fixtures/reference-learning-token-model.md",
+          "purpose": "knowledge_model"
+        }
+      ],
+      "assertions": [
+        "下一步明显建立在用户上一轮已经回答正确的内容之上，不重复测试“字符级会让序列变长”。",
+        "只改变一个主要条件，用新场景暴露相邻 Boundary / Trade-off Gap。",
+        "输出继续要求用户做判断和解释，而不是切回讲课模式。",
+        "不会一次给出完整答案或长问题清单。"
       ]
     }
   ]

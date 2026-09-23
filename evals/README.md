@@ -8,13 +8,13 @@ V0.1 不建立某一家模型供应商专用 benchmark 平台，而是先固定 
 
 `triggering.json` 检查根 Skill 的 `description` 是否覆盖真正应该触发的场景，同时避开相邻但不属于本 Suite 的任务。
 
-V0.1 当前使用 22 个 query：12 个应触发、10 个不应触发。负样本优先使用 near-miss，而不是完全无关问题。
+V0.1 当前使用 24 个 query：14 个应触发、10 个不应触发。负样本优先使用 near-miss，而不是完全无关问题。
 
 触发行为依赖具体 Agent Runtime，因此仓库保存 test set 与结果，但不假设不同 Runtime 的 discovery 机制完全一致。
 
 ### Task Quality
 
-`evals.json` 覆盖 D / R / L / Q 与主要复合路由。每个 case 包含 prompt、files、expected_route、expected_output、assertions。
+`evals.json` 覆盖 D / R / L / P 与主要复合路由。每个 case 包含 prompt、files、expected_route、expected_output、assertions。
 
 assertions 只写尽量客观、可复核的要求；文风、洞察力等主观质量继续交给 human review。
 
@@ -57,24 +57,35 @@ V2.5.0 在 Eval metadata 中增加可选 `reference_context`，用于验证非�
 ~~~
 
 规则：
-- 只有 expected route 包含 **L 或 Q** 的 case 才允许声明 `reference_context`；
+- 只有 expected route 包含 **L 或 P** 的 case 才允许声明 `reference_context`；
 - 纯 D / R case 若配置 reference context，静态校验直接失败；
 - reference 的目标是测试“选择性吸收”，不是把 sibling output 当 source。
 
 Eval 当前重点验证：
 - **Source isolation**：D / R 不消费 sibling result；
-- **Selective reference**：L / Q 能利用真正有价值的 prior finding，同时不继承为事实或结论。
+- **Selective reference**：L / P 能利用真正有价值的 prior finding，同时不继承为事实或结论。
 
-### Questioning V0.1
+### Learning Adaptive Probe
 
-Q 的首个 Eval 暂时只测试 **第一问质量**，不假装已经覆盖完整多轮 Agent Loop：
+原 Questioning 中用于“补知识”的能力已迁入 Learning。
 
-- 默认是否只推进一个关键问题；
-- 是否优先澄清问题定义或追真实案例；
-- 是否避免把答案藏进诱导性问题；
-- 是否在获得新信息前避免提前回答。
+相关 Eval 验证：
+- 当用户自身语境是关键缺口时，Learning 会先澄清，而不是凭常识补原因；
+- 默认一次只问一个高信息价值问题；
+- 专家访谈问题服务于 Knowledge Model 更新；
+- 提问不是独立终点。
 
-多轮 `Answer → State Update → Next Probe`、停止条件和长访谈稳定性留给后续版本。
+### Practice Transfer
+
+Practice Eval 重点验证：
+- 不重新讲已经学过的答案；
+- 能把 Knowledge Model 转成真实 decision / design / troubleshooting 场景；
+- 一次只推进一个主要任务；
+- 下一轮根据上一轮表现改变 stress condition；
+- 面试式追问用于检验 transfer，而不是背题。
+
+当前首个 transfer 主题使用“为什么 LLM 基于 token”，并分别测试初始场景化与 adaptive stress。
+
 
 ## 2. Baseline 策略
 

@@ -25,7 +25,7 @@ def main():
         if case.get("name") in names:
             errors.append(f"{prefix}: duplicate name")
         names.add(case.get("name"))
-        if any(x not in {"D", "R", "L", "Q"} for x in case.get("expected_route", [])):
+        if any(x not in {"D", "R", "L", "P"} for x in case.get("expected_route", [])):
             errors.append(f"{prefix}: invalid expected_route")
         if not case.get("assertions"):
             errors.append(f"{prefix}: assertions must not be empty")
@@ -34,10 +34,10 @@ def main():
                 errors.append(f"{prefix}: fixture does not exist: {rel}")
 
         references = case.get("reference_context", [])
-        if references and not any(x in {"L", "Q"} for x in case.get("expected_route", [])):
-            errors.append(f"{prefix}: reference_context is only allowed when expected_route includes L or Q")
+        if references and not any(x in {"L", "P"} for x in case.get("expected_route", [])):
+            errors.append(f"{prefix}: reference_context is only allowed when expected_route includes L or P")
         for ref in references:
-            if ref.get("source_skill") not in {"D", "R", "L", "Q"}:
+            if ref.get("source_skill") not in {"D", "R", "L", "P"}:
                 errors.append(f"{prefix}: invalid reference source_skill")
             rel = ref.get("file")
             if not rel or not (ROOT / rel).exists():

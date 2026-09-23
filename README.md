@@ -1,79 +1,55 @@
-# SenseWright V2.5.1
+# SenseWright V2.6.0
 
-**Agent skills for making sense of complex information.**
+**Agent skills for making sense of complex information — and proving you can use what you learned.**
 
-SenseWright is a modular agent skill system for understanding, reviewing, learning from, and questioning complex information.
+SenseWright 现在收敛为四种一级认知模式：
 
-当前四种模式：
+- **D — Deep Read V6.1**：理解材料。
+- **R — Vibe Review V0.10**：审阅材料。
+- **L — System Learning V0.5.0**：形成知识模型。
+- **P — Practice V0.1**：检验知识迁移。
 
-- **D — Deep Read V6.1**：source-facing，忠实理解；为了理解允许按认知价值压缩。
-- **R — Vibe Review V0.10**：source-facing，先完整建立审阅覆盖，再独立判断；重要性只决定最终报告。
-- **L — System Learning V0.4.4**：knowledge-facing，可选择性参考已有认知结果建立知识模型。
-- **Q — Questioning V0.1.1**：knowledge-facing，可选择性利用已有发现和 Knowledge Gap 决定下一问。
-
-核心协作原则仍然是：
-
-> **D and R reason in isolation; L and Q learn from context.**
-
-V2.5.1 不改变 V2.5.0 的非对称协作架构，只升级 Review 内部机制。
-
-## Review V0.10：Coverage Before Materiality
-
-旧版 Review 容易把“只输出真正重要的问题”前移成“只深入检查重要内容”。
-
-V0.10 把顺序固定为：
+核心边界可以压缩成四个问题：
 
 ~~~text
-Raw Source
-   ↓
-Atomic Review Units
-   ↓
-Coverage Reconciliation
-   ↓
-Review Every Unit
-   ↓
-Adaptive Depth
-   ↓
-Materiality Assessment
-   ↓
-Selective Reporting
+D — 我理解材料了吗？
+R — 这份材料可靠吗、够用吗？
+L — 我真正懂了吗？
+P — 我真正会了吗？
 ~~~
 
-关键区别：
+## 为什么删除 Questioning 一级路由
 
-> **先完整拆解，再判断；不是先判断什么值得审，再拆解。**
+V2.4 曾把 Questioning 建模为独立 Skill。实际迭代后发现，“提问”更像一种跨任务控制策略，而不是稳定的最终用户目标。
 
-### Atomic Review Unit
+同一句“问我一个问题”，可能有两种完全不同的目的：
 
-不是句子、段落或 bullet，而是：
+~~~text
+为了获得缺失知识
+→ Learning Probe
 
-> 最小的、能够被独立理解并接受审阅判断的语义单位。
+为了暴露学习者能力
+→ Practice Probe
+~~~
 
-Atomization 阶段不做重要性筛选。原文中每个有信息内容的 source span 都应被某个 Review Unit 覆盖，或明确归为纯结构 / 过渡 / 无新增语义的重复内容。
+因此 V2.6.0 将 `questioning-v0.1.1` 从 active tree 移除，并把它最有价值的机制拆入 L / P：
 
-同时保留：
-- 条件；
-- 例外；
-- 因果；
-- 前后依赖；
-- 责任转移；
-- 范围限定。
+### Learning 吸收
+- Clarify / Reason / Evidence / Assumption；
+- Alternative / Mechanism / Boundary / Missing；
+- 一次一个高信息价值问题；
+- 根据回答更新 Confirmed / Assumed / Unknown / Contradiction / Next Gap；
+- 访谈 / 专家交流作为 Project to Use。
 
-原子化是为了 coverage，不是为了切碎 context。
+### Practice 吸收
+- 一次一个主要任务；
+- 下一问随用户表现变化；
+- 追真实情境；
+- 不使用诱导性问题泄漏答案；
+- What-if / Why-not-alternative 压力测试；
+- 停止条件与动态难度。
 
-### Review all, report what matters
-
-所有 Unit 都进入 Review，但不同 Unit 可以使用不同分析深度。
-
-Materiality 发生在 Review 之后，只控制最终报告：
-
-- Material → 重点展开；
-- Minor → 视用户需要简述；
-- No issue → 默认不输出。
-
-因此：
-
-> **全面审阅 ≠ 全量输出。**
+Questioning 的历史没有删除，仍保留在 Git 历史和 CHANGELOG。
 
 ## Architecture
 
@@ -91,13 +67,76 @@ Deep Read   Review
         ▼
      Learning
         L
-        ↓
-   Questioning
-        Q
+        │
+        │ Knowledge Model
+        ▼
+     Practice
+        P
+        │
+        │ Performance Gap
         └──────────────► Learning
 ~~~
 
-Deep Read 与 Review 仍严格隔离。Review V0.10 的覆盖机制不会读取 D / L / Q 的结果。
+### Source-facing
+
+D / R 继续严格隔离：
+- 都直接读取 Raw Source；
+- 不读取 sibling outputs；
+- D 与 R 互不消费结果。
+
+### Knowledge-facing
+
+L / P 可以选择性参考已有结果：
+
+- Learning 可参考 D / R，以及 Practice 暴露出的 Gap；
+- Practice 可参考 D / R / L，其中 Learning Knowledge Model 通常是主要输入。
+
+统一规则：
+
+> **Reference ≠ Evidence. Transform, don't copy. Selective, not mandatory.**
+
+## Learning V0.5.0
+
+主体仍然是：
+
+~~~text
+Build Model
+→ Find Gaps
+→ Project to Use
+~~~
+
+但在真正阻塞模型时允许：
+
+~~~text
+Gap
+→ Adaptive Probe / Research
+→ Update Model
+~~~
+
+Learning Probe 的目标是减少 **knowledge uncertainty**。
+
+如果问题变成“你到底会不会”，转入 Practice。
+
+## Practice V0.1
+
+核心循环：
+
+~~~text
+Diagnose
+→ Situate
+→ Perform
+→ Stress
+→ Debrief
+~~~
+
+Practice 不把工作和面试当作目标本身。
+
+它们只是两种常用情境：
+
+- 工作场景：测试能否真实决策、操作、排错；
+- 面试场景：用连续追问检验模型是否稳定、能否解释 trade-off 和反例。
+
+Practice Probe 的目标是减少对用户 **capability uncertainty**。
 
 ## Skills
 
@@ -107,34 +146,30 @@ skills/
 │   └── SKILL.md
 ├── vibe-review-v0.10/
 │   └── SKILL.md
-├── system-learning-v0.4.4/
+├── system-learning-v0.5.0/
 │   └── SKILL.md
-└── questioning-v0.1.1/
+└── practice-v0.1/
     └── SKILL.md
 ~~~
 
 ## Evaluation Workflow V0.1
 
-除原有任务质量、source isolation 和 selective reference 外，新增 Review coverage regression：
+Eval 路由同步收敛为：
 
-- 人工标注 Gold Atomic Review Units；
-- 检查分散在不同位置的问题是否被遗漏；
-- 检查条件 / 例外 / 前后依赖是否在 atomization 后仍被保留；
-- 检查“全覆盖”有没有导致最终输出退化成逐条问题清单。
+`D / R / L / P`
 
-当前增加 `review_v0_9` baseline，指向升级前的 V2.5.0 commit，可直接用于 V0.9 vs V0.10 比较。
+原 Q case 已重新归属：
+- “把问题问清楚 / 专家访谈求证” → Learning；
+- “用场景或面试追问检验是否会用” → Practice。
 
-示例：
+新增 Practice transfer cases，重点验证：
+- 是否把 Knowledge Model 转成真实判断任务；
+- 是否避免重新讲答案；
+- 是否一次只推进一个主要任务；
+- 是否根据上一轮表现改变 stress condition；
+- 是否能把表现失败回流成明确 Knowledge Gap。
 
-~~~bash
-python scripts/init_eval_workspace.py --iteration 1 --baseline review_v0_9
-~~~
-
-当前 Eval 仍是 runner-neutral 的实验协议，不自动执行模型调用。
-
-## Agent Skills 标准兼容
-
-所有 `SKILL.md` frontmatter 使用 `name + description` 最小公共集。
+V2.5.1 commit `9bbc0360616b60c4d960e412979b841853a10369` 固定为本次架构收敛前 baseline。
 
 本地校验：
 

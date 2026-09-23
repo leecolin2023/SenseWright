@@ -47,7 +47,15 @@
       "should_trigger": true
     },
     {
-      "query": "我要访谈研发负责人，帮我设计主问题，并根据对方回答继续追问",
+      "query": "我在学企业 Agent 权限设计，准备访谈研发负责人，帮我围绕当前知识缺口设计最值得确认的问题",
+      "should_trigger": true
+    },
+    {
+      "query": "我已经学过 Agent State，不要再讲定义，用真实工作场景测试我是不是真的会",
+      "should_trigger": true
+    },
+    {
+      "query": "像技术面试官一样连续追问我 RAG 的 rerank，但重点是检验我能不能在场景里做判断，不要让我背定义",
       "should_trigger": true
     },
     {

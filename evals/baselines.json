@@ -17,6 +17,12 @@
       "type": "git_commit",
       "ref": "46ec079238fd58e6771ebbb1234d170ed7f68087",
       "description": "Frozen SenseWright V2.5.0 baseline immediately before Vibe Review V0.10. Use for coverage-before-materiality regression comparisons."
+    },
+    {
+      "name": "pre_practice_refactor",
+      "type": "git_commit",
+      "ref": "9bbc0360616b60c4d960e412979b841853a10369",
+      "description": "Frozen SenseWright V2.5.1 baseline before Questioning was absorbed into Learning/Practice and the D/R/L/P architecture was introduced."
     }
   ]
 }

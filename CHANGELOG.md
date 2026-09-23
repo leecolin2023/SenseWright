@@ -1,5 +1,16 @@
 # Changelog
 
+## V2.6.0 — Learning / Practice convergence
+- 将 **Questioning 从一级 Skill 降级为内部控制策略**，active tree 删除 `questioning-v0.1.1`；其历史完整保留在 Git。
+- 一级路由从 D / R / L / Q 收敛为 **D / R / L / P**。
+- 新增 **P — Practice V0.1**：以 `Diagnose → Situate → Perform → Stress → Debrief` 检验知识能否迁移到真实或仿真情境。
+- System Learning 从 **V0.4.4 升级到 V0.5.0**，吸收 Questioning 中用于减少 knowledge uncertainty 的 adaptive probing：Clarify / Evidence / Assumption / Mechanism / Boundary 等按需触发。
+- 明确两种提问机制：Learning Probe 用于补知识，Practice Probe 用于暴露能力；不再因“用户要求提问”而建立独立 Q 路由。
+- 非对称协作更新为 source-facing D/R + knowledge-facing L/P；D/R 继续严格隔离，L/P 可选择性使用 Reference Context。
+- 建立 **L ↔ P 学习闭环**：Learning 输出 Knowledge Model，Practice 暴露 Performance Gap，再回流 Learning 更新模型。
+- Eval 路由、trigger cases、reference_context 规则同步迁移到 D / R / L / P；原 Q eval 重新归属 Learning，并新增 Token transfer 的 Practice regression。
+- 固定 V2.5.1 commit `9bbc0360616b60c4d960e412979b841853a10369` 为 `pre_practice_refactor` baseline。
+
 ## V2.5.1 — Review Coverage
 - Vibe Review 从 **V0.9** 升级为 **V0.10**，SenseWright 总体非对称协作架构保持不变。
 - Review 新增 **Coverage Before Materiality**：先把 Raw Source 拆成 Atomic Review Units，完成 source-span coverage reconciliation，再进入判断。
