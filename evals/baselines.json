@@ -23,6 +23,12 @@
       "type": "git_commit",
       "ref": "9bbc0360616b60c4d960e412979b841853a10369",
       "description": "Frozen SenseWright V2.5.1 baseline before Questioning was absorbed into Learning/Practice and the D/R/L/P architecture was introduced."
+    },
+    {
+      "name": "learning_v0_5_0",
+      "type": "git_commit",
+      "ref": "5ab713149329685c3834bc97b65bf010c6d70c36",
+      "description": "Frozen SenseWright V2.6.0 baseline with System Learning V0.5.0 before grounding-before-abstraction and grounding-recovery changes."
     }
   ]
 }
