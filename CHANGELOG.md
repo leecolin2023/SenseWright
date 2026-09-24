@@ -1,5 +1,16 @@
 # Changelog
 
+## V2.6.1 — Learning grounding before abstraction
+- System Learning 从 **V0.5.0 升级到 V0.5.1**；D / R / L / P 总体架构保持不变，本次仅修 Learning 的理解目标与回归标准。
+- 恢复并强化“**先解释对象，再抽象方法**”：新增 `Ground Object → Build Model → Find Gaps → Project to Use`，避免用更高层术语解释尚未理解的抽象。
+- 新增 **Contrastive Grounding**：对“X 和 Y 有何区别 / 为什么需要 X”优先比较一个低差异场景和一个高差异场景，再总结真实变化与适用边界。
+- 明确 **Teaching Example 属于 Learning，Performance Task 才属于 Practice**，避免因为存在 Practice 就把 Learning 退化成抽象讲解。
+- 新增 **Grounding Recovery**：当用户反馈“没理解 / 太抽象 / 像生造的 / 实际有什么用 / 不就是 X 吗”时，停止继续上提抽象，回到具体对象逐步跑过程。
+- 新增原则：**抽象应该压缩已经理解的事实，而不应该成为解释的起点。**
+- Learning 验收新增“能否映射回具体对象、能否指出前后哪一步真正变化”；若框架完整但用户仍不知道“现实里到底改变了什么”，判定 Learning 未完成。
+- Eval 新增 3 个 grounding regression：Workspace Agent 概念差异、解释失败后的降层恢复、数据库事务的跨领域泛化。
+- 冻结 V2.6.0 commit `5ab713149329685c3834bc97b65bf010c6d70c36` 为 `learning_v0_5_0` baseline，便于 V0.5.0 vs V0.5.1 相邻版本比较。
+
 ## V2.6.0 — Learning / Practice convergence
 - 将 **Questioning 从一级 Skill 降级为内部控制策略**，active tree 删除 `questioning-v0.1.1`；其历史完整保留在 Git。
 - 一级路由从 D / R / L / Q 收敛为 **D / R / L / P**。
