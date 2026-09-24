@@ -334,6 +334,56 @@
         "输出继续要求用户做判断和解释，而不是切回讲课模式。",
         "不会一次给出完整答案或长问题清单。"
       ]
+    },
+    {
+      "id": 14,
+      "name": "learning-ground-before-abstract",
+      "prompt": "你说 Chatbot 的核心对象是 Conversation，而 Workspace Agent 的核心对象是 Workspace + Task + Artifact。我还是不能理解这到底有多少差异，感觉这些概念像生造出来的。对我们实际每一项工作到底有多少帮助？请先让我真正看懂差异，不要继续堆 Agent 架构术语。",
+      "expected_route": [
+        "L"
+      ],
+      "expected_output": "Learning 先回到具体知识工作任务，用一个几乎没有差异的任务和一个长期、多文件、反复修改的任务做对照，指出用户当前额外承担的协调工作以及哪些工作可被系统接走，最后才把观察压缩成抽象。",
+      "files": [],
+      "assertions": [
+        "输出不会一开始继续增加 Runtime、Ownership、State Transition 等新的上位术语来解释原术语。",
+        "输出至少使用一个 Workspace Agent 几乎没有额外价值的低差异场景，例如一次性改写或单文件问答，以明确边界。",
+        "输出至少使用一个持续性知识工作场景，逐步说明现有 Chat 使用中人仍在承担哪些材料选择、进度恢复、成果维护或影响判断工作。",
+        "抽象结论出现在具体任务差异之后，并能被还原为“原来怎么做、引入后哪一步变化、谁少承担了什么”。",
+        "输出允许并明确指出某些任务里 Chat 与 Workspace Agent 没有实质差异，而不是为了维护概念强行制造优势。"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "learning-grounding-recovery",
+      "prompt": "上一轮你已经用 Context Ownership、Action Ownership、State Ownership、五个 Runtime 给我解释过，但我还是觉得太抽象，像换了一套词继续解释。我现在只想知道现实工作到底哪里变了。",
+      "expected_route": [
+        "L"
+      ],
+      "expected_output": "Learning 将“还是太抽象”识别为 grounding failure，停止继续上提概念，回到用户熟悉的一个具体任务逐步跑过程，直到能指出实际变化，再决定是否需要重新抽象。",
+      "files": [],
+      "assertions": [
+        "输出明确降低抽象层级，不再用新的 taxonomy 或更高层框架作为主要解释。",
+        "输出选择一个具体任务并按真实步骤展开，而不是只换一个比喻或重新定义已有术语。",
+        "输出把重点放在“哪一步变了、原来谁负责、现在谁负责、没有这个能力会怎样”。",
+        "只有在具体变化已经清楚之后才允许再次命名或抽象；即使不重新抽象也应能够完成解释。"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "learning-grounding-transfer-transaction",
+      "prompt": "我还是不明白数据库事务实际有什么意义，不就是几条 SQL 吗？不要先背 ACID，先让我看见没有事务到底会发生什么。",
+      "expected_route": [
+        "L"
+      ],
+      "expected_output": "Learning 通过一个具体的多步写入失败场景让事务需求自然出现，例如转账中扣款成功但入账失败；先比较无事务与有事务的行为差异，再用 atomicity/rollback 等概念压缩已经看见的机制。",
+      "files": [],
+      "assertions": [
+        "输出不会以 ACID 定义或事务术语清单开场。",
+        "输出使用一个具体的多步数据库操作，并展示中途失败时没有事务会留下什么现实错误状态。",
+        "输出对比引入事务后哪一步行为改变以及系统接走了什么一致性恢复负担。",
+        "atomicity、rollback 或其他抽象概念若出现，应位于具体失败场景之后，作为对已理解现象的命名和压缩。",
+        "该案例证明 grounding 规则可迁移到非 Agent 主题，而不是只针对 Workspace Agent 特判。"
+      ]
     }
   ]
 }
