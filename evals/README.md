@@ -87,6 +87,19 @@ System Learning V0.5.1 增加 grounding-oriented regression，用来捕捉“知
 
 当前相邻版本 baseline：`learning_v0_5_0`。
 
+### Learning Mechanism Depth
+
+System Learning V0.5.2 在 V0.5.1 grounding 基础上增加技术机制深度回归。
+
+相关 Eval 验证：
+- **Run once**：机制型技术不能只停在组件说明，至少让一个最小实例真实运行；
+- **Mechanism causality**：不仅说明发生了什么，还解释关键步骤为什么存在；
+- **Teaching variation**：改变一个主要条件并解释结果变化，答案可直接展示，仍属于 Learning；
+- **Prediction check**：当前模型应足以解释至少一个相邻条件变化，而不是只复述定义；
+- **Analogy scaffolding**：Deep Read 保留下来的比喻/故事可以帮助进入机制，但 Learning 最终应映射回真实系统并说明类比边界。
+
+当前相邻版本 baseline：`learning_v0_5_1`。
+
 ### Practice Transfer
 
 Practice Eval 重点验证：
