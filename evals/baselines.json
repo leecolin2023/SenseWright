@@ -29,6 +29,12 @@
       "type": "git_commit",
       "ref": "5ab713149329685c3834bc97b65bf010c6d70c36",
       "description": "Frozen SenseWright V2.6.0 baseline with System Learning V0.5.0 before grounding-before-abstraction and grounding-recovery changes."
+    },
+    {
+      "name": "learning_v0_5_1",
+      "type": "git_commit",
+      "ref": "4b3e79a263ee90a992cf50a9eb5616fe198e35dc",
+      "description": "Frozen SenseWright V2.6.1 baseline with System Learning V0.5.1 before executable-mechanism, teaching-variation, and prediction-based understanding checks."
     }
   ]
 }
