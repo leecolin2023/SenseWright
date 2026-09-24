@@ -1,5 +1,16 @@
 # Changelog
 
+## V2.6.2 — Learning mechanism depth
+- System Learning 从 **V0.5.1 升级到 V0.5.2**；D / R / L / P 总体架构和 Deep Read V6.1 均保持不变。
+- 保留 V0.5.1 的 Grounding，并针对 **mechanism-heavy technical knowledge** 增加按需启用的 `Ground → Run Once → Explain Mechanism → Vary One Condition → Compress Model`。
+- 新增 **Executable Mental Model**：算法、系统、Agent、RAG、数据库、缓存、运行时等主题优先选最小具体实例，追踪真正相关的输入、中间表示、状态、控制流、资源变化、输出或反馈。
+- 新增 **Teaching Variation**：一次改变一个关键条件，直接展示哪一步首先受影响、结果/成本为何变化；该过程仍属于 Learning，而不是 Practice。
+- 新增 **Prediction as Understanding Check**：机制模型至少应能够解释一个相邻条件变化；如果只能复述定义和标准流程，则认为理解深度仍不足。
+- 明确 **比喻是脚手架，不是机制本身**：Deep Read 继续忠实保留作者的故事、比喻和认知桥梁；Learning 可利用它们进入真实机制，并在理解建立后说明类比边界。
+- Project to Use 增加 **最小实验**：当语言解释不足时，用最小输入、可观察变量和预期变化验证机制模型，而不是为了练技术搭大工程。
+- Eval 新增 3 个 mechanism-depth regression：RAG rerank 的运行与条件变化、Agent State 的状态演化、技术比喻从脚手架回到真实机制。
+- 冻结 V2.6.1 commit `4b3e79a263ee90a992cf50a9eb5616fe198e35dc` 为 `learning_v0_5_1` baseline，便于 V0.5.1 vs V0.5.2 相邻版本比较。
+
 ## V2.6.1 — Learning grounding before abstraction
 - System Learning 从 **V0.5.0 升级到 V0.5.1**；D / R / L / P 总体架构保持不变，本次仅修 Learning 的理解目标与回归标准。
 - 恢复并强化“**先解释对象，再抽象方法**”：新增 `Ground Object → Build Model → Find Gaps → Project to Use`，避免用更高层术语解释尚未理解的抽象。
