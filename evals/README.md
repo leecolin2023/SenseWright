@@ -75,6 +75,18 @@ Eval 当前重点验证：
 - 专家访谈问题服务于 Knowledge Model 更新；
 - 提问不是独立终点。
 
+### Learning Grounding
+
+System Learning V0.5.1 增加 grounding-oriented regression，用来捕捉“知识模型结构完整，但用户仍然不知道现实里到底改变了什么”的失败。
+
+相关 Eval 验证：
+- **Ground before abstract**：先用具体对象和任务解释，再形成上位模型；
+- **Contrastive grounding**：对概念差异同时找低差异与高差异场景，避免强行制造价值；
+- **Grounding recovery**：用户明确反馈“没理解 / 太抽象”后，必须降低抽象层级而不是继续增加术语；
+- **Cross-domain transfer**：同一规则应能解释数据库事务等非 Agent 概念，而不是只针对某个案例特判。
+
+当前相邻版本 baseline：`learning_v0_5_0`。
+
 ### Practice Transfer
 
 Practice Eval 重点验证：
@@ -182,7 +194,7 @@ python scripts/aggregate_benchmark.py .eval-workspace/iteration-1
 
 量化不是最终裁决。对每个 case 同时看 with-skill 与 baseline：
 
-- 哪个更忠实、更有判断价值或更能形成知识模型；
+- 哪个更忠实、更有判断价值，或更能让用户先形成具体理解再形成知识模型；
 - 哪些差异真正改变理解或行动；
 - 哪些改善只是“写得更长”；
 - 哪些 failure 应该修改 Skill，而不是修改测试去迎合 Skill。
