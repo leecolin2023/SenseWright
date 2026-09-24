@@ -1,4 +1,4 @@
-# SenseWright V2.6.0
+# SenseWright V2.6.1
 
 **Agent skills for making sense of complex information — and proving you can use what you learned.**
 
@@ -6,7 +6,7 @@ SenseWright 现在收敛为四种一级认知模式：
 
 - **D — Deep Read V6.1**：理解材料。
 - **R — Vibe Review V0.10**：审阅材料。
-- **L — System Learning V0.5.0**：形成知识模型。
+- **L — System Learning V0.5.1**：先落地理解，再形成知识模型。
 - **P — Practice V0.1**：检验知识迁移。
 
 核心边界可以压缩成四个问题：
@@ -95,15 +95,22 @@ L / P 可以选择性参考已有结果：
 
 > **Reference ≠ Evidence. Transform, don't copy. Selective, not mandatory.**
 
-## Learning V0.5.0
+## Learning V0.5.1
 
-主体仍然是：
+主体调整为：
 
 ~~~text
-Build Model
+Ground Object
+→ Build Model
 → Find Gaps
 → Project to Use
 ~~~
+
+当用户对一个概念仍觉得抽象时，Learning 优先用具体任务和对照情境解释“引入它前后到底哪一步发生了变化”。如果找不到真实差异，允许结论是“这个区分对当前任务没有实质价值”。
+
+> **抽象应该压缩已经理解的事实，而不应该成为解释的起点。**
+
+Teaching Example 仍属于 Learning；只有当用户已经理解、需要检验自己能否独立判断或操作时，才进入 Practice。
 
 但在真正阻塞模型时允许：
 
@@ -146,7 +153,7 @@ skills/
 │   └── SKILL.md
 ├── vibe-review-v0.10/
 │   └── SKILL.md
-├── system-learning-v0.5.0/
+├── system-learning-v0.5.1/
 │   └── SKILL.md
 └── practice-v0.1/
     └── SKILL.md
@@ -162,7 +169,13 @@ Eval 路由同步收敛为：
 - “把问题问清楚 / 专家访谈求证” → Learning；
 - “用场景或面试追问检验是否会用” → Practice。
 
-新增 Practice transfer cases，重点验证：
+Learning V0.5.1 新增 grounding regression，重点验证：
+- 概念差异先回到真实任务，而不是继续堆 taxonomy；
+- 能同时给出低差异场景与高差异场景，明确价值边界；
+- 用户明确说“还是没懂”后会降层恢复，不再增加上位术语；
+- 抽象出现在具体差异之后，而不是之前。
+
+Practice transfer cases 继续验证：
 - 是否把 Knowledge Model 转成真实判断任务；
 - 是否避免重新讲答案；
 - 是否一次只推进一个主要任务；
