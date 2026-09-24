@@ -3,7 +3,7 @@ name: sensewright
 description: Route complex information and knowledge-work tasks among faithful deep reading, independent review, systematic learning, and applied practice. Use when the user wants to understand source material, judge whether a document or argument is sound, build a reusable knowledge model, or test whether that knowledge can transfer into realistic decisions, scenarios, or interview-style stress questions. Deep Read and Review remain source-isolated; Learning and Practice may selectively use prior outputs as attributed reference context rather than inherited truth.
 ---
 
-# SenseWright V2.6.0
+# SenseWright V2.6.1
 
 ## 核心设计
 
@@ -13,7 +13,7 @@ SenseWright 维护四种一级认知模式：
 
 - **D — Deep Read**：忠实理解原材料。
 - **R — Review**：完整覆盖原材料后独立评价。
-- **L — Learning**：形成可复用知识模型，并在必要时通过自适应追问补齐关键知识缺口。
+- **L — Learning**：先把当前对象落到真实情境中讲清楚，再形成可复用知识模型，并在必要时通过自适应追问补齐关键知识缺口。
 - **P — Practice**：把知识放进真实或仿真情境，检验是否能够迁移、判断、操作和解释。
 
 Questioning 不再作为独立路由。原 Questioning 的能力拆分为两种内部策略：
@@ -92,9 +92,11 @@ Review 先完整覆盖，再判断重要性：
 - 发现还缺什么，并通过必要的追问、研究或专家交流继续补齐；
 - 把知识投影到会议、实施或决策。
 
-→ 使用 `skills/system-learning-v0.5.0/SKILL.md`
+→ 使用 `skills/system-learning-v0.5.1/SKILL.md`
 
 **中心问题：我真正懂了吗？**
+
+当用户觉得概念“太抽象、像生造的、实际没区别”，Learning 必须先降回具体对象，用能拉开差异的真实情境解释“到底哪一步变了”，而不是继续增加新的上位术语。抽象应该压缩已经理解的事实，而不是成为解释的起点。
 
 Learning 可以选择性参考已有 D / R / P 结果，但它们只是 Reference Context。
 
