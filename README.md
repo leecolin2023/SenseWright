@@ -1,4 +1,4 @@
-# SenseWright V2.6.1
+# SenseWright V2.6.2
 
 **Agent skills for making sense of complex information — and proving you can use what you learned.**
 
@@ -6,7 +6,7 @@ SenseWright 现在收敛为四种一级认知模式：
 
 - **D — Deep Read V6.1**：理解材料。
 - **R — Vibe Review V0.10**：审阅材料。
-- **L — System Learning V0.5.1**：先落地理解，再形成知识模型。
+- **L — System Learning V0.5.2**：先落地理解；技术机制再跑起来，最后形成知识模型。
 - **P — Practice V0.1**：检验知识迁移。
 
 核心边界可以压缩成四个问题：
@@ -95,7 +95,7 @@ L / P 可以选择性参考已有结果：
 
 > **Reference ≠ Evidence. Transform, don't copy. Selective, not mandatory.**
 
-## Learning V0.5.1
+## Learning V0.5.2
 
 主体调整为：
 
@@ -111,6 +111,20 @@ Ground Object
 > **抽象应该压缩已经理解的事实，而不应该成为解释的起点。**
 
 Teaching Example 仍属于 Learning；只有当用户已经理解、需要检验自己能否独立判断或操作时，才进入 Practice。
+
+对 mechanism-heavy technical knowledge，Learning 增加一个按需启用的深度路径：
+
+~~~text
+Ground
+→ Run Once
+→ Explain Mechanism
+→ Vary One Condition
+→ Compress Model
+~~~
+
+目标不是固定输出“定义 / 原理 / 示例 / 优缺点”，而是让一个真实输入经过系统时的关键状态、表示、资源或控制流变得可观察。随后改变一个关键条件，看当前模型是否能够解释结果为什么变化。
+
+> **技术理解的更强判据：模型不只能够描述系统，还应该能够解释并预测相邻条件变化。**
 
 但在真正阻塞模型时允许：
 
@@ -153,7 +167,7 @@ skills/
 │   └── SKILL.md
 ├── vibe-review-v0.10/
 │   └── SKILL.md
-├── system-learning-v0.5.1/
+├── system-learning-v0.5.2/
 │   └── SKILL.md
 └── practice-v0.1/
     └── SKILL.md
@@ -169,11 +183,18 @@ Eval 路由同步收敛为：
 - “把问题问清楚 / 专家访谈求证” → Learning；
 - “用场景或面试追问检验是否会用” → Practice。
 
-Learning V0.5.1 新增 grounding regression，重点验证：
+Learning V0.5.1 的 grounding regression 继续保留，重点验证：
 - 概念差异先回到真实任务，而不是继续堆 taxonomy；
 - 能同时给出低差异场景与高差异场景，明确价值边界；
 - 用户明确说“还是没懂”后会降层恢复，不再增加上位术语；
 - 抽象出现在具体差异之后，而不是之前。
+
+Learning V0.5.2 新增 mechanism-depth regression，重点验证：
+- 技术概念是否通过最小具体实例真正“运行一遍”；
+- 是否从流程进一步解释每一步为什么存在；
+- 是否通过移除组件 / 改变规模 / 关闭缓存等单变量变化解释结果变化；
+- 是否把 prediction 当作理解检查，而不是把 Learning 变成考试；
+- 是否能利用 Deep Read 的比喻和案例作为脚手架，最终回到真实机制。
 
 Practice transfer cases 继续验证：
 - 是否把 Knowledge Model 转成真实判断任务；
