@@ -35,6 +35,12 @@
       "type": "git_commit",
       "ref": "4b3e79a263ee90a992cf50a9eb5616fe198e35dc",
       "description": "Frozen SenseWright V2.6.1 baseline with System Learning V0.5.1 before executable-mechanism, teaching-variation, and prediction-based understanding checks."
+    },
+    {
+      "name": "deep_read_v6_1",
+      "type": "git_commit",
+      "ref": "4692f7f332059cdf9681e046dd60d5c592d850f4",
+      "description": "Frozen SenseWright V2.6.3 baseline with Deep Read V6.1 immediately before the V6.4 cognitive-task-contract and dual-compression upgrade."
     }
   ]
 }

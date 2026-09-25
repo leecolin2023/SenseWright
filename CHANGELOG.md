@@ -1,5 +1,16 @@
 # Changelog
 
+## V2.6.4 — Deep Read dual compression contract
+- Deep Read 从 **V6.1 升级到 V6.4**；Review、Learning、Practice 与 D / R / L / P 总体架构保持不变。
+- Deep Read 明确为完整认知任务契约：`Input / Context → Deep Read Core → Compression Contract → Deliverable → Acceptance Gate → Repair`。
+- 保留“删除语言冗余，不删除理解过程”，并把核心阅读逻辑收敛为：恢复材料自己的认知拓扑、忠实认知推进、识别认知发动机、保留必要解释冗余、按功能而不是形式取舍内容。
+- 新增 **Dual Compression Contract**：`Coverage-Preserving` 与 `Cognitive-Synthesis` 共用同一阅读核心，分叉只发生在读懂以后“哪些信息允许消失”。
+- Coverage-Preserving 以 **100% 独立认知单元可追踪** 为底线，只压缩单元内部重复、同功能案例和语言冗余；避免把“完整覆盖”误解为原文复述。
+- Cognitive-Synthesis 允许跨单元归并与抽象，并使用边际认知收益继续压缩；压缩上限定义为 **Model-Preserving Compression Boundary**，不能让陌生读者形成不同的核心认知模型。
+- 明确两条 Contract 不是“长版 / 短版”，也不按文章、会议、制度等材料类型固定路由，而按用户的交付意图选择。
+- 将自检升级为真正的 **Acceptance Gate → Repair Loop**：Coverage 路线重点检查 Unit Coverage / Over-Merging，Synthesis 路线重点检查 Cognitive Density / Model Preservation。
+- Eval 新增同源双契约回归 fixture，并冻结升级前 commit `4692f7f332059cdf9681e046dd60d5c592d850f4` 为 `deep_read_v6_1` baseline。
+
 ## V2.6.3 — Learning boundary variation
 - System Learning 从 **V0.5.2 升级到 V0.5.3**；D / R / L / P 总体架构、Router、Deep Read、Review 与 Practice 均保持不变。
 - 将原本主要用于 mechanism-heavy technical knowledge 的 **Vary One Condition** 向通用 Learning 提升半级，新增按需启用的 **Boundary Variation**。

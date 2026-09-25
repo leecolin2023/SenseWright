@@ -18,6 +18,16 @@ V0.1 当前使用 24 个 query：14 个应触发、10 个不应触发。负样�
 
 assertions 只写尽量客观、可复核的要求；文风、洞察力等主观质量继续交给 human review。
 
+### Deep Read Dual Compression
+
+Deep Read V6.4 增加同源双契约回归，用同一份多议题材料验证“交付意图而不是材料类型”决定压缩方式：
+
+- **Coverage-Preserving**：检查所有独立认知单元是否仍可追踪，同时确认重复案例和语言冗余被压缩；
+- **Cognitive-Synthesis**：检查是否真正跨单元形成更高密度理解，而不是逐项换写原文；同时确认压缩没有改变核心认知模型；
+- 两条路线都继续验证 Source Boundary、认知发动机和必要解释冗余。
+
+当前相邻版本 baseline：`deep_read_v6_1`。
+
 ### Review Coverage / Atomic Review Units
 
 Vibe Review V0.10 增加 coverage-oriented eval。

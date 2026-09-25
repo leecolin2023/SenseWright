@@ -1,10 +1,10 @@
-# SenseWright V2.6.3
+# SenseWright V2.6.4
 
 **Agent skills for making sense of complex information — and proving you can use what you learned.**
 
 SenseWright 现在收敛为四种一级认知模式：
 
-- **D — Deep Read V6.1**：理解材料。
+- **D — Deep Read V6.4**：先恢复认知结构，再按交付目标选择完整覆盖或认知提炼。
 - **R — Vibe Review V0.10**：审阅材料。
 - **L — System Learning V0.5.3**：先落地理解；必要时改变一个高信息量条件暴露边界；技术机制再跑起来，最后形成知识模型。
 - **P — Practice V0.1**：检验知识迁移。
@@ -95,6 +95,33 @@ L / P 可以选择性参考已有结果：
 
 > **Reference ≠ Evidence. Transform, don't copy. Selective, not mandatory.**
 
+## Deep Read V6.4
+
+Deep Read 从 V6.1 的“忠实深读 + 长文分层”升级为一个更明确的认知任务契约：
+
+~~~text
+Raw Source
+→ Restore Cognitive Topology
+→ Identify Cognitive Units / Engines
+→ Choose Compression Contract
+   ├─ Coverage-Preserving
+   └─ Cognitive-Synthesis
+→ Deliverable
+→ Acceptance Gate
+→ Repair if needed
+~~~
+
+两条 Contract 共用同一个理解核心，分叉发生在“读懂以后哪些信息允许消失”：
+
+- **Coverage-Preserving**：Coverage first, compression second。所有具有独立意义的认知单元必须可追踪，只压缩单元内部重复、同功能案例和语言冗余。
+- **Cognitive-Synthesis**：Understanding first, coverage second。允许跨单元归并、抽象和省略低价值信息，但压缩上限是 **Model-Preserving Compression Boundary**：不能让未读原文的人形成不同的核心认知模型。
+
+这不是“长版 / 短版”的区别。篇幅由材料复杂度和认知价值决定；Contract 决定的是信息保留规则。
+
+V6.4 同时把自检升级为真正的 **Acceptance Gate → Repair Loop**：Coverage 路线重点防漏项和过度合并，Synthesis 路线重点防忠实改写和过度压缩。
+
+> **Deep Read 可以替代理解性重读，不能替代证据性回查。**
+
 ## Learning V0.5.3
 
 主体调整为：
@@ -165,7 +192,7 @@ Practice Probe 的目标是减少对用户 **capability uncertainty**。
 
 ~~~text
 skills/
-├── article-deep-read-v6.1/
+├── article-deep-read-v6.4/
 │   └── SKILL.md
 ├── vibe-review-v0.10/
 │   └── SKILL.md

@@ -3,7 +3,7 @@ name: sensewright
 description: Route complex information and knowledge-work tasks among faithful deep reading, independent review, systematic learning, and applied practice. Use when the user wants to understand source material, judge whether a document or argument is sound, build a reusable knowledge model, or test whether that knowledge can transfer into realistic decisions, scenarios, or interview-style stress questions. Deep Read and Review remain source-isolated; Learning and Practice may selectively use prior outputs as attributed reference context rather than inherited truth.
 ---
 
-# SenseWright V2.6.3
+# SenseWright V2.6.4
 
 ## 核心设计
 
@@ -11,7 +11,7 @@ description: Route complex information and knowledge-work tasks among faithful d
 
 SenseWright 维护四种一级认知模式：
 
-- **D — Deep Read**：忠实理解原材料。
+- **D — Deep Read**：先忠实恢复原材料的认知结构，再按交付意图选择完整覆盖型或认知提炼型压缩。
 - **R — Review**：完整覆盖原材料后独立评价。
 - **L — Learning**：先把当前对象落到真实情境中讲清楚；模型建立后，在有明显认知增量时改变一个关键前提、观察角度、变量或边界，暴露适用范围；对机制型技术知识进一步让机制跑起来，再形成可复用知识模型。
 - **P — Practice**：把知识放进真实或仿真情境，检验是否能够迁移、判断、操作和解释。
@@ -45,7 +45,7 @@ Router 不解释材料、不生成结论，也不建立共享黑板。
 - 保留故事、比喻、术语和推理过程；
 - 做忠实的深读、总结或解读。
 
-→ 使用 `skills/article-deep-read-v6.1/SKILL.md`
+→ 使用 `skills/article-deep-read-v6.4/SKILL.md`
 
 **中心问题：我理解原材料了吗？**
 
@@ -54,6 +54,17 @@ Router 不解释材料、不生成结论，也不建立共享黑板。
 Deep Read 只读取 Raw Source、用户对当前任务的直接要求和必要的原始用户上下文。
 
 **不得读取或消费 Review / Learning / Practice 的输出。**
+
+
+### Compression Contract
+
+Deep Read 在完成材料理解后，再根据用户的交付意图选择压缩契约：
+
+- **Coverage-Preserving**：完整保留所有具有独立意义的认知单元，只压缩单元内部冗余；
+- **Cognitive-Synthesis**：允许跨单元归并与抽象，但继续压缩不能改变陌生读者最终形成的核心认知模型。
+
+不要按“文章 / 会议 / 制度”等材料类型固定路由。Compression Contract 决定的是**哪些信息允许消失**，不是输出应该有多长。
+
 
 ---
 
