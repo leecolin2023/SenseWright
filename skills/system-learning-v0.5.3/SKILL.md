@@ -1,9 +1,9 @@
 ---
 name: system-learning
-description: Turn a concept, system, person, event, method, question, or source material into grounded understanding first and a reusable knowledge model second; for mechanism-heavy technical knowledge, make the mechanism executable enough to trace and predict, identify the few gaps that block real understanding or use, and adaptively probe for missing user- or expert-specific information when needed.
+description: Turn a concept, system, person, event, method, question, or source material into grounded understanding first and a reusable knowledge model second; when one high-information change in premise, viewpoint, variable, scope, or boundary could materially change the understanding, vary it once to expose what still holds, weakens, disappears, reverses, or becomes unanswerable; for mechanism-heavy technical knowledge, make the mechanism executable enough to trace and predict, identify the few gaps that block real understanding or use, and adaptively probe for missing user- or expert-specific information when needed.
 ---
 
-# System Learning V0.5.2 — Ground → Run → Explain → Vary → Model → Use
+# System Learning V0.5.3 — Ground → Run → Explain → Vary → Model → Use
 
 ## Suite 集成边界
 
@@ -11,7 +11,7 @@ description: Turn a concept, system, person, event, method, question, or source 
 
 目标是：
 
-> **先让当前对象真正变得可理解；对机制型知识，再让它“跑起来”，直到用户不仅知道它是什么，还能解释它为什么这样工作、条件变化后会发生什么；最后再压缩成可复用知识模型。**
+> **先让当前对象真正变得可理解；建立模型后，如果改变一个关键前提、观察角度、变量或边界会带来明显认知增量，就主动变化一次，看哪些结论仍然成立、哪些削弱或消失、哪些问题甚至不再能由当前信息回答；对机制型知识，再让机制真正“跑起来”；最后压缩成可复用、带适用边界的知识模型。**
 
 - “原文讲了什么” → Deep Read。
 - “材料哪里有问题” → Review。
@@ -47,6 +47,12 @@ Learning 的主要依据仍是 Raw Source / 用户事实 / 当前任务。
 Learning 的通用主体仍然是：
 
 `Ground Object → Build Model → Find Gaps → Project to Use`
+
+当 Knowledge Model 已经初步成立，而且一次单变量变化可能显著改变理解时，可按需插入：
+
+`Build Model → Vary One High-Information Condition → Reconcile Boundary`
+
+这不是强制步骤，也不是为了把 Learning 变成科学验证。只有当变化能暴露模型的适用范围、阻止过度外推，或让用户看到“换一个问题后原材料已经不能回答”时才执行。
 
 对于 **mechanism-heavy technical knowledge**，Build Model 内部优先启用：
 
@@ -221,11 +227,38 @@ Grounding 之后再形成可迁移模型。
 
 ---
 
-## 4. 改变一个关键条件，看模型还能否解释
+## 4. Boundary Variation：改变一个最有信息量的条件
 
-对于已经跑通的机制，选择一个真正会影响行为的变量做 **Teaching Variation**。
+Knowledge Model 初步建立后，不要只问“当前解释是否成立”，还可以按需问：
 
-一次优先改变一个主要条件，例如：
+> **如果只改变一个最关键的前提、观察角度、变量、范围或边界，当前模型会发生什么？**
+
+一次只改变一个高信息量条件，不做穷举。优先观察：
+
+- **Still holds**：核心结论仍成立；
+- **Weakens / becomes conditional**：结论仍有用，但需要附加条件；
+- **Disappears / reverses**：原来的模式消失，甚至方向改变；
+- **Becomes unanswerable**：问题一变，当前材料或模型已经不足以回答；
+- **Reframes the object**：变化暴露出我们其实换了一个问题、分母、观察主体或决策目标。
+
+Boundary Variation 的目的不是完成严格科学证明，也不是每次都补齐全部证据，而是把一个**静态模型**变成一个**知道自己在哪些条件下成立的模型**。
+
+常见变化可以来自：
+
+- 统计 / 图表：换分母、换条件方向、换观察单位；
+- 概念比较：换任务规模、持续时间、失败成本或使用者；
+- 业务 / 社会问题：换主体、激励、时间尺度或制度边界；
+- 技术机制：换输入规模、组件、状态、缓存、资源预算或实现方式。
+
+如果变化之后当前材料已经不能回答，直接指出“这里变成了一个新问题”，不要为了保持解释连续性而硬推结论。
+
+### 对机制型技术知识：Teaching Variation
+
+对于已经跑通的机制，选择一个真正会影响行为的变量，直接展示：
+
+`条件变化 → 哪一步首先受影响 → 状态/成本/结果怎样变化 → 为什么`
+
+例如：
 
 - 输入规模增大；
 - 某个组件移除；
@@ -236,10 +269,6 @@ Grounding 之后再形成可迁移模型。
 - 资源预算降低；
 - 一个前提失效；
 - 换一种实现方式。
-
-然后直接展示：
-
-`条件变化 → 哪一步首先受影响 → 状态/成本/结果怎样变化 → 为什么`
 
 这仍然属于 Learning，因为答案可以直接给出。
 
@@ -306,6 +335,7 @@ Knowledge Model 应该帮助用户以后处理相邻问题，而不是只回答�
 - 当前对象到底怎么运行；
 - 一个能解释关键差异的具体例子；
 - 对机制型知识：一次最小运行、关键状态/变量和至少一个条件变化；
+- 当有明显认知增量时：一次高信息量 Boundary Variation，以及它暴露出的适用边界或新问题；
 - 上位结构；
 - 重要边界与纠偏；
 - 可迁移分析框架。
@@ -407,7 +437,7 @@ Learning 默认以“让用户真正形成理解”为主，而不是展示一�
 
 普通主题优先：
 
-`具体理解 → 关键机制 → 必要抽象 → 边界 → 可迁移模型`
+`具体理解 → 关键机制/结构 → 必要抽象 → [高信息量时] 改一个条件 → 边界 → 可迁移模型`
 
 机制型技术主题可以自然展开为：
 
@@ -443,12 +473,13 @@ Learning 默认以“让用户真正形成理解”为主，而不是展示一�
 4. 对机制型技术知识，是否至少有一个具体实例真正运行起来，而不是停在组件说明；
 5. 用户是否能看见关键输入、状态/表示/资源变化、动作和输出之间的因果连接；
 6. 是否解释了关键步骤为什么存在，而不是只复述标准流程；
-7. 当前机制模型是否足以解释至少一个相邻条件变化后的结果；
-8. 比喻若被使用，是否最终映射回真实机制，并说明其失真边界；
-9. 抽象模型是否是对已经理解事实的压缩，而不是替代解释；
-10. source / derived / external 边界是否正确；
-11. 关键 Gap 是否真正阻塞下一步；
-12. 当用户需要测试“会不会”时，是否正确转入 Practice。
+7. 当当前模型容易被继续外推、或一次条件变化可能显著改变理解时，是否做了一个高信息量 Boundary Variation，并说清哪些结论保留、削弱、消失或变得不可回答；如果变化没有认知增量，则不强行执行；
+8. 对机制型技术知识，当前机制模型是否足以解释至少一个相邻条件变化后的结果；
+9. 比喻若被使用，是否最终映射回真实机制，并说明其失真边界；
+10. 抽象模型是否是对已经理解事实的压缩，而不是替代解释；
+11. source / derived / external 边界是否正确；
+12. 关键 Gap 是否真正阻塞下一步；
+13. 当用户需要测试“会不会”时，是否正确转入 Practice。
 
 如果知识很多、术语正确，但用户仍然不知道：
 

@@ -1,4 +1,4 @@
-# SenseWright V2.6.2
+# SenseWright V2.6.3
 
 **Agent skills for making sense of complex information — and proving you can use what you learned.**
 
@@ -6,7 +6,7 @@ SenseWright 现在收敛为四种一级认知模式：
 
 - **D — Deep Read V6.1**：理解材料。
 - **R — Vibe Review V0.10**：审阅材料。
-- **L — System Learning V0.5.2**：先落地理解；技术机制再跑起来，最后形成知识模型。
+- **L — System Learning V0.5.3**：先落地理解；必要时改变一个高信息量条件暴露边界；技术机制再跑起来，最后形成知识模型。
 - **P — Practice V0.1**：检验知识迁移。
 
 核心边界可以压缩成四个问题：
@@ -95,7 +95,7 @@ L / P 可以选择性参考已有结果：
 
 > **Reference ≠ Evidence. Transform, don't copy. Selective, not mandatory.**
 
-## Learning V0.5.2
+## Learning V0.5.3
 
 主体调整为：
 
@@ -112,7 +112,9 @@ Ground Object
 
 Teaching Example 仍属于 Learning；只有当用户已经理解、需要检验自己能否独立判断或操作时，才进入 Practice。
 
-对 mechanism-heavy technical knowledge，Learning 增加一个按需启用的深度路径：
+V0.5.3 在不改变 Learning 主体架构的前提下，把 **Vary One Condition** 从技术机制中的局部能力推广为按需启用的 **Boundary Variation**：模型初步建立后，如果改变一个关键前提、观察角度、变量、范围或边界会带来明显认知增量，就只改变一个，观察哪些结论仍成立、哪些削弱或消失、哪些问题已经超出当前材料的回答能力。它不是强制步骤，也不是科学论证 checklist。
+
+对 mechanism-heavy technical knowledge，Learning 继续保留按需启用的深度路径：
 
 ~~~text
 Ground
@@ -167,7 +169,7 @@ skills/
 │   └── SKILL.md
 ├── vibe-review-v0.10/
 │   └── SKILL.md
-├── system-learning-v0.5.2/
+├── system-learning-v0.5.3/
 │   └── SKILL.md
 └── practice-v0.1/
     └── SKILL.md
@@ -189,7 +191,7 @@ Learning V0.5.1 的 grounding regression 继续保留，重点验证：
 - 用户明确说“还是没懂”后会降层恢复，不再增加上位术语；
 - 抽象出现在具体差异之后，而不是之前。
 
-Learning V0.5.2 新增 mechanism-depth regression，重点验证：
+Learning V0.5.2 的 mechanism-depth regression 继续保留，重点验证：
 - 技术概念是否通过最小具体实例真正“运行一遍”；
 - 是否从流程进一步解释每一步为什么存在；
 - 是否通过移除组件 / 改变规模 / 关闭缓存等单变量变化解释结果变化；

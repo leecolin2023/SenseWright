@@ -1,5 +1,14 @@
 # Changelog
 
+## V2.6.3 — Learning boundary variation
+- System Learning 从 **V0.5.2 升级到 V0.5.3**；D / R / L / P 总体架构、Router、Deep Read、Review 与 Practice 均保持不变。
+- 将原本主要用于 mechanism-heavy technical knowledge 的 **Vary One Condition** 向通用 Learning 提升半级，新增按需启用的 **Boundary Variation**。
+- Knowledge Model 初步建立后，如果改变一个关键前提、观察角度、变量、范围或边界会带来明显认知增量，优先只改变一个条件，观察结论是继续成立、变弱、消失/反转，还是问题已经变得无法由当前材料回答。
+- 明确 Boundary Variation **不是强制 checklist，也不是科学论证流程**；只有它能暴露适用边界、阻止过度外推或重构问题时才执行，避免 Learning 因追求严谨而退化成 Review / Research。
+- 对技术机制继续保留 Teaching Variation：`条件变化 → 哪一步首先受影响 → 状态/成本/结果怎样变化 → 为什么`；通用 Boundary Variation 与技术机制深挖共用“改一个条件”的思想，但不要求所有主题都跑技术模板。
+- Learning 输出与验收同步增加：当模型容易被外推时，应能说明“什么还成立、什么不再成立、什么已经变成新问题”。
+- 本次为小步约束升级，不新增一级 Skill、不修改非对称协作架构，也不增加新的 mandatory pipeline。
+
 ## V2.6.2 — Learning mechanism depth
 - System Learning 从 **V0.5.1 升级到 V0.5.2**；D / R / L / P 总体架构和 Deep Read V6.1 均保持不变。
 - 保留 V0.5.1 的 Grounding，并针对 **mechanism-heavy technical knowledge** 增加按需启用的 `Ground → Run Once → Explain Mechanism → Vary One Condition → Compress Model`。
