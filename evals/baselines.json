@@ -41,6 +41,12 @@
       "type": "git_commit",
       "ref": "4692f7f332059cdf9681e046dd60d5c592d850f4",
       "description": "Frozen SenseWright V2.6.3 baseline with Deep Read V6.1 immediately before the V6.4 cognitive-task-contract and dual-compression upgrade."
+    },
+    {
+      "name": "practice_v0_1",
+      "type": "git_commit",
+      "ref": "1aa694d00e896f7c7896b07c5439c252e4344d82",
+      "description": "Frozen SenseWright V2.6.4 baseline with Practice V0.1 immediately before Practice shifted from capability assessment to end-to-end engineering transfer."
     }
   ]
 }

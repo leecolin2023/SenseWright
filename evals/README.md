@@ -8,7 +8,7 @@ V0.1 不建立某一家模型供应商专用 benchmark 平台，而是先固定 
 
 `triggering.json` 检查根 Skill 的 `description` 是否覆盖真正应该触发的场景，同时避开相邻但不属于本 Suite 的任务。
 
-V0.1 当前使用 24 个 query：14 个应触发、10 个不应触发。负样本优先使用 near-miss，而不是完全无关问题。
+V0.1 当前使用 25 个 query：14 个应触发、11 个不应触发。负样本优先使用 near-miss，而不是完全无关问题。
 
 触发行为依赖具体 Agent Runtime，因此仓库保存 test set 与结果，但不假设不同 Runtime 的 discovery 机制完全一致。
 
@@ -110,16 +110,22 @@ System Learning V0.5.2 在 V0.5.1 grounding 基础上增加技术机制深度回
 
 当前相邻版本 baseline：`learning_v0_5_1`。
 
-### Practice Transfer
+### Practice Engineering Transfer
 
-Practice Eval 重点验证：
-- 不重新讲已经学过的答案；
-- 能把 Knowledge Model 转成真实 decision / design / troubleshooting 场景；
-- 一次只推进一个主要任务；
-- 下一轮根据上一轮表现改变 stress condition；
-- 面试式追问用于检验 transfer，而不是背题。
+Practice V0.2 不再以 capability test 为核心，而是验证 **Knowledge → Executable Engineering Model**：
 
-当前首个 transfer 主题使用“为什么 LLM 基于 token”，并分别测试初始场景化与 adaptive stress。
+- **Scenario grounding**：不是给定义套故事，而是进入真实工程目标与约束；
+- **System placement**：明确概念在系统里的位置、责任边界、输入输出与依赖；
+- **Implementation specificity**：具体到组件、Schema、接口、状态、配置或工程产物；
+- **Run one path**：至少让一个具体输入真实跑完整链路；
+- **Verification**：提供可以判断“做对没有”的反馈机制；
+- **Troubleshooting**：展示高信息价值的 failure symptom → diagnosis → fix；
+- **Artifact readiness**：用户知道真正动手时要创建、运行和验收哪些东西；
+- **Generalization**：区分概念本身的不变量与当前项目的实现选择。
+
+当前回归主题使用 **RAG 文档切分** 与 **Agent State**，用于验证 Practice 是否真正填平“知道 → 知道怎么做”的鸿沟。
+
+当前相邻版本 baseline：`practice_v0_1`.
 
 
 ## 2. Baseline 策略

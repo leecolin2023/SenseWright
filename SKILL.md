@@ -1,9 +1,9 @@
 ---
 name: sensewright
-description: Route complex information and knowledge-work tasks among faithful deep reading, independent review, systematic learning, and applied practice. Use when the user wants to understand source material, judge whether a document or argument is sound, build a reusable knowledge model, or test whether that knowledge can transfer into realistic decisions, scenarios, or interview-style stress questions. Deep Read and Review remain source-isolated; Learning and Practice may selectively use prior outputs as attributed reference context rather than inherited truth.
+description: Route complex information and knowledge-work tasks among faithful deep reading, independent review, systematic learning, and engineering practice. Use when the user wants to understand source material, judge whether a document or argument is sound, build a reusable knowledge model, or turn an understood concept into executable engineering know-how in a realistic project. Deep Read and Review remain source-isolated; Learning and Practice may selectively use prior outputs as attributed reference context rather than inherited truth.
 ---
 
-# SenseWright V2.6.4
+# SenseWright V2.7.0
 
 ## 核心设计
 
@@ -14,12 +14,12 @@ SenseWright 维护四种一级认知模式：
 - **D — Deep Read**：先忠实恢复原材料的认知结构，再按交付意图选择完整覆盖型或认知提炼型压缩。
 - **R — Review**：完整覆盖原材料后独立评价。
 - **L — Learning**：先把当前对象落到真实情境中讲清楚；模型建立后，在有明显认知增量时改变一个关键前提、观察角度、变量或边界，暴露适用范围；对机制型技术知识进一步让机制跑起来，再形成可复用知识模型。
-- **P — Practice**：把知识放进真实或仿真情境，检验是否能够迁移、判断、操作和解释。
+- **P — Practice**：把已经理解的知识放进真实工程场景，完整走通设计、实现、运行、验证、排错和工程化，把 Knowledge Model 转成 Executable Engineering Model。
 
-Questioning 不再作为独立路由。原 Questioning 的能力拆分为两种内部策略：
+Questioning 不再作为独立路由。
 
-- **Learning Probe**：为了减少 knowledge uncertainty 而提问；
-- **Practice Probe**：为了暴露 capability gap 而提问。
+- **Learning Probe** 继续用于减少 knowledge uncertainty；
+- **Practice 不再以提问测试用户能力为核心**。只有关键工程约束缺失且会实质改变实施路径时，才提出最少量澄清问题。
 
 ---
 
@@ -125,30 +125,29 @@ Learning 可以一次提出一个高信息价值问题，并根据回答更新 K
 
 ---
 
-## P — Practice / 应用演练
+## P — Practice / 工程实践
 
 当用户主要想：
-- 检验自己是不是真的学会；
-- 把知识放进工作、工程、业务或其他真实情境；
-- 不要继续讲答案，而是让我做判断、设计、排错或选择；
-- 通过条件变化、反例、连续追问或模拟面试检验知识迁移；
-- 找出“会解释但不会用”的 Application Gap。
+- 已经理解一个概念，但不知道真正打开 IDE / 系统后第一步做什么；
+- 把 RAG、Agent、数据库、工作流等技术放进真实项目完整实现一遍；
+- 看清组件、接口、数据、状态、配置和工程产物如何连接；
+- 让一个具体输入真正跑完整链路，而不是只看架构图；
+- 知道如何测试、验收、排错、观测和处理边界问题；
+- 从“知道原理”跨到“知道怎么做”。
 
-→ 使用 `skills/practice-v0.1/SKILL.md`
+→ 使用 `skills/practice-v0.2/SKILL.md`
 
-**中心问题：我真正会了吗？**
+**中心问题：如果现在真的要把它做出来，我该怎么做？**
 
 Practice 可以选择性参考 D / R / L 的结果，其中 Learning Knowledge Model 通常是最重要输入。
 
-### Practice Probe
-
-Practice 的问题不是为了获得未知事实，而是为了暴露用户当前能力。
-
 默认：
 
-`Diagnose → Situate → Perform → Stress → Debrief`
+`Ground Scenario → Engineering Model → Implement End-to-End → Run One Path → Verify → Troubleshoot → Operationalize → Generalize`
 
-面试只是 Practice 的一种 stress surface，不是独立任务类型。
+Practice 的主产物是一份 **End-to-End Engineering Walkthrough**，并应明确真正需要创建、运行和验收的工程产物。
+
+它不是默认的知识测验、题库或模拟面试工具。
 
 ---
 
@@ -160,10 +159,10 @@ Practice 的问题不是为了获得未知事实，而是为了暴露用户当�
 
 - “这个问题我还没想清楚，先问我最关键的一件事，帮助我建立理解。” → **L**
 - “我要访谈专家，把当前知识缺口转成最值得确认的问题。” → **L**
-- “不要再讲，出场景测试我是否真正理解。” → **P**
-- “像面试官一样连续追问，看我能不能解释和应对变化。” → **P**
+- “我已经理解 RAG 文档切分，现在用真实制度库把实现、检索、评测和排错完整走一遍。” → **P**
+- “我知道 Agent State 是什么，现在告诉我真实工程里状态怎么建模、持久化、重启恢复和测试。” → **P**
 
-> **L 的问题为了获得知识；P 的问题为了暴露能力。**
+单纯“出题考我 / 模拟面试 / 连续追问”不再因为测试形式自动路由 Practice；Practice 的核心目标已经从 **Knowledge Assessment** 转为 **Engineering Transfer**。
 
 ---
 
@@ -189,7 +188,7 @@ Deep Read   Review
      Practice
         P
         │
-        │ performance gaps
+        │ implementation-discovered gaps
         └──────────────► Learning
 ~~~
 
@@ -199,7 +198,7 @@ Deep Read   Review
 - D → P
 - R → P
 - L → P
-- P → L（主要回流 Performance Gap、暴露出的误解和新的 Knowledge Gap）
+- P → L（主要回流实施过程中暴露出的 Knowledge Gap、未验证前提和机制边界）
 
 禁止：
 - 任何 Skill → D
@@ -223,12 +222,12 @@ Deep Read   Review
 - **D — source-centered**：我理解材料了吗？
 - **R — judgment-centered**：材料可靠吗、够用吗？
 - **L — learner-centered**：我真正懂了吗？
-- **P — performance-centered**：我真正会了吗？
+- **P — engineering-centered**：如果现在真的要把它做出来，我该怎么做？
 
 ---
 
 ## 最终原则
 
-> **Read what it says. Review whether it holds. Learn how it works. Practice whether you can use it.**
+> **Read what it says. Review whether it holds. Learn how it works. Practice how it gets built and run.**
 
-Questioning 作为内部控制策略服务于 Learning 和 Practice，不再作为独立产品级 Skill。
+Questioning 不再作为独立产品级 Skill；Learning 可用 Probe 补知识，Practice 只在工程约束真正阻塞实施时做最少量澄清。

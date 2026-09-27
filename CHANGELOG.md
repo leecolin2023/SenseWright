@@ -1,5 +1,16 @@
 # Changelog
 
+## V2.7.0 — Practice engineering transfer
+- Practice 从 **V0.1 升级到 V0.2**；Deep Read V6.4、Review V0.10、Learning V0.5.3 保持不变。
+- Practice 的 Mission 从 **Knowledge Assessment / capability stress test** 正式调整为 **Knowledge-to-Execution / Engineering Transfer**。
+- 中心问题从“我真正会了吗？”改为“**如果现在真的要把它做出来，我该怎么做？**”。
+- 新核心路径：`Ground Scenario → Engineering Model → Implement End-to-End → Run One Path → Verify → Troubleshoot → Operationalize → Generalize`。
+- 新增 Engineering Artifacts：Practice 不只讲步骤，还应明确真实实施需要创建、运行和验收的模块、Schema、配置、测试、Eval、监控或其他工程产物。
+- 保留 Learning Knowledge Model 作为最重要上游 Reference Context；Practice 实施中暴露的知识缺口、未验证前提和机制边界允许回流 Learning。
+- 旧版 Diagnose / Practice Probe / Interview Stress / Guidance Fading 退出 Practice Core；Stress 的有效部分仅保留为 Failure & Troubleshooting，用于暴露工程边界而不是考试用户。
+- Router 同步更新：P 只在用户需要把已理解知识放进真实工程、完整走通实施与验证路径时触发；单纯出题、模拟面试或连续追问不再因为测试形式自动路由 P。
+- Eval 将旧 token capability-test case 替换为 **RAG 文档切分** 与 **Agent State** 两个工程迁移回归，并冻结升级前 commit `1aa694d00e896f7c7896b07c5439c252e4344d82` 为 `practice_v0_1` baseline。
+
 ## V2.6.4 — Deep Read dual compression contract
 - Deep Read 从 **V6.1 升级到 V6.4**；Review、Learning、Practice 与 D / R / L / P 总体架构保持不变。
 - Deep Read 明确为完整认知任务契约：`Input / Context → Deep Read Core → Compression Contract → Deliverable → Acceptance Gate → Repair`。

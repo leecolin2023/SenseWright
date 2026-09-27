@@ -291,48 +291,43 @@
     },
     {
       "id": 12,
-      "name": "practice-token-transfer",
-      "prompt": "我已经学过“大模型为什么基于 token”。不要重新给我讲一遍答案，请用一个真实的模型设计场景检验我是不是真的理解。一次只推进一个主要任务，等我回答后再根据表现继续。",
+      "name": "practice-rag-chunking-engineering-transfer",
+      "prompt": "我已经理解 RAG 文档切分为什么会影响检索。现在不要再讲定义，也不要考我。请放进一个真实的银行制度库工程里，从文档解析后的输入结构开始，完整走一遍切分怎么设计、怎么接检索、怎么验证、出了问题怎么排查。我要看完就知道真正动手第一步做什么。",
       "expected_route": [
         "P"
       ],
-      "expected_output": "Practice 把已有 Token Knowledge Model 转成一个需要用户做判断的设计场景，例如字符级、词级或 subword 方案选择；第一轮只提出一个主要任务，不提前泄漏标准答案。",
+      "expected_output": "Practice 将 RAG Chunking 放入真实制度库场景，明确 Chunker 在 ingestion/retrieval 链路中的系统位置，给出可实现的数据结构与切分策略，让一个具体 query 走完 chunk → retrieval → context 路径，并建立 retrieval/eval 与故障排查方法，最后区分可迁移原则和银行制度场景特有实现。",
       "files": [],
-      "reference_context": [
-        {
-          "source_skill": "L",
-          "file": "evals/fixtures/reference-learning-token-model.md",
-          "purpose": "knowledge_model"
-        }
-      ],
+      "reference_context": [],
       "assertions": [
-        "输出不重新完整解释为什么 LLM 使用 token，而是立即进入需要用户做判断的情境。",
-        "场景能够检验 vocabulary size、sequence length、表示粒度或计算成本之间至少一个真实 trade-off。",
-        "第一轮只推进一个主要任务，并要求用户说明为什么，而不是一次抛出多道面试题。",
-        "问题不把标准答案写进题干；Learning reference 被转换成 performance task，而不是被复述。"
+        "输出不会把主要篇幅用于重新解释 chunking 定义，也不会通过连续提问测试用户能力，而是尽快进入真实工程场景。",
+        "输出明确 Chunking 在完整 RAG 系统中的位置和责任边界，并至少具体到输入 block/document schema、chunk metadata 或等价工程对象。",
+        "输出给出可以真正实现的端到端步骤，而不是停在“按语义切分、接向量库、做评测”等概念性动词。",
+        "至少选择一个具体 query 或文档条款，让数据从切分结果经过检索/上下文组装真实跑一遍，并解释每一步输入输出。",
+        "输出包含可执行的验证方式，例如 Recall@K、上下文完整性、边界完整性、Golden Query Set 或等价反馈机制。",
+        "输出至少覆盖一个真实失败现象及其定位路径，并说明应从哪里检查和如何修复。",
+        "输出明确实施时应留下的工程产物，例如模块、Schema、测试、Eval 数据集、配置或监控项。",
+        "最后能区分“结构优先、检索粒度与上下文粒度可不同、chunk 可追踪可评估”等可迁移原则与银行制度场景的具体参数选择。"
       ]
     },
     {
       "id": 13,
-      "name": "practice-token-adaptive-stress",
-      "prompt": "上一轮你问我为什么不直接一个汉字一个 token。我回答：理论上可以，但序列会更长，会更快消耗 context，也会增加 attention 计算。继续测试我，不要重复上一题，也不要先给答案。一次只改变一个关键条件。",
+      "name": "practice-agent-state-engineering-transfer",
+      "prompt": "我已经知道 Agent State 是任务当前状态，也理解为什么聊天记录不总能替代结构化 State。现在不要再测试我。请用一个真实的多步骤 Agent 工程完整走一轮：State 怎么建模、存哪里、每一步怎么更新、崩溃重启后怎么恢复、不可逆动作怎么避免重复、最后怎么测试和观测。",
       "expected_route": [
         "P"
       ],
-      "expected_output": "Practice 根据上一轮已经掌握的字符级序列长度问题，改变一个新条件继续 stress，例如转到英语字符级的词表/序列 trade-off、词级 vocabulary explosion 或具体 tokenizer 方案比较，而不是重复解释原题。",
+      "expected_output": "Practice 把 Agent State Knowledge Model 编译成一个真实多步骤 Agent 的执行模型，给出状态 Schema、持久化与状态转移、恢复/幂等设计、一次具体任务的状态轨迹、测试与可观测性，并覆盖至少一个崩溃恢复失败案例。",
       "files": [],
-      "reference_context": [
-        {
-          "source_skill": "L",
-          "file": "evals/fixtures/reference-learning-token-model.md",
-          "purpose": "knowledge_model"
-        }
-      ],
+      "reference_context": [],
       "assertions": [
-        "下一步明显建立在用户上一轮已经回答正确的内容之上，不重复测试“字符级会让序列变长”。",
-        "只改变一个主要条件，用新场景暴露相邻 Boundary / Trade-off Gap。",
-        "输出继续要求用户做判断和解释，而不是切回讲课模式。",
-        "不会一次给出完整答案或长问题清单。"
+        "输出不以“你会怎么设计 State”作为测试题，而是主动给出完整工程 Walkthrough。",
+        "输出明确 State 在系统中的持久化位置、关键字段或等价数据模型，以及哪些组件读取和更新它。",
+        "至少让一个具体多步骤任务展示 State 的前后变化，并覆盖一次崩溃/重启后的恢复路径。",
+        "输出把不可逆动作与幂等、去重键、checkpoint 或等价机制连接起来，而不是只给抽象建议。",
+        "输出包含验证与观测方法，例如恢复测试、重复执行测试、状态转移断言、日志/trace 或等价反馈机制。",
+        "输出至少展示一个 failure symptom → diagnosis → fix 的排障路径。",
+        "最后区分 Agent State 的可迁移设计原则与该案例的具体存储/字段/框架选择。"
       ]
     },
     {

@@ -51,11 +51,11 @@
       "should_trigger": true
     },
     {
-      "query": "我已经学过 Agent State，不要再讲定义，用真实工作场景测试我是不是真的会",
+      "query": "我已经理解 Agent State 的概念，现在把它放进一个真实的多步骤 Agent 工程里，从状态模型、持久化、重启恢复、幂等到测试完整走一遍",
       "should_trigger": true
     },
     {
-      "query": "像技术面试官一样连续追问我 RAG 的 rerank，但重点是检验我能不能在场景里做判断，不要让我背定义",
+      "query": "我已经理解 RAG 文档切分的原理，现在用银行制度库这个真实工程完整走一遍：怎么切、怎么存 metadata、怎么接检索、怎么评测和排错",
       "should_trigger": true
     },
     {
@@ -96,6 +96,10 @@
     },
     {
       "query": "从这个 Excel 里统计每个部门的人数并画图",
+      "should_trigger": false
+    },
+    {
+      "query": "给我出 10 道 RAG 面试题连续追问我，看看我会不会",
       "should_trigger": false
     }
   ]

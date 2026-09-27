@@ -1,13 +1,13 @@
-# SenseWright V2.6.4
+# SenseWright V2.7.0
 
-**Agent skills for making sense of complex information — and proving you can use what you learned.**
+**Agent skills for making sense of complex information — and turning understanding into executable engineering practice.**
 
 SenseWright 现在收敛为四种一级认知模式：
 
 - **D — Deep Read V6.4**：先恢复认知结构，再按交付目标选择完整覆盖或认知提炼。
 - **R — Vibe Review V0.10**：审阅材料。
 - **L — System Learning V0.5.3**：先落地理解；必要时改变一个高信息量条件暴露边界；技术机制再跑起来，最后形成知识模型。
-- **P — Practice V0.1**：检验知识迁移。
+- **P — Practice V0.2**：把已理解的知识编译成可执行、可验证、可排错的真实工程路径。
 
 核心边界可以压缩成四个问题：
 
@@ -15,41 +15,24 @@ SenseWright 现在收敛为四种一级认知模式：
 D — 我理解材料了吗？
 R — 这份材料可靠吗、够用吗？
 L — 我真正懂了吗？
-P — 我真正会了吗？
+P — 如果现在真的要把它做出来，我该怎么做？
 ~~~
 
-## 为什么删除 Questioning 一级路由
+## 为什么 Questioning 不再是一级路由
 
-V2.4 曾把 Questioning 建模为独立 Skill。实际迭代后发现，“提问”更像一种跨任务控制策略，而不是稳定的最终用户目标。
+Questioning 仍然不是稳定的最终用户目标。
 
-同一句“问我一个问题”，可能有两种完全不同的目的：
+Learning 可以在真正的知识缺口阻塞理解时使用 **Learning Probe**；但 Practice V0.2 不再继承原 Questioning 的“能力测验 / 自适应追问”定位。
 
-~~~text
-为了获得缺失知识
-→ Learning Probe
+Practice 的目标已经从：
 
-为了暴露学习者能力
-→ Practice Probe
-~~~
+`Knowledge Assessment`
 
-因此 V2.6.0 将 `questioning-v0.1.1` 从 active tree 移除，并把它最有价值的机制拆入 L / P：
+调整为：
 
-### Learning 吸收
-- Clarify / Reason / Evidence / Assumption；
-- Alternative / Mechanism / Boundary / Missing；
-- 一次一个高信息价值问题；
-- 根据回答更新 Confirmed / Assumed / Unknown / Contradiction / Next Gap；
-- 访谈 / 专家交流作为 Project to Use。
+`Knowledge Model → Executable Engineering Model`
 
-### Practice 吸收
-- 一次一个主要任务；
-- 下一问随用户表现变化；
-- 追真实情境；
-- 不使用诱导性问题泄漏答案；
-- What-if / Why-not-alternative 压力测试；
-- 停止条件与动态难度。
-
-Questioning 的历史没有删除，仍保留在 Git 历史和 CHANGELOG。
+因此“出题考我、模拟面试、连续压力追问”不再是进入 P 的充分条件。P 只有在用户需要把已理解知识落进真实工程、走通实施与验证路径时触发。
 
 ## Architecture
 
@@ -73,7 +56,7 @@ Deep Read   Review
      Practice
         P
         │
-        │ Performance Gap
+        │ Implementation Gap
         └──────────────► Learning
 ~~~
 
@@ -167,26 +150,31 @@ Learning Probe 的目标是减少 **knowledge uncertainty**。
 
 如果问题变成“你到底会不会”，转入 Practice。
 
-## Practice V0.1
+## Practice V0.2
 
-核心循环：
+Practice 的产品定位从“检验是否会用”改为“把已经理解的知识落进真实工程”。
+
+核心路径：
 
 ~~~text
-Diagnose
-→ Situate
-→ Perform
-→ Stress
-→ Debrief
+Knowledge Model
+→ Ground Real Scenario
+→ Build Engineering Model
+→ Implement End-to-End
+→ Run One Concrete Path
+→ Verify
+→ Troubleshoot
+→ Operationalize
+→ Generalize
 ~~~
 
-Practice 不把工作和面试当作目标本身。
+Practice 的完成标准不是“用户答对了”，而是：
 
-它们只是两种常用情境：
+> **一个已经理解概念、但没有真正实施过的人，拿到输出后能够开始实际动手，并知道怎样判断做对、怎样排错、最终要留下哪些工程产物。**
 
-- 工作场景：测试能否真实决策、操作、排错；
-- 面试场景：用连续追问检验模型是否稳定、能否解释 trade-off 和反例。
+RAG 文档切分回归案例验证了这一点：输出不能停在 chunk size / overlap 定义，而需要把 Parser Block Schema、结构恢复、Chunk Policy、Metadata、Parent-Child Retrieval、具体 Query 链路、Golden Eval、故障排查和工程目录真正串成一条可执行路径。
 
-Practice Probe 的目标是减少对用户 **capability uncertainty**。
+旧版 Diagnose / Practice Probe / Interview Stress / Guidance Fading 不再属于 Practice Core。原 Stress 的有效部分仅保留为 Failure & Troubleshooting，用来暴露工程模型边界，而不是考试用户。
 
 ## Skills
 
@@ -198,7 +186,7 @@ skills/
 │   └── SKILL.md
 ├── system-learning-v0.5.3/
 │   └── SKILL.md
-└── practice-v0.1/
+└── practice-v0.2/
     └── SKILL.md
 ~~~
 
@@ -225,12 +213,12 @@ Learning V0.5.2 的 mechanism-depth regression 继续保留，重点验证：
 - 是否把 prediction 当作理解检查，而不是把 Learning 变成考试；
 - 是否能利用 Deep Read 的比喻和案例作为脚手架，最终回到真实机制。
 
-Practice transfer cases 继续验证：
-- 是否把 Knowledge Model 转成真实判断任务；
-- 是否避免重新讲答案；
-- 是否一次只推进一个主要任务；
-- 是否根据上一轮表现改变 stress condition；
-- 是否能把表现失败回流成明确 Knowledge Gap。
+Practice engineering-transfer cases 验证：
+- 是否从 Knowledge Model 进入真实工程场景，而不是再次解释概念；
+- 是否明确系统位置、组件边界、数据/状态/接口与工程产物；
+- 是否至少让一个具体输入跑完整链路；
+- 是否提供可执行的验证、故障定位和修复路径；
+- 是否区分概念本身的不变量与当前项目的实现选择。
 
 V2.5.1 commit `9bbc0360616b60c4d960e412979b841853a10369` 固定为本次架构收敛前 baseline。
 
