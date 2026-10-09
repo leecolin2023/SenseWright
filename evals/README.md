@@ -134,6 +134,16 @@ Every L eval now includes the route prefix ["D","R","L"] and the following contr
 
 D/R independently consume current Raw Input. Both are mandatory and must finish before L; L reads both as cognitive scaffolds, while returning to the real object and mechanism. Historical optional reference_context cannot replace current D/R. Query-only prompts still receive two concise preflight stages without fabricating sources. Cases 28–30 cover source preflight, no-document preflight, and non-authoritative scaffold handling. **Static validation cannot prove actual runtime isolation**: check execution traces or mark isolation and barrier UNVERIFIED.
 
+### Learning V0.6.2 — Source-grounded Code Learning
+
+Cases **31–33** test a new L-only authoring contract: **research from actual source first**, then present **real problem → necessary mechanism → concrete implementation → minimal, verifiable source anchors → next substantive problem**. The D/R preflight still runs independently from Raw Input.
+
+- Case 31: synthetic Agent loop implementation. The output must explain why Tool Call is not execution **before** citing functions, and may only claim what the source excerpt proves.
+- Case 32: counterexample. The snippet contains text generation and history but no tool execution; the model must **revise the mechanism claim** instead of retrofitting nonexistent code.
+- Case 33: only TypeScript type declarations. A schema proves a contract shape, **not executable action, cancellation, or recovery**.
+
+These fixtures are intentionally synthetic and must not be described as real DeepSeek/Pi code. The optional `source_learning` metadata binds expectations for research order, teaching order, citation grounding, and disagreement handling. Static checks ensure the contract exists; **human assessment and traceable source/probe evidence are needed to establish actual behavioral improvement**. Compare against frozen `learning_v0_6_1` under equivalent runtime/model conditions.
+
 ### Practice Engineering Transfer
 
 Practice V0.2 不再以 capability test 为核心，而是验证 **Knowledge → Executable Engineering Model**：

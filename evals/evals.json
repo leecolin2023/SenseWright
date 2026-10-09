@@ -902,6 +902,114 @@
         "L 不将审阅意见当证据，不从未知原生能力自动推出必须自研。",
         "仅最终文本出现 D/R/L 三个标题不等于真的执行了三阶段，需运行记录核实。"
       ]
+    },
+    {
+      "id": 31,
+      "name": "learning-source-mechanism-before-code",
+      "prompt": "请根据附件中提供的玩具 Agent Runtime 源码，帮我学习 Tool Call 如何形成真正的行动闭环。不要先列文件名、函数名或 API；先让我理解模型说要行动为什么不等于真的执行，再简要展示源码如何落实机制，附上关键源码行号。只用附件作为代码事实依据。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "source_learning": {
+        "research_order": "inspect_source_before_modeling",
+        "presentation_order": "real_problem_necessary_mechanism_implementation_evidence_next_problem",
+        "citations": "minimal_verified_source_anchors",
+        "mismatch": "revise_model_not_source"
+      },
+      "files": [
+        "evals/fixtures/learning-code-action-loop.md"
+      ],
+      "expected_output": "先解释问题与必要机制，然后用 fixture 实现链和精确行号验证；明确局限。",
+      "assertions": [
+        "先解释模型输出 Tool Call 不等于实际执行成功及需要受控执行与结果反馈的原因，再首次引用 toy/agent.ts 或 step()。",
+        "代码链正确：step() 提取调用→executeToolCalls() 分派并追加 Tool Result→后续 step() 通过 deriveMessages() 读取派生历史；不声称后续 step 自动发生。",
+        "只用 toy 文件与行号作源码证据，不输出无关函数/目录清单，不将合成 fixture 当成真实产品。",
+        "不声称真实外部调用成功、真实 Probe 或 Durable Execution；完整 D/R 前置，交付整合 Learning。"
+      ]
+    },
+    {
+      "id": 32,
+      "name": "learning-source-revise-unsupported-mechanism",
+      "prompt": "同事说附件实现了完整 Agent Action Loop。请从真实问题出发学习并检查这个说法，遇到源码不支持的前提必须纠正，不要为了保留机制图而强行解释出 Tool Execution 或 Observation。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "source_learning": {
+        "research_order": "inspect_source_before_modeling",
+        "presentation_order": "real_problem_necessary_mechanism_implementation_evidence_next_problem",
+        "citations": "minimal_verified_source_anchors",
+        "mismatch": "revise_model_not_source"
+      },
+      "files": [
+        "evals/fixtures/learning-code-source-mismatch.md"
+      ],
+      "expected_output": "只证明单次模型生成和保存文本，不能推出受控执行或结果回流；收缩结论。",
+      "assertions": [
+        "先说明模型回答与真实执行动作的差异，而非函数名分类。",
+        "明确指出源码没有 Tool Schema/分派/Observation，history.push 文本不等于工具 Observation。",
+        "源码反驳预期机制时必须纠正结论，不能猜测缺失函数或声称运行了 Probe。",
+        "只引用给定的合成片段，不伪造真实 GitHub 链接。"
+      ]
+    },
+    {
+      "id": 33,
+      "name": "learning-source-insufficient-evidence",
+      "prompt": "我只有附件中几段 TypeScript 类型声明。请用它们学习 Agent Runtime，但不要假装已经读到实现细节；给我最短而有效的机制解释，以及哪些具体行为现在不能从代码判断。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "source_learning": {
+        "research_order": "inspect_source_before_modeling",
+        "presentation_order": "real_problem_necessary_mechanism_implementation_evidence_next_problem",
+        "citations": "minimal_verified_source_anchors",
+        "mismatch": "revise_model_not_source"
+      },
+      "files": [
+        "evals/fixtures/learning-code-incomplete.md"
+      ],
+      "expected_output": "用最小场景解释决策与行动闭环，明确接口声明不能证明实际 Tool 执行、取消、副作用或持久恢复。",
+      "assertions": [
+        "删除框架和类型名以后仍能理解机制为什么存在、怎么工作。",
+        "区分类型声明证据与未知实现；不把工具类型视为执行能力已存在。",
+        "不编造 Tool Executor、Session Store、后续模型循环，也不伪造源码锚点。",
+        "输入不足时保持简明且不把教学推演写作实际 Probe。"
+      ]
     }
   ]
 }

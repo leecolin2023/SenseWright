@@ -1,4 +1,4 @@
-# SenseWright V2.8.1
+# SenseWright V2.8.2
 
 **Four cognitive skills, one entrypoint:** [SKILL.md](SKILL.md).
 
@@ -6,7 +6,7 @@
 |---|---|
 | [Deep Read V6.4](skills/article-deep-read-v6.4/SKILL.md) | Faithfully reconstruct a source and preserve the reasoning that matters |
 | [Review V0.10](skills/vibe-review-v0.10/SKILL.md) | Independently review the original source, covering all units before prioritizing issues |
-| [Learning V0.6.1](skills/system-learning-v0.6.1/SKILL.md) | Rebuild grounded understanding and necessary mechanisms from a real problem |
+| [Learning V0.6.2](skills/system-learning-v0.6.2/SKILL.md) | Rebuild grounded understanding and necessary mechanisms from a real problem |
 | [Practice V0.2](skills/practice-v0.2/SKILL.md) | Transfer understood knowledge into executable, verifiable engineering work |
 
 ## How Learning works
@@ -43,6 +43,12 @@ The host Runtime must enforce actual isolation and a completion barrier. This re
 5. Repair broken explanation chains and unsupported claims before delivery. Output one coherent answer instead of internal audit logs.
 
 Learning **does not imply an implementation decision**. Practice is for design and real engineering execution, not merely testing whether the user can answer questions.
+
+## Source-grounded code learning
+
+The **research order** is source/tests/observable behavior first, then infer a mechanism. The **teaching order** is the reverse of a file walkthrough: **real problem → necessary mechanism → implementation logic → a few exact source anchors → next useful question**. Source citations must actually support the adjacent claim. If code contradicts the assumed mechanism, revise the explanation rather than inventing implementation. Type declarations and documentation alone do not prove runtime behavior; reading source is not the same as running a probe.
+
+This rule applies only when learning from source code; it does not add source-code overhead to simple conceptual learning. D and R remain faithful/independent source-facing stages; the presentation reorder happens only in L.
 
 ## Validation
 

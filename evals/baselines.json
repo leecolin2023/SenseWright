@@ -59,6 +59,12 @@
       "type": "git_commit",
       "ref": "74e8c8c1098d2b8874dc6055f34285412764d0b8",
       "description": "Frozen feature baseline before mandatory dual D/R preflight in Learning V0.6.1."
+    },
+    {
+      "name": "learning_v0_6_1",
+      "type": "git_commit",
+      "ref": "7e4126b3976af9c530763e9a799c2ebfbbd5b658",
+      "description": "Frozen SenseWright V2.8.1 baseline immediately before source-grounded Learning V0.6.2; mandatory D/R preflight and 49-line Learning Skill are preserved."
     }
   ]
 }

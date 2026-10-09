@@ -3,7 +3,7 @@ name: sensewright
 description: Route knowledge work among independent source-faithful Deep Read, source-critical Review, grounded Learning, and executable engineering Practice. Every Learning task must first run fresh Deep Read and Review independently on the same original input and use both as non-authoritative scaffolds.
 ---
 
-# SenseWright V2.8.1
+# SenseWright V2.8.2
 
 Choose the task by **user goal**, not by the existence of an attachment:
 
@@ -11,7 +11,7 @@ Choose the task by **user goal**, not by the existence of an attachment:
 |---|---|---|
 | **D — Deep Read** | 原材料实际说了什么、怎样推导 | `skills/article-deep-read-v6.4/SKILL.md` |
 | **R — Review** | 原材料的事实、论证和决策依据是否成立 | `skills/vibe-review-v0.10/SKILL.md` |
-| **L — Learning** | 用户怎样真正理解对象、机制和适用边界 | `skills/system-learning-v0.6.1/SKILL.md` |
+| **L — Learning** | 用户怎样真正理解对象、机制和适用边界 | `skills/system-learning-v0.6.2/SKILL.md` |
 | **P — Practice** | 怎样把已理解知识落成可执行、可验证、可排错的真实工程 | `skills/practice-v0.2/SKILL.md` |
 
 ## 执行编排
@@ -26,7 +26,7 @@ Choose the task by **user goal**, not by the existence of an attachment:
 
 - **D** 忠实还原材料的认知拓扑，并按交付目的选择 Coverage-Preserving 或 Cognitive-Synthesis；不插入独立批评。
 - **R** 对原材料完整覆盖后再判断重要性，独立审阅；不消费 D 的总结。
-- **L** 不服从原文结构，不接受 R 意见为天然事实；通过真实场景、问题链、必要机制、证据和边界形成自己的知识模型。内部自检不是独立 R Skill 的替代品。
+- **L** 不服从原文结构，不接受 R 意见为天然事实；通过真实场景、问题链、必要机制、证据和边界形成自己的知识模型。**学习源码时先核实实现，交付时先解释机制、再用少量源码证据落地**。内部自检不是独立 R Skill 的替代品。
 - **P** 专注设计、端到端实施、运行、验证、排障及工程交付；纯提问、自测或模拟面试不因形式自动路由 P。知识补缺可由 L 使用简短、非诱导的追问完成。
 
 默认**只输出满足当前用户目标的结果**。包含 L 的任务默认交付整合后的学习解释；用户明确要求时才展示 D/R 各自完整结果。不要打印内部路由、前置检查表或质量 Gate。

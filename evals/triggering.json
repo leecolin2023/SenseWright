@@ -113,6 +113,10 @@
     {
       "query": "直接帮我运行程序并修复报错，不需要学习解释或知识模型",
       "should_trigger": false
+    },
+    {
+      "query": "请基于 DeepSeek Harness 源码帮我学懂 Agent Runtime 的运行机制，先讲为什么需要，再用关键源码链证明，不要罗列 API 名字。",
+      "should_trigger": true
     }
   ]
 }

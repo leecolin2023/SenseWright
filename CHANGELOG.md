@@ -1,5 +1,12 @@
 # Changelog
 
+## V2.8.2 — Source-grounded Learning V0.6.2
+- 新增 `skills/system-learning-v0.6.2/SKILL.md` 并替换活跃 `V0.6.1` 路由，D V6.4、R V0.10、P V0.2 不变，D/R 本轮独立前置要求不变。
+- 区分内部研究顺序（源码/测试/行为证据 → 机制判断）与教学交付顺序（真实问题 → 必要机制 → 实现逻辑 → 最小源码锚点 → 下一个有增量的问题）。
+- 新增源码学习自检：去掉函数/框架名后机制仍可独立理解；代码引用必须真实支撑实现主张；源码反例应修正机制而非补造不存在的实现。
+- 新增 3 个源码学习回归案例和合成源码 Fixture；冻结 V0.6.1 Git baseline。仅静态校验通过不能证明模型输出质量或独立 D/R Runtime Trace。
+
+
 ## V2.8.1 — Mandatory D/R before Learning
 - 收敛活跃 Learning Skill 为精简执行契约，合并重复的 Ground / Problem Chain / Boundary Variation / Gate / Acceptance 说明；保留回归用例，版本演变解释仅存于非运行文档。
 - System Learning V0.6.0 → **V0.6.1**，D V6.4、R V0.10、P V0.2 的独立职责保持不变。
