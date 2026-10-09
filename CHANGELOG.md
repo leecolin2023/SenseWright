@@ -1,6 +1,7 @@
 # Changelog
 
 ## V2.8.1 — Mandatory D/R before Learning
+- 收敛活跃 Learning Skill 为精简执行契约，合并重复的 Ground / Problem Chain / Boundary Variation / Gate / Acceptance 说明；保留回归用例，版本演变解释仅存于非运行文档。
 - System Learning V0.6.0 → **V0.6.1**，D V6.4、R V0.10、P V0.2 的独立职责保持不变。
 - 所有含 L 的路线强制展开为 **D + R → L**：D、R 只从本轮原始输入独立执行，可以并行，但必须全部完成后才启动 L，不能用历史结果代替。
 - L 必须读取 D/R 当轮结果，但不照搬它们。**Mandatory execution, selective incorporation**；D 恢复认知结构与案例，R 独立检查逻辑与证据，L 再回到真实对象和机制。

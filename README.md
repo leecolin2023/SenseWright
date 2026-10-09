@@ -1,190 +1,56 @@
 # SenseWright V2.8.1
 
-**Agent skills for making sense of complex information — and turning understanding into executable engineering practice.**
+**Four cognitive skills, one entrypoint:** [SKILL.md](SKILL.md).
 
-SenseWright 现在收敛为四种一级认知模式：
+| Skill | Primary job |
+|---|---|
+| [Deep Read V6.4](skills/article-deep-read-v6.4/SKILL.md) | Faithfully reconstruct a source and preserve the reasoning that matters |
+| [Review V0.10](skills/vibe-review-v0.10/SKILL.md) | Independently review the original source, covering all units before prioritizing issues |
+| [Learning V0.6.1](skills/system-learning-v0.6.1/SKILL.md) | Rebuild grounded understanding and necessary mechanisms from a real problem |
+| [Practice V0.2](skills/practice-v0.2/SKILL.md) | Transfer understood knowledge into executable, verifiable engineering work |
 
-- **D — Deep Read V6.4**：先恢复认知结构，再按交付目标选择完整覆盖或认知提炼。
-- **R — Vibe Review V0.10**：审阅材料。
-- **L — System Learning V0.6.1**：**先独立完成 D + R**，两者是必经认知脚手架；然后 L 回到真实问题、必要机制与知识模型。
-- **P — Practice V0.2**：把已理解的知识编译成可执行、可验证、可排错的真实工程路径。
-
-核心边界可以压缩成四个问题：
-
-~~~text
-D — 我理解材料了吗？
-R — 这份材料可靠吗、够用吗？
-L — 我真正懂了吗？
-P — 如果现在真的要把它做出来，我该怎么做？
-~~~
-
-## 为什么 Questioning 不再是一级路由
-
-Questioning 仍然不是稳定的最终用户目标。
-
-Learning 可以在真正的知识缺口阻塞理解时使用 **Learning Probe**；但 Practice V0.2 不再继承原 Questioning 的“能力测验 / 自适应追问”定位。
-
-Practice 的目标已经从：
-
-`Knowledge Assessment`
-
-调整为：
-
-`Knowledge Model → Executable Engineering Model`
-
-因此“出题考我、模拟面试、连续压力追问”不再是进入 P 的充分条件。P 只有在用户需要把已理解知识落进真实工程、走通实施与验证路径时触发。
-
-## Architecture — Mandatory Deep Read + Independent Review
+## How Learning works
 
 ~~~text
- Raw Source / User Query
-    /             \
-   D               R
-[raw-only]      [raw-only]
-    \             /
-     [both completed]
-             |
-             v
-     L — Learning
- (scaffolds, not truth)
-             |
-             v
-     P — Practice
+                   Raw Input
+                  /         \
+      Deep Read (D)        Review (R)
+       [isolated]          [isolated]
+                  \         /
+                 both complete
+                       |
+                       v
+                  Learning (L)
+          Ground → Mechanism → Boundary
+                       |
+                       v
+                Practice (P)
+               [only if needed]
 ~~~
 
-**D/R 必须先执行，L 必须读取二者**；但具体发现仍按当前学习价值有选择地进入知识模型，而非复制两份报告。D 不看 R、R 不看 D；L 必须回到真实对象与机制。无文档时 D/R 均以用户实际问题为 Raw Input 轻量处理，不能伪造文献或不必要的批评。
+Every Learning run requires **fresh D and R** on the same raw input, independently executed. Learning reads both results as cognitive scaffolds, not extra evidence; it must return to the real object and mechanism rather than copy or concatenate the upstream reports.
 
-严格的 Runtime 级隔离与完成屏障需要宿主支持独立调用和 trace。Skill 静态规则只能表达契约，不能单独证实运行时的物理隔离。
+For a question without an attached document, D/R operate briefly on the actual user question and its premises. This is still required; no source or critique should be invented. D-only, R-only, D+R, and P-only requests keep their independent paths.
 
-## Deep Read V6.4
+The host Runtime must enforce actual isolation and a completion barrier. This repository's skill instructions and static checks **do not by themselves prove** that two isolated calls occurred.
 
-Deep Read 从 V6.1 的“忠实深读 + 长文分层”升级为一个更明确的认知任务契约：
+## Learning behavior
 
-~~~text
-Raw Source
-→ Restore Cognitive Topology
-→ Identify Cognitive Units / Engines
-→ Choose Compression Contract
-   ├─ Coverage-Preserving
-   └─ Cognitive-Synthesis
-→ Deliverable
-→ Acceptance Gate
-→ Repair if needed
-~~~
+1. Ground the question in an observable example; check unsupported premises.
+2. When necessary, advance through a real failure → minimal required mechanism → next meaningful problem.
+3. Trace technical mechanisms with a minimal run; use a single high-information condition change when it clarifies boundaries.
+4. Distinguish source facts, derived knowledge, external evidence, and unknowns.
+5. Repair broken explanation chains and unsupported claims before delivery. Output one coherent answer instead of internal audit logs.
 
-两条 Contract 共用同一个理解核心，分叉发生在“读懂以后哪些信息允许消失”：
+Learning **does not imply an implementation decision**. Practice is for design and real engineering execution, not merely testing whether the user can answer questions.
 
-- **Coverage-Preserving**：Coverage first, compression second。所有具有独立意义的认知单元必须可追踪，只压缩单元内部重复、同功能案例和语言冗余。
-- **Cognitive-Synthesis**：Understanding first, coverage second。允许跨单元归并、抽象和省略低价值信息，但压缩上限是 **Model-Preserving Compression Boundary**：不能让未读原文的人形成不同的核心认知模型。
-
-这不是“长版 / 短版”的区别。篇幅由材料复杂度和认知价值决定；Contract 决定的是信息保留规则。
-
-V6.4 同时把自检升级为真正的 **Acceptance Gate → Repair Loop**：Coverage 路线重点防漏项和过度合并，Synthesis 路线重点防忠实改写和过度压缩。
-
-> **Deep Read 可以替代理解性重读，不能替代证据性回查。**
-
-## Learning V0.6.1 — Mandatory D/R + Problem-Driven Knowledge Construction
-
-本次吸收 [IntraMate Learning & Framework Observation Method](https://github.com/leecolin2023/IntraMate/blob/main/Architecture/method/00-learning-method.md) 的可迁移认知方法，**并不复制其 Agent Runtime / Work Agent 具体领域分类，更不把 Deep Read 改成唯一的问题链形式**。
-
-```text
-Ground Real Problem
-→ Current Explanation / Behavior
-→ Observable Failure / Explanatory Gap
-→ Minimal Necessary Mechanism
-→ Next Problem, if it matters
-→ Evidence / Boundary
-→ Stable Knowledge Model → Project to Use
-```
-
-每次 Learning 必须先执行独立的 Deep Read + Review，L 读取两份结果作为脚手架，再回到真实对象形成新的解释。L 内部另外执行 **Problem-chain Review → Concept First-Appearance Audit → Boundary & Evidence Review → Repair → Re-check**。用户看到的是经修复的知识解释，而不是“待执行 Gate”的审阅计划。
-
-知识与实施边界：`Problem Knowledge ≠ Framework Evidence ≠ Architecture Decision`；`UNKNOWN ≠ ABSENT`，`ABSENT ≠ BUILD`，`Knowledge Stable ≠ Implementation Ready`。
-
-V0.5.1–V0.5.3 的 Grounding、Contrastive Teaching、Mechanism Run Once、Boundary Variation 和 Adaptive Probe 继续保留。简单问题不强制长问题链；纯面试/自测不自动转入 Practice，只有真实工程实现才由 P 负责。
-
-详细说明：[Learning Problem-chain Migration](docs/learning-problem-chain-migration.md)、[Mandatory D/R Preflight](docs/learning-mandatory-dr-preflight.md)。
-
-## Practice V0.2
-
-Practice 的产品定位从“检验是否会用”改为“把已经理解的知识落进真实工程”。
-
-核心路径：
-
-~~~text
-Knowledge Model
-→ Ground Real Scenario
-→ Build Engineering Model
-→ Implement End-to-End
-→ Run One Concrete Path
-→ Verify
-→ Troubleshoot
-→ Operationalize
-→ Generalize
-~~~
-
-Practice 的完成标准不是“用户答对了”，而是：
-
-> **一个已经理解概念、但没有真正实施过的人，拿到输出后能够开始实际动手，并知道怎样判断做对、怎样排错、最终要留下哪些工程产物。**
-
-RAG 文档切分回归案例验证了这一点：输出不能停在 chunk size / overlap 定义，而需要把 Parser Block Schema、结构恢复、Chunk Policy、Metadata、Parent-Child Retrieval、具体 Query 链路、Golden Eval、故障排查和工程目录真正串成一条可执行路径。
-
-旧版 Diagnose / Practice Probe / Interview Stress / Guidance Fading 不再属于 Practice Core。原 Stress 的有效部分仅保留为 Failure & Troubleshooting，用来暴露工程模型边界，而不是考试用户。
-
-## Skills
-
-~~~text
-skills/
-├── article-deep-read-v6.4/
-│   └── SKILL.md
-├── vibe-review-v0.10/
-│   └── SKILL.md
-├── system-learning-v0.6.1/
-│   └── SKILL.md
-└── practice-v0.2/
-    └── SKILL.md
-~~~
-
-## Evaluation Workflow V0.1
-
-Eval 路由同步收敛为：
-
-`D / R / L / P`
-
-原 Q case 已重新归属：
-- “把问题问清楚 / 专家访谈求证” → Learning；
-- 知识自测或模拟面试不再自动触发 Practice；
-- 把 Knowledge Model 落到真实工程设计、实现和验证 → Practice。
-
-Learning V0.5.1 的 grounding regression 继续保留，重点验证：
-- 概念差异先回到真实任务，而不是继续堆 taxonomy；
-- 能同时给出低差异场景与高差异场景，明确价值边界；
-- 用户明确说“还是没懂”后会降层恢复，不再增加上位术语；
-- 抽象出现在具体差异之后，而不是之前。
-
-Learning V0.5.2 的 mechanism-depth regression 继续保留，重点验证：
-- 技术概念是否通过最小具体实例真正“运行一遍”；
-- 是否从流程进一步解释每一步为什么存在；
-- 是否通过移除组件 / 改变规模 / 关闭缓存等单变量变化解释结果变化；
-- 是否把 prediction 当作理解检查，而不是把 Learning 变成考试；
-- 是否能利用 Deep Read 的比喻和案例作为脚手架，最终回到真实机制。
-
-Practice engineering-transfer cases 验证：
-- 是否从 Knowledge Model 进入真实工程场景，而不是再次解释概念；
-- 是否明确系统位置、组件边界、数据/状态/接口与工程产物；
-- 是否至少让一个具体输入跑完整链路；
-- 是否提供可执行的验证、故障定位和修复路径；
-- 是否区分概念本身的不变量与当前项目的实现选择。
-
-V2.5.1 commit `9bbc0360616b60c4d960e412979b841853a10369` 固定为本次架构收敛前 baseline。
-
-本地校验：
+## Validation
 
 ~~~bash
 python scripts/validate_skills.py
 python scripts/validate_evals.py
 ~~~
 
-## 使用
+[Evaluation guidelines](evals/README.md) cover route tests, regression cases, and baseline comparisons. Passing the static validators does **not** establish behavioral superiority or actual Runtime isolation.
 
-以根目录 `SKILL.md` 作为唯一入口。
+The detailed evolution and rationale are retained in [CHANGELOG.md](CHANGELOG.md), [method migration notes](docs/learning-problem-chain-migration.md), and [D/R preflight specification](docs/learning-mandatory-dr-preflight.md). They are not required reading for ordinary Skill execution.
