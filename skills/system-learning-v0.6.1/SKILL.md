@@ -1,9 +1,9 @@
 ---
 name: system-learning
-description: Build genuinely grounded and transferable knowledge with problem-driven learning: start from a real phenomenon or failure, trace why the previous explanation is insufficient, derive the smallest necessary mechanism before naming a concept, distinguish stable problem knowledge from specific implementation evidence and architecture decisions, and stabilize the mental model with internal problem-chain, concept-first-appearance and boundary reviews. Preserve concrete grounding, runnable explanations, condition variation, and adaptive probing without forcing every topic into a technical checklist.
+description: Build grounded and transferable understanding by requiring independent Deep Read and Review of the same original input before every Learning task. Consume both as mandatory non-evidentiary scaffolds, then return to the real object, derive the smallest necessary mechanism with a problem chain, and stabilize the model. This includes query-only prompts with no document, using compact source framing and premise checks instead of inventing articles or critique.
 ---
 
-# System Learning V0.6.0 — Problem → Failure → Mechanism → Evidence → Stable Knowledge
+# System Learning V0.6.1 — Problem → Failure → Mechanism → Evidence → Stable Knowledge
 
 ## Suite 集成边界
 
@@ -22,29 +22,41 @@ Questioning 不再作为独立 Skill。用于减少 knowledge uncertainty 的追
 
 ---
 
-## Optional Reference Context
+## Mandatory Deep Read + Independent Review Before Learning
 
-Learning 的主要依据仍是 Raw Source / 用户事实 / 当前任务。
+**每次执行 Learning，必须先完成 D 和 R 两个独立的前置阶段。** D/R 均使用当轮 Raw Input，不按可能有用程度选择性跳过，历史结果也不能替代本轮执行。
 
-可以选择性参考：
+~~~text
+Raw Input / Current User Question
+   ├─ D: Deep Read（忠实恢复原始认知结构）
+   └─ R: Review（从原始输入独立审阅）
+             │  D + R both complete
+             ▼
+      L: Ground → Problem Chain → Mechanism
+         → Stabilize → Knowledge Model
+~~~
 
-- **Deep Read**：作者结构、关键概念、机制、案例、比喻和认知桥梁等 source reconstruction；
-- **Review**：关键分歧、证据薄弱处、风险、替代解释等 judgment；
-- **Practice**：暴露出的误解、Application Gap、Boundary Gap、Trade-off Gap 等 performance findings。
+**D — mandatory faithful reading**：运行 article-deep-read-v6.4 对当前原始文档、引文、用户问题进行忠实理解。提取论证主线、认知单元、案例、比喻与作者所说的结论；不能读取 R/L/P 输出。压缩可以适应学习任务，但不得遗漏对理解有独立意义的关键内容。
 
-三个规则：
+**R — mandatory independent review**：运行 vibe-review-v0.10，从同一份 Raw Input 独立审阅事实、逻辑、证据、例外、假设、冲突及适用边界，执行其 Atomic Coverage → Materiality 原则；不能读取 D/L/P 输出。D/R 可以并行，也可以先后，但 R 不能被 D 的结论影响。
 
-1. **Reference ≠ Evidence**：涉及“原文到底说了什么”仍回 Raw Source；涉及外部事实仍需要相应证据。
-2. **Transform, don't copy**：Reference 应改变 Learning 的模型、注意力或 Gap，而不是被原样复制。
-3. **Selective, not mandatory**：只有 reference 能明显改善当前学习任务时才使用。
+**Barrier**：D 与 R 两者都完成之后才能进入 L。宿主支持时通过相互独立的执行上下文与阶段完成屏障实现；仅凭文字规则不能宣称已经获得 Runtime 级强隔离。缺少可访问材料或可靠证据时，要标记有限的处理范围，不得声称已读/已审全部来源。
 
-当 Deep Read 提供了作者有价值的故事、比喻或例子时，Learning 可以把它们当作认知脚手架，但最终需要回到真实对象和机制；**比喻帮助进入机制，不替代机制本身。**
+**没有独立材料**：当用户仅提出一个概念问题，Raw Input 就是本次用户问题和明确提供的上下文。D 轻量恢复提问的真实含义和问题结构；R 轻量检查预设前提与可能的歧义，可以得出“未发现实质审阅问题”。不虚构文章、作者、引文或为了审阅而制造批评。两个阶段都需要执行，工作量可与问题复杂度匹配。
+
+**Mandatory handoff**：L 必须读取本轮 D 和 R 的结果，且同时回到 Raw Input。D 贡献忠实的认知结构、实例和桥梁；R 贡献需纠偏的假设、证据问题、替代解释和适用边界。L 需要重新 Ground Object，沿 Problem Chain 推导自己的机制模型，**不能照抄 D 的章节、拼贴 R 的问题清单，更不能把 R 的判断当作原始证据**。
+
+**Mandatory execution, selective incorporation**：强制执行的是 D 和 R *两种审视过程*，而不是把 D/R 的每一句话都塞进 L 的最终回答。只吸收能改变学习模型的高信息量发现。继续遵守 **Reference ≠ Evidence；Transform, don't copy**。D/R 只是认知脚手架，最终必须回到真实对象和机制；类比帮助进入机制，不替代机制本身。
+
+**Output**：默认交付一个整合的 Learning 答案，不要求向用户展示三份报告；若用户明确要求三个阶段的独立成果再分别展示。P 的历史成果可按需引用，但不能替代本轮 D/R。
+
+**Gate**：D/R 各自拥有本轮结果、独立读取 Raw Input，且二者均先于 L 完成时才满足前置契约。若有执行 Trace，应验证上下文独立和完成顺序；没有可检查 Trace 时，不能凭最终文本中的 D/R 标题宣称已完成物理隔离。
 
 ---
 
 ## 目标与主路线
 
-Learning 的主体仍然是 `Ground Object → Build Model → Find Gaps → Project to Use`，但 **Build Model 现在明确采用 Problem Chain 作为首选的因果组织规则**：
+D/R Preflight 完成后，Learning 的主体仍然是 `Ground Object → Build Model → Find Gaps → Project to Use`，但 **Build Model 现在明确采用 Problem Chain 作为首选的因果组织规则**：
 
 ```text
 真实问题 / 当前现象
@@ -515,7 +527,7 @@ Learning 默认以“让用户真正形成理解”为主，而不是展示一�
 
 ## Gate 3 — Boundary & Evidence Review
 
-检查 Source-supported / Derived / External / Unknown 是否区分；框架能力声称是否有相应版本的证据；是否把特定实现或个人推测写成普遍必需机制；是否从 **没有观察到 → 确定不存在 → 应该自研** 越级；是否过度外推案例。失败则收缩结论、补证据或标记未验证，不能靠新增模糊措辞掩盖逻辑缺口。
+检查 D/R 脚手架是否被误当作新的独立证据、R 的判断是否被误写成原文事实；检查 Source-supported / Derived / External / Unknown 是否区分；框架能力声称是否有相应版本的证据；是否把特定实现或个人推测写成普遍必需机制；是否从 **没有观察到 → 确定不存在 → 应该自研** 越级；是否过度外推案例。失败则收缩结论、补证据或标记未验证，不能靠新增模糊措辞掩盖逻辑缺口。
 
 ## Stable / Not Stable
 
@@ -529,7 +541,9 @@ Learning 默认以“让用户真正形成理解”为主，而不是展示一�
 
 # 九、验收标准
 
-一次高质量 Learning 结束前先完成必要的 Stabilization Review，再至少检查：
+一次高质量 Learning 结束前先完成 Mandatory D/R Preflight 和必要的 Stabilization Review，再至少检查：
+
+-1. 是否本轮 D/R 均使用 Raw Input、互不消费并先于 L 完成；是否在 L 中确实读取并重新转化两个结果；
 
 0. 需要问题链的主题是否展示“真实问题 → 旧解释失败 → 最小必要机制”，并在问题不再有增量时停止；
 

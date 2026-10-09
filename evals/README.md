@@ -118,6 +118,22 @@ Three internal gates: **Problem-chain Review → Concept First-Appearance Audit 
 
 The fixture `learning-premature-framework-outline.md` contains intentionally incorrect claims and should never be treated as verified product evidence. A static validator pass does not imply behavioral success. Run each case on old and new Skill under matched model, configuration and time, save outputs/grading and perform human review.
 
+### Learning V0.6.1 — Mandatory D + R Preflight
+
+Every L eval now includes the route prefix ["D","R","L"] and the following contract:
+
+~~~json
+{
+  "required_before_L": ["D", "R"],
+  "source_policy": "same_raw_input_independent_contexts",
+  "completion_barrier": "both_complete_before_L",
+  "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+  "output_policy": "integrated_learning_unless_explicit"
+}
+~~~
+
+D/R independently consume current Raw Input. Both are mandatory and must finish before L; L reads both as cognitive scaffolds, while returning to the real object and mechanism. Historical optional reference_context cannot replace current D/R. Query-only prompts still receive two concise preflight stages without fabricating sources. Cases 28–30 cover source preflight, no-document preflight, and non-authoritative scaffold handling. **Static validation cannot prove actual runtime isolation**: check execution traces or mark isolation and barrier UNVERIFIED.
+
 ### Practice Engineering Transfer
 
 Practice V0.2 不再以 capability test 为核心，而是验证 **Knowledge → Executable Engineering Model**：

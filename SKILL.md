@@ -1,9 +1,9 @@
 ---
 name: sensewright
-description: Route complex information and knowledge-work tasks among faithful deep reading, independent review, systematic learning, and engineering practice. Use when the user wants to understand source material, judge whether a document or argument is sound, build a reusable knowledge model, or turn an understood concept into executable engineering know-how in a realistic project. Deep Read and Review remain source-isolated; Learning and Practice may selectively use prior outputs as attributed reference context rather than inherited truth.
+description: Route Deep Read, independent Review, Learning and engineering Practice. For every Learning request require both Deep Read and Review independently executed on the current original input before Learning starts; Learning then transforms both non-authoritative scaffolds into a grounded mental model. D and R never read each other, and P remains focused on engineering.
 ---
 
-# SenseWright V2.8.0
+# SenseWright V2.8.1
 
 ## 核心设计
 
@@ -13,7 +13,7 @@ SenseWright 维护四种一级认知模式：
 
 - **D — Deep Read**：先忠实恢复原材料的认知结构，再按交付意图选择完整覆盖型或认知提炼型压缩。
 - **R — Review**：完整覆盖原材料后独立评价。
-- **L — Learning**：先锚定真实问题，追踪旧解释失效后为何需要新机制，再命名概念；必要时运行最小实例、改变关键条件、区分实现证据，通过三道内置 Stabilization Gate 修复问题链、概念首次出现和边界，形成稳定 Knowledge Model。
+- **L — Learning**：**必须先完成独立 D + R**，再读取当轮两份认知脚手架，回到真实对象、问题链与必要机制；经过内置稳定化审阅形成 Knowledge Model。
 - **P — Practice**：把已经理解的知识放进真实工程场景，完整走通设计、实现、运行、验证、排错和工程化，把 Knowledge Model 转成 Executable Engineering Model。
 
 Questioning 不再作为独立路由。
@@ -23,17 +23,14 @@ Questioning 不再作为独立路由。
 
 ---
 
-## Router 只做两件事
+## Router — Mandatory Prerequisite Scheduling
 
-### 1. Route Selection
+1. **Route Selection**：先判断用户目标是否包含 L；任何包含 L 的请求自动展开为 D + R → L。D 和 R **都必需**，不能只挑其中一个。D-only / R-only / D+R / P-only 不强制追加 L。
+2. **Independent Execution**：D、R 各自从当前 Raw Input 开始，输入中不能包含对方的输出；可并行，但 L 必须等待二者均完成。宿主需为严格隔离提供独立执行上下文与 barrier。
+3. **Mandatory Handoff**：L 必须消费两份当轮结果，但将其当作认知脚手架，不当作证据；只选择性吸收真正有用的具体发现，最后回到原始对象重新构建机制。
+4. **Query-only**：没有独立材料仍要对用户原始问题分别进行轻量 D（问题与含义重建）和 R（前提/歧义核查），不造假来源、不过度审稿。默认最终只展示整合后 L 输出。
 
-判断当前任务需要 D / R / L / P 中的哪一种或哪几种能力。
-
-### 2. Reference Selection
-
-只有当目标包含 **L 或 P** 时，才判断已有结果是否值得作为可选 Reference Context。
-
-Router 不解释材料、不生成结论，也不建立共享黑板。
+Router 负责编排规则；纯文字 Skill 无法证明运行时硬隔离，需执行记录验证。Practice 的历史上下文引用仍可选。
 
 ---
 
@@ -103,15 +100,13 @@ Review 先完整覆盖，再判断重要性：
 - 发现还缺什么，并通过必要的追问、研究或专家交流继续补齐；
 - 把知识投影到会议、实施或决策。
 
-→ 使用 `skills/system-learning-v0.6.0/SKILL.md`
+→ 使用 `skills/system-learning-v0.6.1/SKILL.md`
 
 **中心问题：我真正懂了吗？**
 
 用户觉得概念“太抽象、像生造的、实际没区别”时，先降层回到真实对象：原有行为是什么、哪里失败、最小新增机制改变了哪一步。复杂学习任务优先按 `Current Explanation → Failure → Necessary Mechanism → Next Problem (if useful)` 推进，术语和具体 Framework 后置。技术知识保留 Run Once / Boundary Variation，并区分 **Problem Knowledge / Implementation Evidence / Architecture Decision**。不要从 UNKNOWN 推出 ABSENT，更不能从 ABSENT 直接推出“应自研”。
 
-Learning 在生成过程中执行 `Problem-chain Review → Concept First-Appearance Audit → Boundary & Evidence Review → Repair`；这不是交付后的待办，也不是要求简单主题输出审阅清单。Deep Read / Review 的 source isolation 不改变。
-
-Learning 可以选择性参考已有 D / R / P 结果，但它们只是 Reference Context。
+**D 与 R 必须分别从本轮原始输入执行，并且在 L 开始前完成。** L 读取双方结果，保留 D 的认知桥梁、审视 R 的事实与证据疑点，但不能直接复制或把 Review 观点认作事实。Learning 自身的 `Problem-chain Review → Concept First-Appearance Audit → Boundary & Evidence Review → Repair` 是另外一组内置成稿 Gate，不能替代独立 R Skill。P 历史发现仍可选择性参考。
 
 ### Learning Probe
 
@@ -168,54 +163,38 @@ Practice 的主产物是一份 **End-to-End Engineering Walkthrough**，并应�
 
 ---
 
-## 非对称协作
+## 强制上游与非对称隔离
 
 ~~~text
-Raw Source / User Context
-        │
-   ┌────┴────┐
-   ▼         ▼
-Deep Read   Review
-   D         R
-[isolated] [isolated]
-   │         │
-   └────┬────┘
-        │ optional references
-        ▼
-     Learning
-        L
-        │
-        │ knowledge model
-        ▼
-     Practice
-        P
-        │
-        │ implementation-discovered gaps
-        └──────────────► Learning
+       Raw Input
+       /       \
+      v         v
+   D [raw]    R [raw]
+      \         /
+       \       /
+      [both complete]
+             |
+             v
+         L Learning
+    (return to real object)
+             |
+             v
+        P Practice
+             |
+      implementation gap
+             |
+             +----> L (new D/R preflight)
 ~~~
 
-允许：
-- D → L
-- R → L
-- D → P
-- R → P
-- L → P
-- P → L（主要回流实施过程中暴露出的 Knowledge Gap、未验证前提和机制边界）
+D 和 R 互相独立，禁止对方输出进入自己的上下文。任何新 L 都要求本轮 D/R 重新运行；已有 D/R 结果不满足 fresh preflight。D、R 只直接消费 Raw Input 和原始用户上下文。
 
-禁止：
-- 任何 Skill → D
-- 任何 Skill → R
-- D ↔ R 之间直接传递结果
+## Learning 上游三原则
 
----
+- **Mandatory execution, selective incorporation**：必须执行两个上游 Skill，但不要求把全部结果照搬进最终答案。
+- **Reference ≠ Evidence**：D/R 产物是脚手架，事实仍要回源验证。
+- **Transform, don't copy**：Learning 重新构建真实对象、因果机制与适用边界，不输出拼贴报告。
 
-## Reference Context 的三条规则
-
-- **Reference ≠ Evidence**
-- **Transform, don't copy**
-- **Selective, not mandatory**
-
-这些规则只适用于 L / P；D / R 不消费 sibling results。
+D/R 独立执行与 barrier 要由宿主保证。静态规则和测试定义不能替代实际隔离 trace。P-only 仍可选择性使用既有 D/R/L 成果。
 
 ---
 

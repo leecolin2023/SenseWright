@@ -60,3 +60,8 @@ Gates are authoring actions, not TODOs for the next user turn. If substantive is
 - Cases 22–27 test causal chain, evidence separation, concept-first appearance, nontechnical transfer, non-overengineering, and integrated repair.
 - D / R source isolation and P V0.2 engineering transfer remain unchanged.
 - Static tests only validate skill packaging and eval file structure; **model behavior improvements require controlled old/new runs** with human review and output/transcript evidence.
+
+
+## V0.6.1 — Mandatory upstream
+
+Learning now **always** executes fresh source-facing Deep Read and independent Review before construction of its problem chain. D and R each use current Raw Input; neither can consume the other's output. L must read both, selectively extract meaningful insight, and return to real objects and mechanisms. These stages are a mandatory invocation contract, not proof of runtime isolation without traces. See [Preflight specification](learning-mandatory-dr-preflight.md).

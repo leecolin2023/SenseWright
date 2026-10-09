@@ -1,4 +1,4 @@
-# SenseWright V2.8.0
+# SenseWright V2.8.1
 
 **Agent skills for making sense of complex information — and turning understanding into executable engineering practice.**
 
@@ -6,7 +6,7 @@ SenseWright 现在收敛为四种一级认知模式：
 
 - **D — Deep Read V6.4**：先恢复认知结构，再按交付目标选择完整覆盖或认知提炼。
 - **R — Vibe Review V0.10**：审阅材料。
-- **L — System Learning V0.6.0**：问题优先；以真实失败推导最小机制，后置术语与框架，通过内置稳定化审阅形成有证据边界的 Knowledge Model。
+- **L — System Learning V0.6.1**：**先独立完成 D + R**，两者是必经认知脚手架；然后 L 回到真实问题、必要机制与知识模型。
 - **P — Practice V0.2**：把已理解的知识编译成可执行、可验证、可排错的真实工程路径。
 
 核心边界可以压缩成四个问题：
@@ -34,49 +34,27 @@ Practice 的目标已经从：
 
 因此“出题考我、模拟面试、连续压力追问”不再是进入 P 的充分条件。P 只有在用户需要把已理解知识落进真实工程、走通实施与验证路径时触发。
 
-## Architecture
+## Architecture — Mandatory Deep Read + Independent Review
 
 ~~~text
-Raw Source / User Context
-        │
-   ┌────┴────┐
-   ▼         ▼
-Deep Read   Review
-   D         R
-[isolated] [isolated]
-   │         │
-   └────┬────┘
-        │ optional references
-        ▼
-     Learning
-        L
-        │
-        │ Knowledge Model
-        ▼
-     Practice
-        P
-        │
-        │ Implementation Gap
-        └──────────────► Learning
+ Raw Source / User Query
+    /             \
+   D               R
+[raw-only]      [raw-only]
+    \             /
+     [both completed]
+             |
+             v
+     L — Learning
+ (scaffolds, not truth)
+             |
+             v
+     P — Practice
 ~~~
 
-### Source-facing
+**D/R 必须先执行，L 必须读取二者**；但具体发现仍按当前学习价值有选择地进入知识模型，而非复制两份报告。D 不看 R、R 不看 D；L 必须回到真实对象与机制。无文档时 D/R 均以用户实际问题为 Raw Input 轻量处理，不能伪造文献或不必要的批评。
 
-D / R 继续严格隔离：
-- 都直接读取 Raw Source；
-- 不读取 sibling outputs；
-- D 与 R 互不消费结果。
-
-### Knowledge-facing
-
-L / P 可以选择性参考已有结果：
-
-- Learning 可参考 D / R，以及 Practice 暴露出的 Gap；
-- Practice 可参考 D / R / L，其中 Learning Knowledge Model 通常是主要输入。
-
-统一规则：
-
-> **Reference ≠ Evidence. Transform, don't copy. Selective, not mandatory.**
+严格的 Runtime 级隔离与完成屏障需要宿主支持独立调用和 trace。Skill 静态规则只能表达契约，不能单独证实运行时的物理隔离。
 
 ## Deep Read V6.4
 
@@ -105,7 +83,7 @@ V6.4 同时把自检升级为真正的 **Acceptance Gate → Repair Loop**：Cov
 
 > **Deep Read 可以替代理解性重读，不能替代证据性回查。**
 
-## Learning V0.6.0 — Problem-Driven Knowledge Construction
+## Learning V0.6.1 — Mandatory D/R + Problem-Driven Knowledge Construction
 
 本次吸收 [IntraMate Learning & Framework Observation Method](https://github.com/leecolin2023/IntraMate/blob/main/Architecture/method/00-learning-method.md) 的可迁移认知方法，**并不复制其 Agent Runtime / Work Agent 具体领域分类，更不把 Deep Read 改成唯一的问题链形式**。
 
@@ -119,13 +97,13 @@ Ground Real Problem
 → Stable Knowledge Model → Project to Use
 ```
 
-Learning 内部执行 **Problem-chain Review → Concept First-Appearance Audit → Boundary & Evidence Review → Repair → Re-check**。用户看到的是经修复的知识解释，而不是“待执行 Gate”的审阅计划。
+每次 Learning 必须先执行独立的 Deep Read + Review，L 读取两份结果作为脚手架，再回到真实对象形成新的解释。L 内部另外执行 **Problem-chain Review → Concept First-Appearance Audit → Boundary & Evidence Review → Repair → Re-check**。用户看到的是经修复的知识解释，而不是“待执行 Gate”的审阅计划。
 
 知识与实施边界：`Problem Knowledge ≠ Framework Evidence ≠ Architecture Decision`；`UNKNOWN ≠ ABSENT`，`ABSENT ≠ BUILD`，`Knowledge Stable ≠ Implementation Ready`。
 
 V0.5.1–V0.5.3 的 Grounding、Contrastive Teaching、Mechanism Run Once、Boundary Variation 和 Adaptive Probe 继续保留。简单问题不强制长问题链；纯面试/自测不自动转入 Practice，只有真实工程实现才由 P 负责。
 
-详细说明：[Learning Problem-chain Migration](docs/learning-problem-chain-migration.md)。
+详细说明：[Learning Problem-chain Migration](docs/learning-problem-chain-migration.md)、[Mandatory D/R Preflight](docs/learning-mandatory-dr-preflight.md)。
 
 ## Practice V0.2
 
@@ -161,7 +139,7 @@ skills/
 │   └── SKILL.md
 ├── vibe-review-v0.10/
 │   └── SKILL.md
-├── system-learning-v0.6.0/
+├── system-learning-v0.6.1/
 │   └── SKILL.md
 └── practice-v0.2/
     └── SKILL.md

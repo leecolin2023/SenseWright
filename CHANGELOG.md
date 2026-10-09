@@ -1,5 +1,13 @@
 # Changelog
 
+## V2.8.1 — Mandatory D/R before Learning
+- System Learning V0.6.0 → **V0.6.1**，D V6.4、R V0.10、P V0.2 的独立职责保持不变。
+- 所有含 L 的路线强制展开为 **D + R → L**：D、R 只从本轮原始输入独立执行，可以并行，但必须全部完成后才启动 L，不能用历史结果代替。
+- L 必须读取 D/R 当轮结果，但不照搬它们。**Mandatory execution, selective incorporation**；D 恢复认知结构与案例，R 独立检查逻辑与证据，L 再回到真实对象和机制。
+- 无独立文档时仍基于问题原文进行轻量 D/R，不杜撰原文、批评；D/R 分别运行的硬隔离需真实宿主编排和 trace，静态 Skill 不能保证。
+- 更新 Router、README、L Skill、评测路由/验证脚本、新增案例和架构文档；冻结前版 V0.6.0 基线。
+
+
 ## V2.8.0 — Learning: transfer IntraMate's problem-driven method
 
 - System Learning **V0.5.3 → V0.6.0**。Deep Read V6.4、Review V0.10、Practice V0.2 核心不变。

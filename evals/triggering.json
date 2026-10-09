@@ -3,6 +3,10 @@
   "eval_version": "0.1",
   "queries": [
     {
+      "query": "请先对这份资料做忠实理解和独立审阅，然后再用它们作为脚手架帮助我真正学会其中的知识",
+      "should_trigger": true
+    },
+    {
       "query": "请从真实失败出发，通过连续的问题链帮助我学会 Agent 的必要运行机制，概念应该在真正需要时再出现",
       "should_trigger": true
     },
