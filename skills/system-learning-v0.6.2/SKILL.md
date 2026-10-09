@@ -1,6 +1,6 @@
 ---
 name: system-learning
-description: Learn real mechanisms from problems, including source-code study. Require independent Deep Read and Review before Learning; verify code behavior before modeling, then explain problem and mechanism before implementation and evidence, without presenting an API inventory.
+description: Learn why and how real mechanisms work across technical books, code, algorithms, commands, protocols and operational cases. Trigger on mechanism understanding, design rationale and source-code behavior study, not code implementation alone. Run independent Deep Read and Review first; teach the problem and mechanism before grounded implementations and evidence.
 ---
 
 # System Learning V0.6.2
@@ -26,7 +26,7 @@ D/R 可以并行，但必须各自从 Raw Input 开始、互不消费，且**全
 1. **Ground**：先让对象具体可见。指出用户真正的问题、当前做法或现象；对带有未经证实前提的提问，先区分观察与假设。用户觉得抽象时，回到一个真实场景，说明“原来怎样、引入新机制后哪一步改变”。
 2. **Problem Chain**：仅当理解需要时沿「旧解释或做法 → 具体失败/缺口 → 为什么不够 → 最小必要机制 → 新机制改变什么」推进。下一环必须解决真正的新问题；**机制先于术语，术语先于具体框架/API**。简单问题直接解释，不制造失败链。
 3. **Run & Explain**：涉及算法或技术系统时，优先用最小例子追踪关键输入、状态/表示、动作、结果与反馈，并解释每一步**为何必要**。无法实际执行时可用明确标注的推演，不得称作已验证的 Probe。非技术主题不强制模拟技术流程。
-4. **Source-grounded Code Learning**：研究阶段先读取源码、测试与实际行为证据，确认真实调用和状态变化，再形成机制判断；**交付讲解顺序**优先为「真实问题 → 必要机制 → 具体实现逻辑 → 少量可核验源码锚点 → 下一问题（仅当有认知增量）」。源码是用来验证、具象化机制的证据，不拿文件树、函数名或 API 清单替代知识结构；没有读到的实现不猜，未运行的 Probe 不声称已运行。**若源码行为与预期机制冲突，修正机制模型，不得倒推源码。**
+4. **Mechanism-to-Implementation Mapping（机制到实现映射）**：对具有实际实现或操作的技术知识（教材中的算法、源码、配置、命令、协议、实验、工程与业务流程等），**研究时先核对原始材料、可观察行为与证据边界，再形成机制判断；交付时按「真实问题 → 必要机制 → 具体实现/操作 → 精准证据 → 下一个有价值的问题」讲解**。顺着关键输入、状态、动作与反馈解释实现如何兑现机制，不用函数、命令、步骤或术语清单代替因果关系。**源码学习**应精确还原关键调用/数据链，并给可核验的文件路径与行号（材料允许时）；其他载体给对应步骤、输入输出或证据锚点，避免无增益的详列。教学示例/推演不能冒充真实运行；证据不足标明未知，实现与预想冲突则**修正机制模型而非倒推实现**。简单概念问题不强行增加实现章节。
 5. **Contrast & Vary**：当比较两个概念时，优先展示一个几乎无差异和一个差异明显的情境；当边界不清且有认知收益时，只改变一个关键条件，说明哪一步先变化、结论保留/减弱/失效还是无法判断。机制应能解释这一变化；不做无增益的穷举。
 6. **Rebuild**：利用 D 的实例、故事或比喻辅助理解，但最终映射回真实对象与因果机制，必要时指出比喻失真的地方。抽象框架只能**压缩已经解释清楚的事实**，不能取代解释。
 
@@ -43,7 +43,8 @@ D/R 可以并行，但必须各自从 Raw Input 开始、互不消费，且**全
 - **问题链**：每个新增机制确实解决上一环缺口吗？有没有预设架构倒推问题或无意义的延长？
 - **术语首次出现**：读者先理解“为什么需要”，再看见名词吗？有没有用框架/API 名字代替行为说明？
 - **证据与边界**：有没有混淆原文、D/R 观点、推断和外部事实？有没有凭单个案例外推、把未知说成已证实？
-- **源码学习专项**：去掉框架名、函数名和链接，读者是否仍能理解机制为何存在、如何工作？所给源码锚点是否确实证明紧邻的实现主张，而不是装饰性目录或技术名词？
+- **机制独立性**：去掉产品、函数、命令和工具名称，读者是否仍理解机制为什么存在、如何工作？
+- **实现锚定**：重新引入代码、实验、教材案例或操作流程后，关键行为是否能对应真实材料和有效证据？源码链接/行号是否精确支撑紧邻的实现主张？
 
 只保留当前任务真正需要的解释。高质量答案应让用户看见 **对象/问题 → 实际变化 → 因果机制 → 关键适用边界**，必要时补可迁移判断或下一步。如果关键环节缺证据，清楚标记未知与最小验证方式，**不假装模型已稳定**。
 

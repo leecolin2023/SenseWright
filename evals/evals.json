@@ -922,12 +922,6 @@
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
       },
-      "source_learning": {
-        "research_order": "inspect_source_before_modeling",
-        "presentation_order": "real_problem_necessary_mechanism_implementation_evidence_next_problem",
-        "citations": "minimal_verified_source_anchors",
-        "mismatch": "revise_model_not_source"
-      },
       "files": [
         "evals/fixtures/learning-code-action-loop.md"
       ],
@@ -937,7 +931,13 @@
         "代码链正确：step() 提取调用→executeToolCalls() 分派并追加 Tool Result→后续 step() 通过 deriveMessages() 读取派生历史；不声称后续 step 自动发生。",
         "只用 toy 文件与行号作源码证据，不输出无关函数/目录清单，不将合成 fixture 当成真实产品。",
         "不声称真实外部调用成功、真实 Probe 或 Durable Execution；完整 D/R 前置，交付整合 Learning。"
-      ]
+      ],
+      "mechanism_mapping": {
+        "research_order": "verify_original_material_and_behavior_before_modeling",
+        "presentation_order": "problem_mechanism_realization_evidence_next_problem",
+        "evidence": "minimal_verifiable_anchors_appropriate_to_medium",
+        "contradictions": "revise_model_not_invent_implementation"
+      }
     },
     {
       "id": 32,
@@ -958,12 +958,6 @@
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
       },
-      "source_learning": {
-        "research_order": "inspect_source_before_modeling",
-        "presentation_order": "real_problem_necessary_mechanism_implementation_evidence_next_problem",
-        "citations": "minimal_verified_source_anchors",
-        "mismatch": "revise_model_not_source"
-      },
       "files": [
         "evals/fixtures/learning-code-source-mismatch.md"
       ],
@@ -973,7 +967,13 @@
         "明确指出源码没有 Tool Schema/分派/Observation，history.push 文本不等于工具 Observation。",
         "源码反驳预期机制时必须纠正结论，不能猜测缺失函数或声称运行了 Probe。",
         "只引用给定的合成片段，不伪造真实 GitHub 链接。"
-      ]
+      ],
+      "mechanism_mapping": {
+        "research_order": "verify_original_material_and_behavior_before_modeling",
+        "presentation_order": "problem_mechanism_realization_evidence_next_problem",
+        "evidence": "minimal_verifiable_anchors_appropriate_to_medium",
+        "contradictions": "revise_model_not_invent_implementation"
+      }
     },
     {
       "id": 33,
@@ -994,12 +994,6 @@
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
       },
-      "source_learning": {
-        "research_order": "inspect_source_before_modeling",
-        "presentation_order": "real_problem_necessary_mechanism_implementation_evidence_next_problem",
-        "citations": "minimal_verified_source_anchors",
-        "mismatch": "revise_model_not_source"
-      },
       "files": [
         "evals/fixtures/learning-code-incomplete.md"
       ],
@@ -1009,6 +1003,84 @@
         "区分类型声明证据与未知实现；不把工具类型视为执行能力已存在。",
         "不编造 Tool Executor、Session Store、后续模型循环，也不伪造源码锚点。",
         "输入不足时保持简明且不把教学推演写作实际 Probe。"
+      ],
+      "mechanism_mapping": {
+        "research_order": "verify_original_material_and_behavior_before_modeling",
+        "presentation_order": "problem_mechanism_realization_evidence_next_problem",
+        "evidence": "minimal_verifiable_anchors_appropriate_to_medium",
+        "contradictions": "revise_model_not_invent_implementation"
+      }
+    },
+    {
+      "id": 34,
+      "name": "learning-technical-textbook-sql-transactions",
+      "prompt": "请根据附件的技术教材案例，帮我真正理解为什么需要数据库事务。不要从 BEGIN/COMMIT/ROLLBACK 或 ACID 名词清单开始；先从两次账户更新中途失败产生什么问题出发，再解释最小必要机制，最后映射到案例中的 SQL 操作与假设结果。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "mechanism_mapping": {
+        "research_order": "verify_original_material_and_behavior_before_modeling",
+        "presentation_order": "problem_mechanism_realization_evidence_next_problem",
+        "evidence": "minimal_verifiable_anchors_appropriate_to_medium",
+        "contradictions": "revise_model_not_invent_implementation"
+      },
+      "files": [
+        "evals/fixtures/learning-transaction-textbook.md"
+      ],
+      "expected_output": "通过分开提交后余额不一致推导整体原子提交/回滚的必要性，再解释示例 SQL 的操作对应关系；不虚构真实数据库运行或超出片段的隔离/持久性保证。",
+      "assertions": [
+        "先解释 A/B 余额不一致与整体操作要求，再在必要时介绍事务原子性、BEGIN/COMMIT/ROLLBACK 语义，不从命令或 ACID 目录起步。",
+        "具体映射到教材原始余额 A=100、B=100、转账30，说明独立提交为何可能只发生第一步，以及事务成功/失败的结果边界。",
+        "清楚指出教材为合成的假设结果，不声称真实执行过数据库 Probe，不延伸出教材未提供的并发隔离或磁盘持久化测试结论。",
+        "移除 SQL 语法后，读者仍能说清为什么需要原子地完成两个相关更新；提供对教材代码片段的精准对应。"
+      ]
+    },
+    {
+      "id": 35,
+      "name": "learning-operational-textbook-linux-signals",
+      "prompt": "这段 Linux 教材包含 sleep、ps、kill -TERM 等命令。我不想背命令列表，我想理解进程运行时为什么需要外部控制、如何让停止请求到达进程、怎样知道它是否退出。请先解释机制，再用附件命令和示意输出落地。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "mechanism_mapping": {
+        "research_order": "verify_original_material_and_behavior_before_modeling",
+        "presentation_order": "problem_mechanism_realization_evidence_next_problem",
+        "evidence": "minimal_verifiable_anchors_appropriate_to_medium",
+        "contradictions": "revise_model_not_invent_implementation"
+      },
+      "files": [
+        "evals/fixtures/learning-linux-process-textbook.md"
+      ],
+      "expected_output": "先从运行中进程难以控制的问题推导信号请求和状态观察，再映射到模拟示例的 ps/kill/sleep；区分 TERM 与 KILL，强调演示不是实测。",
+      "assertions": [
+        "先解释外部进程停止的真实问题、信号机制和状态观察为何必要，再给出 sleep/ps/kill 的操作链；不从命令清单展开。",
+        "对教材中的 PID=4210、TERM 前后示意 ps 输出进行合理映射，强调 TERM 是请求，不等价于任意进程必然即刻退出。",
+        "明确示例是合成终端记录而非真实命令执行，不能宣称实际运行了 KILL 或得到系统现场证据。",
+        "删除命令名称后仍可理解进程控制与效果验证的机制，同时返回案例具体输入、操作和观察位置。"
       ]
     }
   ]

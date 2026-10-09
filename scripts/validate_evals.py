@@ -43,16 +43,18 @@ def main():
         elif "learning_preflight" in case:
             errors.append(f"{prefix}: non-L case cannot set Learning preflight")
         if "source_learning" in case:
-            expected_source = {
-                "research_order": "inspect_source_before_modeling",
-                "presentation_order": "real_problem_necessary_mechanism_implementation_evidence_next_problem",
-                "citations": "minimal_verified_source_anchors",
-                "mismatch": "revise_model_not_source",
+            errors.append(f"{prefix}: deprecated code-only source_learning contract")
+        if "mechanism_mapping" in case:
+            expected_mapping = {
+                "research_order": "verify_original_material_and_behavior_before_modeling",
+                "presentation_order": "problem_mechanism_realization_evidence_next_problem",
+                "evidence": "minimal_verifiable_anchors_appropriate_to_medium",
+                "contradictions": "revise_model_not_invent_implementation",
             }
-            if "L" not in route or case.get("source_learning") != expected_source:
-                errors.append(f"{prefix}: invalid source-grounded Learning contract")
+            if "L" not in route or case.get("mechanism_mapping") != expected_mapping:
+                errors.append(f"{prefix}: invalid Mechanism-to-Implementation Mapping contract")
             if not case.get("files"):
-                errors.append(f"{prefix}: source-grounded eval must have source fixtures")
+                errors.append(f"{prefix}: mechanism-mapping eval must have source fixtures")
         if not case.get("assertions"):
             errors.append(f"{prefix}: assertions must not be empty")
         for rel in case.get("files", []):

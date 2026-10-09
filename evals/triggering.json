@@ -117,6 +117,26 @@
     {
       "query": "请基于 DeepSeek Harness 源码帮我学懂 Agent Runtime 的运行机制，先讲为什么需要，再用关键源码链证明，不要罗列 API 名字。",
       "should_trigger": true
+    },
+    {
+      "query": "我正在看数据库事务的一章技术教材，能先用失败案例让我理解原子性为什么必要，再映射到 SQL 语句吗？",
+      "should_trigger": true
+    },
+    {
+      "query": "结合 Linux 实际操作案例，讲清进程为什么需要信号控制以及 kill 命令背后的机制。",
+      "should_trigger": true
+    },
+    {
+      "query": "请从这份源码解释 Agent 为什么要等待 Tool Result，再精确追踪到实现调用链。",
+      "should_trigger": true
+    },
+    {
+      "query": "只帮我列出仓库有哪些 TypeScript 文件以及目录结构，不需要学习实现原理。",
+      "should_trigger": false
+    },
+    {
+      "query": "照教材给出的命令直接帮我排查 Linux 进程并终止它，不需要讲解机制。",
+      "should_trigger": false
     }
   ]
 }
