@@ -134,6 +134,18 @@ Every L eval now includes the route prefix ["D","R","L"] and the following contr
 
 D/R independently consume current Raw Input. Both are mandatory and must finish before L; L reads both as cognitive scaffolds, while returning to the real object and mechanism. Historical optional reference_context cannot replace current D/R. Query-only prompts still receive two concise preflight stages without fabricating sources. Cases 28–30 cover source preflight, no-document preflight, and non-authoritative scaffold handling. **Static validation cannot prove actual runtime isolation**: check execution traces or mark isolation and barrier UNVERIFIED.
 
+### Learning V0.6.2 — Mechanism-to-Implementation Mapping
+
+Cases **31–35** test one general Learning contract, not a code-only special case: **research original materials / behavior before forming conclusions; teach real problem → necessary mechanism → concrete realization → minimal verifiable evidence → next meaningful problem**. Fresh independent D/R preflight is unchanged.
+
+- **31–33, code-specific:** toy Agent loop must derive Tool Execution from the problem *before* citing code; a counterexample must shrink unsupported claims; types-only input cannot be treated as executed capability. Exact function/data-flow and source anchors remain essential where source code exists.
+- **34, technical textbook / SQL:** use a two-update inconsistency to derive transaction atomicity before listing BEGIN/COMMIT/ROLLBACK; anchor in the teaching SQL and clearly label hypothetical outcomes, not executed database evidence.
+- **35, operational technical textbook / Linux:** derive why external process control and subsequent state observation matter, then map to sample terminal commands/signals; do not treat the mock terminal transcript as actually run.
+
+Two quality gates: **Mechanism Independence** (remove function/product/command names, and why/how must still make sense) and **Implementation Grounding** (map every important behavior back to the real artifact and its evidence). The optional `mechanism_mapping` metadata applies across evidence media, with controlled specificity for source-code/line-number tasks. No forced five-section templates or invented external facts.
+
+New fixtures are explicitly synthetic. Static validators ensure structure/metadata, not model quality, actual experiment execution or D/R runtime separation. Use frozen `learning_v0_6_1` for matched A/B evaluation.
+
 ### Practice Engineering Transfer
 
 Practice V0.2 不再以 capability test 为核心，而是验证 **Knowledge → Executable Engineering Model**：

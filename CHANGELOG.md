@@ -1,5 +1,13 @@
 # Changelog
 
+## V2.8.2 — Mechanism-to-Implementation Mapping in Learning V0.6.2
+- 新增 `skills/system-learning-v0.6.2/SKILL.md` 并替换活跃 `V0.6.1` 路由；保留本轮独立 **D + R → L**，其他 D/R/P Skill 版本不变。
+- 将原源码专项规则**泛化为通用“机制到实现映射”**：技术书、算法、源码、配置、命令、实验、协议及工程/业务流程皆适用；区分研究顺序（先核实材料/行为，再判断机制）与教学顺序（问题→必要机制→具体实现→可核验证据→有意义的新问题）。
+- 保留源码学习精准性：从真实问题触发 Learning，结合关键调用/数据链与可核验位置，而非代码/API 清单；实现与预想冲突时纠正机制，不捏造代码或实测。
+- 增加“机制独立性 + 实现锚定”两道内置自检，简单概念不强迫跑完整实现链或长文章。
+- 新增源码回归 #31–33 和跨领域技术教材回归 #34–35（SQL 事务、Linux 进程信号），更新触发用例和静态校验；冻结 V0.6.1 Git baseline。静态通过不证明模型行为优越或真实 D/R 隔离 Trace。
+
+
 ## V2.8.1 — Mandatory D/R before Learning
 - 收敛活跃 Learning Skill 为精简执行契约，合并重复的 Ground / Problem Chain / Boundary Variation / Gate / Acceptance 说明；保留回归用例，版本演变解释仅存于非运行文档。
 - System Learning V0.6.0 → **V0.6.1**，D V6.4、R V0.10、P V0.2 的独立职责保持不变。
