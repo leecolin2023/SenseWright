@@ -468,6 +468,107 @@
         "预算采购可以被降权，但不能被错误改写成模型能力或治理问题；若被省略，也不应导致对第二阶段约束形成相反理解。",
         "输出不会强行宣称所有问题具有同一根因，也不会跨越 Source Boundary 引入外部事实。"
       ]
+    },
+    {
+      "id": 22,
+      "name": "learning-problem-chain-tool-calling",
+      "prompt": "我知道 Agent 可以调用工具，但不要从 Tool、Runtime、Observation 的术语目录讲起。请从模型回答一个查询请求和真正完成查询之间差了什么开始，每解决一个问题再揭示下一个问题，最后让我看懂 Agent 的行动闭环。",
+      "expected_route": [
+        "L"
+      ],
+      "expected_output": "从真实行动失败出发推导受控执行、结果反馈、持续行动循环，再后置术语命名并明确边界。",
+      "files": [],
+      "assertions": [
+        "先讲可观察的任务失败，再讲 Runtime/Tool 等术语。",
+        "每引入一个必要行为都说明旧机制在哪一步仍然不够。",
+        "Tool Execution、Observation 和 Loop 的术语出现在其必要性已经被说明之后。",
+        "不会把某一具体开源框架或 API 当成实现该机制的唯一方式。",
+        "问题链在形成完整的行动闭环知识后停止，不自动展开产品开发清单。"
+      ]
+    },
+    {
+      "id": 23,
+      "name": "learning-knowledge-vs-native-evidence",
+      "prompt": "一个开源 Agent 的文档只写了 Session 持久化，没有提 Workspace。是不是说明它不支持 Work continuity？我们是不是应该自己做 Task Store 和 Workflow Engine？请先解释问题和证据缺口，不要直接给实施方案。",
+      "expected_route": [
+        "L"
+      ],
+      "expected_output": "区分 Session persistence、Work continuity、尚未核实的框架能力和独立的自研决策。",
+      "files": [],
+      "assertions": [
+        "用真实任务或恢复案例解释恢复交互不自动等于恢复工作。",
+        "没有把‘文档未发现’直接写成‘能力已证实不存在’。",
+        "明确区分问题知识、原生框架能力证据和工程决策。",
+        "不声称实际运行过未执行的框架 Probe。",
+        "不把 UNKNOWN 自动变成 ABSENT，也不从 ABSENT 直接导出 BUILD。"
+      ]
+    },
+    {
+      "id": 24,
+      "name": "learning-concept-first-appearance",
+      "prompt": "我想学会数据库事务的意义。请从一笔两步更新中途失败的业务开始，不要先列 ACID、MVCC、Undo Log 等名词；只有遇到实际需要解决的问题，再引入一个新概念。",
+      "expected_route": [
+        "L"
+      ],
+      "expected_output": "以具体失败和最小保证推导原子性等概念，术语后置，避免为讲完整知识谱系添加无关机制。",
+      "files": [],
+      "assertions": [
+        "先展示具体失败造成的错误状态，而不是事务名词表。",
+        "每个重要术语在首次出现前已有真实需要它的机制缺口。",
+        "不会把数据库某种具体的事务实现说成所有事务都必须采用的方式。",
+        "不强制展开 MVCC、隔离级别等与当前问题无关的知识。"
+      ]
+    },
+    {
+      "id": 25,
+      "name": "learning-problem-chain-business-transfer",
+      "prompt": "领导说我们的系统员工使用率很低，所以大家不需要这个系统。我要学会判断这类说法是否成立。先从已有观察实际说明什么入手，不要堆数据分析框架术语；缺少数据的地方明确说不知道。",
+      "expected_route": [
+        "L"
+      ],
+      "expected_output": "根据观察和尚未解释的差异推导统计口径、使用机会与证据边界，形成可迁移的业务判断方法。",
+      "files": [],
+      "assertions": [
+        "明确低使用率是观察，‘不需要产品’是尚未验证的解释。",
+        "引入必要的比较口径或使用机会区分，解释这些区分解决什么疑问。",
+        "通过一个高信息量条件变化，说明结论可能变化。",
+        "没有虚构使用数据，也不强迫业务问题套技术框架 Probe。"
+      ]
+    },
+    {
+      "id": 26,
+      "name": "learning-do-not-overbuild-chain",
+      "prompt": "请用一个特别简单的数字例子解释同比和环比有什么区别。我只需要读懂报表，不需要完整课程、审阅清单或工程方案。",
+      "expected_route": [
+        "L"
+      ],
+      "expected_output": "直接解释对比时间基准及相应示例，不用为普通概念强行制造长问题链。",
+      "files": [],
+      "assertions": [
+        "准确解释同比和环比的比较基准。",
+        "至少有一个便于人理解的具体数值或时间例子。",
+        "没有为了执行方法模板而构造多轮虚假失败。",
+        "不打印 Problem-chain/Concept-first/Boundary 三道 Gate 检查表。"
+      ]
+    },
+    {
+      "id": 27,
+      "name": "learning-stabilization-repair-inline",
+      "prompt": "附件是一份技术学习提纲，但其中可能存在逻辑跳步、过早命名、把技术方案当成学习结论。请直接将它修复成连续的知识学习说明，帮我理解 Agent Runtime 与 Work Continuity 为什么不同，不要只列三道待执行 Gate。",
+      "expected_route": [
+        "L"
+      ],
+      "expected_output": "修复概念和因果链，去除未经证实的产品结论与自研必然性，直接交付稳定或明确不稳定的知识结果。",
+      "files": [
+        "evals/fixtures/learning-premature-framework-outline.md"
+      ],
+      "assertions": [
+        "不把 Session / Thread 持久化直接当成 Work 状态持久化。",
+        "先解释观察到的恢复失败，再引入 Work State 等术语。",
+        "纠正提纲中‘文档没提就没有能力’的未经验证判断。",
+        "不会直接得出必须自研通用 Enterprise Layer、Task Store 或 Workflow Engine。",
+        "输出经过修复的可阅读知识解释，而不是‘Stable Gate — 待执行’。"
+      ]
     }
   ]
 }

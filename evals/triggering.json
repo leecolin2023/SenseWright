@@ -3,6 +3,10 @@
   "eval_version": "0.1",
   "queries": [
     {
+      "query": "请从真实失败出发，通过连续的问题链帮助我学会 Agent 的必要运行机制，概念应该在真正需要时再出现",
+      "should_trigger": true
+    },
+    {
       "query": "请帮我深读这篇论文，保留作者真正的推理过程，不要只给结论",
       "should_trigger": true
     },
@@ -100,6 +104,10 @@
     },
     {
       "query": "给我出 10 道 RAG 面试题连续追问我，看看我会不会",
+      "should_trigger": false
+    },
+    {
+      "query": "直接帮我运行程序并修复报错，不需要学习解释或知识模型",
       "should_trigger": false
     }
   ]

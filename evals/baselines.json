@@ -47,6 +47,12 @@
       "type": "git_commit",
       "ref": "1aa694d00e896f7c7896b07c5439c252e4344d82",
       "description": "Frozen SenseWright V2.6.4 baseline with Practice V0.1 immediately before Practice shifted from capability assessment to end-to-end engineering transfer."
+    },
+    {
+      "name": "learning_v0_5_3",
+      "type": "git_commit",
+      "ref": "6bfc5519e089d8a1b08d254d500e947388400e78",
+      "description": "Frozen V2.7.0 with Learning V0.5.3; baseline before IntraMate problem-driven learning, evidence boundary, and embedded stabilization upgrade."
     }
   ]
 }

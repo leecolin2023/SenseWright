@@ -1,4 +1,4 @@
-# SenseWright V2.7.0
+# SenseWright V2.8.0
 
 **Agent skills for making sense of complex information — and turning understanding into executable engineering practice.**
 
@@ -6,7 +6,7 @@ SenseWright 现在收敛为四种一级认知模式：
 
 - **D — Deep Read V6.4**：先恢复认知结构，再按交付目标选择完整覆盖或认知提炼。
 - **R — Vibe Review V0.10**：审阅材料。
-- **L — System Learning V0.5.3**：先落地理解；必要时改变一个高信息量条件暴露边界；技术机制再跑起来，最后形成知识模型。
+- **L — System Learning V0.6.0**：问题优先；以真实失败推导最小机制，后置术语与框架，通过内置稳定化审阅形成有证据边界的 Knowledge Model。
 - **P — Practice V0.2**：把已理解的知识编译成可执行、可验证、可排错的真实工程路径。
 
 核心边界可以压缩成四个问题：
@@ -105,50 +105,27 @@ V6.4 同时把自检升级为真正的 **Acceptance Gate → Repair Loop**：Cov
 
 > **Deep Read 可以替代理解性重读，不能替代证据性回查。**
 
-## Learning V0.5.3
+## Learning V0.6.0 — Problem-Driven Knowledge Construction
 
-主体调整为：
+本次吸收 [IntraMate Learning & Framework Observation Method](https://github.com/leecolin2023/IntraMate/blob/main/Architecture/method/00-learning-method.md) 的可迁移认知方法，**并不复制其 Agent Runtime / Work Agent 具体领域分类，更不把 Deep Read 改成唯一的问题链形式**。
 
-~~~text
-Ground Object
-→ Build Model
-→ Find Gaps
-→ Project to Use
-~~~
+```text
+Ground Real Problem
+→ Current Explanation / Behavior
+→ Observable Failure / Explanatory Gap
+→ Minimal Necessary Mechanism
+→ Next Problem, if it matters
+→ Evidence / Boundary
+→ Stable Knowledge Model → Project to Use
+```
 
-当用户对一个概念仍觉得抽象时，Learning 优先用具体任务和对照情境解释“引入它前后到底哪一步发生了变化”。如果找不到真实差异，允许结论是“这个区分对当前任务没有实质价值”。
+Learning 内部执行 **Problem-chain Review → Concept First-Appearance Audit → Boundary & Evidence Review → Repair → Re-check**。用户看到的是经修复的知识解释，而不是“待执行 Gate”的审阅计划。
 
-> **抽象应该压缩已经理解的事实，而不应该成为解释的起点。**
+知识与实施边界：`Problem Knowledge ≠ Framework Evidence ≠ Architecture Decision`；`UNKNOWN ≠ ABSENT`，`ABSENT ≠ BUILD`，`Knowledge Stable ≠ Implementation Ready`。
 
-Teaching Example 仍属于 Learning；只有当用户已经理解、需要检验自己能否独立判断或操作时，才进入 Practice。
+V0.5.1–V0.5.3 的 Grounding、Contrastive Teaching、Mechanism Run Once、Boundary Variation 和 Adaptive Probe 继续保留。简单问题不强制长问题链；纯面试/自测不自动转入 Practice，只有真实工程实现才由 P 负责。
 
-V0.5.3 在不改变 Learning 主体架构的前提下，把 **Vary One Condition** 从技术机制中的局部能力推广为按需启用的 **Boundary Variation**：模型初步建立后，如果改变一个关键前提、观察角度、变量、范围或边界会带来明显认知增量，就只改变一个，观察哪些结论仍成立、哪些削弱或消失、哪些问题已经超出当前材料的回答能力。它不是强制步骤，也不是科学论证 checklist。
-
-对 mechanism-heavy technical knowledge，Learning 继续保留按需启用的深度路径：
-
-~~~text
-Ground
-→ Run Once
-→ Explain Mechanism
-→ Vary One Condition
-→ Compress Model
-~~~
-
-目标不是固定输出“定义 / 原理 / 示例 / 优缺点”，而是让一个真实输入经过系统时的关键状态、表示、资源或控制流变得可观察。随后改变一个关键条件，看当前模型是否能够解释结果为什么变化。
-
-> **技术理解的更强判据：模型不只能够描述系统，还应该能够解释并预测相邻条件变化。**
-
-但在真正阻塞模型时允许：
-
-~~~text
-Gap
-→ Adaptive Probe / Research
-→ Update Model
-~~~
-
-Learning Probe 的目标是减少 **knowledge uncertainty**。
-
-如果问题变成“你到底会不会”，转入 Practice。
+详细说明：[Learning Problem-chain Migration](docs/learning-problem-chain-migration.md)。
 
 ## Practice V0.2
 
@@ -184,7 +161,7 @@ skills/
 │   └── SKILL.md
 ├── vibe-review-v0.10/
 │   └── SKILL.md
-├── system-learning-v0.5.3/
+├── system-learning-v0.6.0/
 │   └── SKILL.md
 └── practice-v0.2/
     └── SKILL.md
@@ -198,7 +175,8 @@ Eval 路由同步收敛为：
 
 原 Q case 已重新归属：
 - “把问题问清楚 / 专家访谈求证” → Learning；
-- “用场景或面试追问检验是否会用” → Practice。
+- 知识自测或模拟面试不再自动触发 Practice；
+- 把 Knowledge Model 落到真实工程设计、实现和验证 → Practice。
 
 Learning V0.5.1 的 grounding regression 继续保留，重点验证：
 - 概念差异先回到真实任务，而不是继续堆 taxonomy；

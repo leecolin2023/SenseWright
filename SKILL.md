@@ -3,7 +3,7 @@ name: sensewright
 description: Route complex information and knowledge-work tasks among faithful deep reading, independent review, systematic learning, and engineering practice. Use when the user wants to understand source material, judge whether a document or argument is sound, build a reusable knowledge model, or turn an understood concept into executable engineering know-how in a realistic project. Deep Read and Review remain source-isolated; Learning and Practice may selectively use prior outputs as attributed reference context rather than inherited truth.
 ---
 
-# SenseWright V2.7.0
+# SenseWright V2.8.0
 
 ## 核心设计
 
@@ -13,7 +13,7 @@ SenseWright 维护四种一级认知模式：
 
 - **D — Deep Read**：先忠实恢复原材料的认知结构，再按交付意图选择完整覆盖型或认知提炼型压缩。
 - **R — Review**：完整覆盖原材料后独立评价。
-- **L — Learning**：先把当前对象落到真实情境中讲清楚；模型建立后，在有明显认知增量时改变一个关键前提、观察角度、变量或边界，暴露适用范围；对机制型技术知识进一步让机制跑起来，再形成可复用知识模型。
+- **L — Learning**：先锚定真实问题，追踪旧解释失效后为何需要新机制，再命名概念；必要时运行最小实例、改变关键条件、区分实现证据，通过三道内置 Stabilization Gate 修复问题链、概念首次出现和边界，形成稳定 Knowledge Model。
 - **P — Practice**：把已经理解的知识放进真实工程场景，完整走通设计、实现、运行、验证、排错和工程化，把 Knowledge Model 转成 Executable Engineering Model。
 
 Questioning 不再作为独立路由。
@@ -103,11 +103,13 @@ Review 先完整覆盖，再判断重要性：
 - 发现还缺什么，并通过必要的追问、研究或专家交流继续补齐；
 - 把知识投影到会议、实施或决策。
 
-→ 使用 `skills/system-learning-v0.5.3/SKILL.md`
+→ 使用 `skills/system-learning-v0.6.0/SKILL.md`
 
 **中心问题：我真正懂了吗？**
 
-当用户觉得概念“太抽象、像生造的、实际没区别”，Learning 必须先降回具体对象，用能拉开差异的真实情境解释“到底哪一步变了”。模型建立后，如果改变一个关键前提、观察角度、变量或边界能够显著改变理解，应按需做一次 Boundary Variation，观察哪些结论仍成立、哪些消失、哪些问题已经变得不可回答；这不是强制 checklist，也不是科学论证流程。对于算法、系统、Agent、RAG、数据库等 mechanism-heavy knowledge，仅知道“为什么需要”还不够：应尽量让一个最小实例真实跑一遍，并用条件变化检验当前机制模型能否解释结果。抽象应该压缩已经理解的事实，而不是成为解释的起点。
+用户觉得概念“太抽象、像生造的、实际没区别”时，先降层回到真实对象：原有行为是什么、哪里失败、最小新增机制改变了哪一步。复杂学习任务优先按 `Current Explanation → Failure → Necessary Mechanism → Next Problem (if useful)` 推进，术语和具体 Framework 后置。技术知识保留 Run Once / Boundary Variation，并区分 **Problem Knowledge / Implementation Evidence / Architecture Decision**。不要从 UNKNOWN 推出 ABSENT，更不能从 ABSENT 直接推出“应自研”。
+
+Learning 在生成过程中执行 `Problem-chain Review → Concept First-Appearance Audit → Boundary & Evidence Review → Repair`；这不是交付后的待办，也不是要求简单主题输出审阅清单。Deep Read / Review 的 source isolation 不改变。
 
 Learning 可以选择性参考已有 D / R / P 结果，但它们只是 Reference Context。
 
@@ -121,7 +123,7 @@ Learning 可以选择性参考已有 D / R / P 结果，但它们只是 Referenc
 
 Learning 可以一次提出一个高信息价值问题，并根据回答更新 Knowledge Model。
 
-如果问题是为了“测试用户会不会”，则不是 Learning Probe，而应路由 Practice。
+用户明确要求短自测，可将其作为 Learning 的教学反馈；单纯出题、面试或测试“会不会”不自动路由 Practice。只有完整工程实施、验证与排障才进入 P。
 
 ---
 

@@ -1,5 +1,17 @@
 # Changelog
 
+## V2.8.0 — Learning: transfer IntraMate's problem-driven method
+
+- System Learning **V0.5.3 → V0.6.0**。Deep Read V6.4、Review V0.10、Practice V0.2 核心不变。
+- 从 IntraMate `Architecture/method/00-learning-method.md` 吸收 **Problem First、Mechanism Before Framework、知识与原生证据分离、三道内置 Stabilization Gate**；不复制其三框架比较和 Agent 领域架构结论。
+- Learning 新增可追溯的问题链：`Real Problem → Current Mechanism Fails → Minimal Necessary Behavior → Next Problem (if useful) → Stable Model`。保留 V0.5.3 具体化、机制可运行、单变量变化、适应式补缺能力；不强制非技术主题跑长技术流程。
+- 区分 **Problem Knowledge / Implementation Evidence / Architecture Decision**。规定 UNKNOWN ≠ ABSENT、ABSENT ≠ BUILD、Knowledge Stable ≠ Implementation Ready；无真实 Probe 不声称 executable evidence。
+- 将 **Problem-chain Review、Concept First-Appearance Audit、Boundary & Evidence Review** 作为生成过程中的 Draft → Gate → Repair → Re-check，而非交付后的“待审阅”阶段。
+- 修复旧的“知识测验自动路由 Practice”描述；Practice 聚焦知识到实际工程实现的转化。
+- 新增六个 Learning 回归用例与负面提纲 fixture，更新触发测试，冻结升级前 `learning_v0_5_3` baseline 为 `6bfc5519e089d8a1b08d254d500e947388400e78`。
+- 此版本只增加评测定义和静态契约，不宣称已经完成新旧 Skill 在相同模型/参数下的实测对比。
+
+
 ## V2.7.0 — Practice engineering transfer
 - Practice 从 **V0.1 升级到 V0.2**；Deep Read V6.4、Review V0.10、Learning V0.5.3 保持不变。
 - Practice 的 Mission 从 **Knowledge Assessment / capability stress test** 正式调整为 **Knowledge-to-Execution / Engineering Transfer**。

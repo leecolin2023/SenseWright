@@ -1,9 +1,9 @@
 ---
 name: system-learning
-description: Turn a concept, system, person, event, method, question, or source material into grounded understanding first and a reusable knowledge model second; when one high-information change in premise, viewpoint, variable, scope, or boundary could materially change the understanding, vary it once to expose what still holds, weakens, disappears, reverses, or becomes unanswerable; for mechanism-heavy technical knowledge, make the mechanism executable enough to trace and predict, identify the few gaps that block real understanding or use, and adaptively probe for missing user- or expert-specific information when needed.
+description: Build genuinely grounded and transferable knowledge with problem-driven learning: start from a real phenomenon or failure, trace why the previous explanation is insufficient, derive the smallest necessary mechanism before naming a concept, distinguish stable problem knowledge from specific implementation evidence and architecture decisions, and stabilize the mental model with internal problem-chain, concept-first-appearance and boundary reviews. Preserve concrete grounding, runnable explanations, condition variation, and adaptive probing without forcing every topic into a technical checklist.
 ---
 
-# System Learning V0.5.3 — Ground → Run → Explain → Vary → Model → Use
+# System Learning V0.6.0 — Problem → Failure → Mechanism → Evidence → Stable Knowledge
 
 ## Suite 集成边界
 
@@ -11,12 +11,12 @@ description: Turn a concept, system, person, event, method, question, or source 
 
 目标是：
 
-> **先让当前对象真正变得可理解；建立模型后，如果改变一个关键前提、观察角度、变量或边界会带来明显认知增量，就主动变化一次，看哪些结论仍然成立、哪些削弱或消失、哪些问题甚至不再能由当前信息回答；对机制型知识，再让机制真正“跑起来”；最后压缩成可复用、带适用边界的知识模型。**
+> **从真实问题或现象进入：看到旧解释或旧做法在哪里失败，推导修复此缺口的最小必要机制，再命名概念；只有后续的新问题真正重要时才继续推进问题链。必要时用最小运行、条件变化和外部证据验证，经过三道内置 Stabilization Gate 修复逻辑跳步、过早术语化和越界结论，最后得到稳定的 Knowledge Model。**
 
 - “原文讲了什么” → Deep Read。
 - “材料哪里有问题” → Review。
 - “我应该怎样理解、为什么会这样、它在现实中到底改变了什么 / 怎么运行” → Learning。
-- “不要再讲，用场景测试我是不是真的会” → Practice。
+- “理解了原理，现在要真实实施、验证、排错并交付工程产物” → Practice。单纯自测、出题或模拟面试不自动路由 Practice。
 
 Questioning 不再作为独立 Skill。用于减少 knowledge uncertainty 的追问继续留在 Learning。
 
@@ -42,31 +42,73 @@ Learning 的主要依据仍是 Raw Source / 用户事实 / 当前任务。
 
 ---
 
-## 目标
+## 目标与主路线
 
-Learning 的通用主体仍然是：
+Learning 的主体仍然是 `Ground Object → Build Model → Find Gaps → Project to Use`，但 **Build Model 现在明确采用 Problem Chain 作为首选的因果组织规则**：
 
-`Ground Object → Build Model → Find Gaps → Project to Use`
+```text
+真实问题 / 当前现象
+→ 已有做法或解释
+→ 具体失败 / 解释缺口
+→ 为什么已有机制不够
+→ 最小必要区分或机制
+→ 机制怎样改变行为 / 解释结果
+→ 下一问题（仅当有实质认知增量）
+→ 证据与边界 → 稳定 Knowledge Model
+```
 
-当 Knowledge Model 已经初步成立，而且一次单变量变化可能显著改变理解时，可按需插入：
+技术机制型知识继续按需使用 `Ground → Run Once → Explain Mechanism → Vary One Condition → Compress Model`。能够用一两个事实直接解释的问题，不必强迫生成长问题链。Boundary Variation 和 Adaptive Learning Probe 均保留为高信息量时使用的能力。
 
-`Build Model → Vary One High-Information Condition → Reconcile Boundary`
-
-这不是强制步骤，也不是为了把 Learning 变成科学验证。只有当变化能暴露模型的适用范围、阻止过度外推，或让用户看到“换一个问题后原材料已经不能回答”时才执行。
-
-对于 **mechanism-heavy technical knowledge**，Build Model 内部优先启用：
-
-`Ground → Run Once → Explain Mechanism → Vary One Condition → Compress Model`
-
-必要时在 Find Gaps 内部使用：
-
-`Gap → Probe / Research → Update Model`
-
-这不是要求所有主题都套技术模板。只有当“知道定义”仍不足以形成理解，且对象本身存在可追踪的计算、状态、控制流、数据流、资源变化或反馈机制时，才提高 Mechanism Depth。
+**Knowledge Stable ≠ Implementation Ready。** 概念上的必要机制不自动意味着必须建设一个软件组件；对框架或产品的具体能力，需独立收集实现证据；从机制直接跳到选型、自研或生产架构是越界推导。
 
 ---
 
-# 一、Ground Object
+# 一、Problem-Driven Knowledge Construction
+
+## 1. Real problem before technical vocabulary
+
+从真实任务、失败案例、疑惑或可观察现象进入。说明：已有机制是什么？它在哪一个条件下不再足够？为什么这个缺口确实改变理解？先解释对象，再定义术语。
+
+不要以 Runtime、Ownership、Framework、Workspace 或分类目录冒充用户想解决的问题。也不要为了凑问题链而凭空发明失败：已有解释足够时，直接讲清楚并停止。
+
+## 2. Necessary mechanism before naming
+
+每一步都执行轻量推导：
+
+```text
+Existing Behavior
+→ Observable Failure / Unexplained Gap
+→ Why Existing Explanation Fails
+→ Smallest Necessary Behavior / Distinction
+→ What This Changes
+→ Next Failure (if genuinely useful)
+```
+
+**问题先于术语，机制先于框架。** 新概念第一次出现时，应能回溯到导致它必要的具体问题；如果删除这一新概念并不影响解释，优先合并或删除，不为术语表维护虚假的复杂度。
+
+例如 Agent Tool Calling 的概念问题链：模型说“我会查询”并不等于查询真的发生 → 需要受控动作执行 → 执行完成不等于模型知道结果 → 需要 Observation 回流 → 才能持续决策、行动、观察。然后才引入 Executor、Observation、Agent Loop 等名称。
+
+问题链**不是**预设完整工程架构：新机制可以只是责任、语义、保证、状态变化或一种必要区分，并非代码模块。
+
+## 3. Separate stable problem knowledge from implementation evidence
+
+解释或比较一个框架/产品时，明确三层：
+
+- **Problem Knowledge**：不依赖特定 API 仍然成立的现象、失败、必要机制与适用边界；
+- **Implementation / Native Capability Evidence**：某个具体版本或第一方生态怎样实现机制，由谁拥有责任、状态和生命周期，能够观察或复现什么；需要资料或最小 Probe 支持；
+- **Architecture / Engineering Decision**：在用户真实目标、约束、现有方案、复用成本和证据均足够时，才能讨论如何建设；完整实施应交给 Practice。
+
+**UNKNOWN ≠ ABSENT；ABSENT ≠ BUILD。** 不因为没有找到官方文档就宣称能力不存在，也不因为确实没有能力就自动推荐自研。没有实际运行过 Probe 时，写清“机制推演”或“尚待验证”，不能冒充 executable evidence。
+
+框架对比优先比较行为、状态、职责、边界，具体类名和 API 放到机制之后作为索引。IntraMate 的 Pi / LangGraph / Pydantic AI 与 Runtime / Work Agent 分类只是其研究对象，不是所有 Learning 必须使用的范式。
+
+## 4. The chain's stopping boundary
+
+当已有因果机制足够解释当前目标、下一环节不再增加认知、必须依赖新证据，或新问题属于另一主题时停止；保留当前稳定模型与未解决边界。对非技术对象，问题链可以短到“观察 → 解释缺口 → 新区分 → 条件与证据”，不强制技术 Probe。
+
+---
+
+# 二、Ground Object
 
 ## 1. 先解释对象，再抽象方法
 
@@ -110,12 +152,12 @@ Learning 的通用主体仍然是：
 ### Teaching Example
 目的是让用户听懂。可以直接给过程、答案、变量变化和对比。
 
-### Performance Task
-目的是测试用户会不会。这时不提前给答案，而要求用户判断、设计或排错；这才进入 Practice。
+### Self-check / Performance Task
+短自测可用于教学反馈，但仅凭“需要检验是否会答题/判断”并不触发 Practice。Practice V0.2 聚焦完整工程实施，而不是默认考试或面试。
 
-> **场景化解释 ≠ 场景化测试。**
+> **Teaching Example 用于教会，Self-check 用于自检，Practice 用于真实工程实施。**
 
-Learning 可以主动展示完整机制；Practice 才要求用户自己完成。
+Learning 可以主动展示真实过程、答案和变量变化；Practice 应指导实施、运行、验证与排错。
 
 ---
 
@@ -138,7 +180,7 @@ Learning 可以主动展示完整机制；Practice 才要求用户自己完成�
 
 ---
 
-# 二、Build Model
+# 三、Build Model
 
 Grounding 之后再形成可迁移模型。
 
@@ -286,7 +328,7 @@ Practice 与它的区别在于：Practice 会把变化条件交给用户自己�
 
 这个检查主要用于决定 Learning 是否需要继续解释；默认不把它变成考试。
 
-如果需要让用户独立预测，转 Practice。
+用户明确要求时可以用简短自测验证理解，但纯测试/追问不应自动转入 Practice。
 
 ---
 
@@ -344,7 +386,7 @@ Knowledge Note 不是固定模板。对象已经简单清楚时，不为了完�
 
 ---
 
-# 三、Find Gaps
+# 四、Find Gaps
 
 Knowledge Model 建立后，只保留真正阻塞下一步的 Gap。
 
@@ -370,7 +412,7 @@ Knowledge Model 建立后，只保留真正阻塞下一步的 Gap。
 
 ---
 
-# 四、Adaptive Learning Probe
+# 五、Adaptive Learning Probe
 
 只有当 Gap 阻塞当前模型，而且最合适的信息源是用户、专家或后续交流时，才提问。
 
@@ -395,7 +437,7 @@ Knowledge Model 建立后，只保留真正阻塞下一步的 Gap。
 
 ---
 
-# 五、Project to Use
+# 六、Project to Use
 
 把知识投影到用户下一步。
 
@@ -423,15 +465,11 @@ Knowledge Model 建立后，只保留真正阻塞下一步的 Gap。
 `选择 + 支撑证据 + 权衡 + 尚未确定的信息`
 
 ### 转入 Practice
-只有当用户需要验证：
-
-> “我已经理解了，但我是不是只会解释，实际不会用？”
-
-才把当前 Knowledge Model 和关键边界交给 Practice。
+只有当用户需要在真实工程中完成设计、实现、执行、验证、排障或交付工程产物时，才将当前 Knowledge Model、问题链与尚未证实的实现前提交给 Practice。纯知识考试、面试或自测不再自动路由到 P。
 
 ---
 
-# 六、输出原则
+# 七、输出原则
 
 Learning 默认以“让用户真正形成理解”为主，而不是展示一个完整知识体系。
 
@@ -463,9 +501,37 @@ Learning 默认以“让用户真正形成理解”为主，而不是展示一�
 
 ---
 
-# 七、验收标准
+# 八、Built-in Stabilization Loop — Draft → Review → Repair → Re-check
 
-一次高质量 Learning 结束后，至少检查：
+三道 Gate 是 **Learning 生成过程内的质量循环**，不应以“待执行 Gate”作为交付状态，也不要求普通回答输出三份审阅报告。对复杂问题链在交付前内部运行；对简单问题做轻量核验。
+
+## Gate 1 — Problem-chain Review
+
+核对新机制是否真的由上一个问题逼出；旧解释失效的因果桥梁是否完整；有没有把选定的产品/架构方案伪装成问题本身；有没有无信息增量的额外分层或循环论证。发现第一处断裂，退回该处 **修改解释的先后关系或必要性**，然后重新审阅后续链条。
+
+## Gate 2 — Concept First-Appearance Audit
+
+检查每个重要概念首次出现时：为什么需要它是否已展示；是否以 API、类名、框架名称代替机制；同名异义或相似名词是否被误合并。失败时前移具体失败案例、后移术语命名或删除不必要的新词。
+
+## Gate 3 — Boundary & Evidence Review
+
+检查 Source-supported / Derived / External / Unknown 是否区分；框架能力声称是否有相应版本的证据；是否把特定实现或个人推测写成普遍必需机制；是否从 **没有观察到 → 确定不存在 → 应该自研** 越级；是否过度外推案例。失败则收缩结论、补证据或标记未验证，不能靠新增模糊措辞掩盖逻辑缺口。
+
+## Stable / Not Stable
+
+**Stable Knowledge**：当前解释可以由真实问题、必要机制、实例与边界自洽地追踪；术语出场顺序合理；重大推断没有越过可用证据。它不意味着框架全部验证或工程已经可落地。
+
+**Not Stable**：关键因果链仍断裂、证据不支持重要结论或新事实会改变当前模型。直接列出阻塞性的 Gap 与最小验证方向，不编造完成状态。
+
+任何 Gate 失败都应 **Repair 并重新检查**，不是生成“我以后还会做三道检查”的待办。只有用户明确要求正式审计记录，才外显 Gate 状态。
+
+---
+
+# 九、验收标准
+
+一次高质量 Learning 结束前先完成必要的 Stabilization Review，再至少检查：
+
+0. 需要问题链的主题是否展示“真实问题 → 旧解释失败 → 最小必要机制”，并在问题不再有增量时停止；
 
 1. 用户是否能把核心概念映射回一个具体对象、事件或任务；
 2. 用户是否能说清“引入这个概念/机制前后，哪一步真的发生了变化”；
@@ -479,7 +545,7 @@ Learning 默认以“让用户真正形成理解”为主，而不是展示一�
 10. 抽象模型是否是对已经理解事实的压缩，而不是替代解释；
 11. source / derived / external 边界是否正确；
 12. 关键 Gap 是否真正阻塞下一步；
-13. 当用户需要测试“会不会”时，是否正确转入 Practice。
+13. 是否只在真正需要工程落地时才转入 Practice，而不是因自测需求就自动转入 P。
 
 如果知识很多、术语正确，但用户仍然不知道：
 
@@ -487,4 +553,4 @@ Learning 默认以“让用户真正形成理解”为主，而不是展示一�
 
 则 mechanism-heavy Learning 没有完成任务。
 
-> **Learning 的终点不是记住说明，而是形成一个能运行、能解释、能预测的 mental model。**
+> **Learning 的终点是由真实问题逼出、能够解释和迁移、且知道其证据与边界的 Mental Model，而不是术语目录或未经验证的工程方案。**
