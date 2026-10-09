@@ -27,6 +27,21 @@ def main():
         names.add(case.get("name"))
         if any(x not in {"D", "R", "L", "P"} for x in case.get("expected_route", [])):
             errors.append(f"{prefix}: invalid expected_route")
+        route = case.get("expected_route", [])
+        if "L" in route:
+            if route[:3] != ["D", "R", "L"]:
+                errors.append(f"{prefix}: Learning must be preceded by D and R")
+            expected_preflight = {
+                "required_before_L": ["D", "R"],
+                "source_policy": "same_raw_input_independent_contexts",
+                "completion_barrier": "both_complete_before_L",
+                "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+                "output_policy": "integrated_learning_unless_explicit",
+            }
+            if case.get("learning_preflight") != expected_preflight:
+                errors.append(f"{prefix}: missing or invalid Learning preflight contract")
+        elif "learning_preflight" in case:
+            errors.append(f"{prefix}: non-L case cannot set Learning preflight")
         if not case.get("assertions"):
             errors.append(f"{prefix}: assertions must not be empty")
         for rel in case.get("files", []):

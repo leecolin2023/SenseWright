@@ -110,6 +110,30 @@ System Learning V0.5.2 在 V0.5.1 grounding 基础上增加技术机制深度回
 
 当前相邻版本 baseline：`learning_v0_5_1`。
 
+### Learning V0.6.0 — Problem Chain & Built-in Stabilization
+
+Cases **22–27** cover: a causal Agent action loop; Framework Evidence vs stable Knowledge and architecture selection; transaction concepts appearing only after failure; business/usage-rate cross-domain transfer; simple tasks where long chains harm clarity; and repairing a deliberately flawed outline rather than leaving Gates pending.
+
+Three internal gates: **Problem-chain Review → Concept First-Appearance Audit → Boundary & Evidence Review**, with repair and re-check *before* delivery. Verify that these checks change actual explanations, not just append a checklist. The old `learning_v0_5_3` baseline is pinned to `6bfc5519e089d8a1b08d254d500e947388400e78`.
+
+The fixture `learning-premature-framework-outline.md` contains intentionally incorrect claims and should never be treated as verified product evidence. A static validator pass does not imply behavioral success. Run each case on old and new Skill under matched model, configuration and time, save outputs/grading and perform human review.
+
+### Learning V0.6.1 — Mandatory D + R Preflight
+
+Every L eval now includes the route prefix ["D","R","L"] and the following contract:
+
+~~~json
+{
+  "required_before_L": ["D", "R"],
+  "source_policy": "same_raw_input_independent_contexts",
+  "completion_barrier": "both_complete_before_L",
+  "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+  "output_policy": "integrated_learning_unless_explicit"
+}
+~~~
+
+D/R independently consume current Raw Input. Both are mandatory and must finish before L; L reads both as cognitive scaffolds, while returning to the real object and mechanism. Historical optional reference_context cannot replace current D/R. Query-only prompts still receive two concise preflight stages without fabricating sources. Cases 28–30 cover source preflight, no-document preflight, and non-authoritative scaffold handling. **Static validation cannot prove actual runtime isolation**: check execution traces or mark isolation and barrier UNVERIFIED.
+
 ### Practice Engineering Transfer
 
 Practice V0.2 不再以 capability test 为核心，而是验证 **Knowledge → Executable Engineering Model**：

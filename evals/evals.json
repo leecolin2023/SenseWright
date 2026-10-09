@@ -41,6 +41,8 @@
       "name": "learning-build-model",
       "prompt": "我想真正学会 Agent 里的 State 和 Feedback，不要只总结材料。请帮我形成以后分析其他 Agent 系统也能复用的理解，并告诉我下一步最值得补的知识缺口。",
       "expected_route": [
+        "D",
+        "R",
         "L"
       ],
       "expected_output": "从材料重建 State/Feedback 的系统关系和事件链，形成可迁移知识模型，并识别少量关键 gap。",
@@ -50,8 +52,19 @@
       "assertions": [
         "输出形成 State 与 Feedback 的关系模型，而不是按原文顺序复述。",
         "输出使用至少一个事件链说明观察、动作、状态变化和反馈如何连接。",
-        "输出只提出会阻塞进一步使用的少量 Knowledge Gap，并说明为什么值得继续补。"
-      ]
+        "输出只提出会阻塞进一步使用的少量 Knowledge Gap，并说明为什么值得继续补。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
     },
     {
       "id": 4,
@@ -77,6 +90,7 @@
       "prompt": "先告诉我这份 State / Feedback 材料到底讲了什么，然后基于它帮我建立一套自己的 Agent 状态管理理解框架。",
       "expected_route": [
         "D",
+        "R",
         "L"
       ],
       "expected_output": "先忠实恢复材料，再重组成用户可迁移的知识模型，两者角色清楚。",
@@ -86,16 +100,28 @@
       "assertions": [
         "输出同时完成忠实深读与知识模型重构，且两部分目的可区分。",
         "Learning 部分不是简单复制 Deep Read 的结构。",
-        "材料未支持的扩展如果出现，会被明确标成推断或外部补充，而不是伪装成原文结论。"
-      ]
+        "材料未支持的扩展如果出现，会被明确标成推断或外部补充，而不是伪装成原文结论。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
     },
     {
       "id": 6,
       "name": "learning-plus-review",
       "prompt": "我既想学会这份 Agent 工作流观点，也想知道这个观点本身有没有值得质疑的地方。请形成我的理解框架，同时独立审阅它。",
       "expected_route": [
-        "L",
-        "R"
+        "D",
+        "R",
+        "L"
       ],
       "expected_output": "形成可迁移的 Workflow vs Agent 判断框架，同时独立评价原论证的证据与边界。",
       "files": [
@@ -104,8 +130,19 @@
       "assertions": [
         "Learning 形成可迁移的判断模型，不只是复述观点。",
         "Review 能区分材料中的论证、例子与尚未被证明的普遍结论。",
-        "两个任务的输出不会互相吞并为单一摘要或单一批评。"
-      ]
+        "两个任务的输出不会互相吞并为单一摘要或单一批评。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
     },
     {
       "id": 7,
@@ -113,8 +150,8 @@
       "prompt": "对这份企业知识助手方案做三件事：先忠实讲清楚，再帮我真正理解企业 Agent 系统里为什么权限、评测和反馈重要，最后独立审阅这份方案。三种任务不要互相污染。",
       "expected_route": [
         "D",
-        "L",
-        "R"
+        "R",
+        "L"
       ],
       "expected_output": "D/L/R 三路组合并最终自然合并，保持 source-centered / learner-centered / judgment-centered 的边界。",
       "files": [
@@ -123,14 +160,27 @@
       "assertions": [
         "输出覆盖忠实理解、知识模型和独立审阅三种不同目标。",
         "三种目标之间边界清楚，不把审阅意见伪装成原文，也不把学习模型误写成作者原意。",
-        "最终合并后的内容对用户形成理解与行动有帮助，而不是机械打印内部路由标签。"
-      ]
+        "最终合并后的内容对用户形成理解与行动有帮助，而不是机械打印内部路由标签。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
     },
     {
       "id": 8,
       "name": "learning-adaptive-probe",
       "prompt": "我想真正理解“为什么银行业务部门不愿意用 Agent”。这个判断来自我的工作感受，但“不愿意用”本身还很模糊。不要急着列原因；如果当前信息不足以建立可靠的知识模型，先问我一个最有信息价值的问题。",
       "expected_route": [
+        "D",
+        "R",
         "L"
       ],
       "expected_output": "Learning 先识别当前 Context Gap，必要时用一个中性、高信息价值的 probe 澄清“不愿意用”的具体含义或真实案例，再据此更新知识模型，而不是直接凭常识列原因。",
@@ -141,14 +191,27 @@
         "Learning 能识别“不愿意用”仍是未定义清楚的观察，而不是直接把它当成已经解释完成的事实。",
         "如果需要用户信息，默认只推进一个最有信息价值的问题，而不是一次生成问题清单。",
         "Probe 保持中性，不把安全、权限、成本、能力等候选原因提前塞进诱导性问句。",
-        "提问的目的明确服务于 Knowledge Model 更新，而不是为了测试用户会不会。"
-      ]
+        "提问的目的明确服务于 Knowledge Model 更新，而不是为了测试用户会不会。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
     },
     {
       "id": 9,
       "name": "learning-selective-reference",
       "prompt": "基于原始材料帮我真正学会这个 Agent 工作流观点。这里还有一份之前的独立 Review 结果，你可以在有帮助时参考，但不要把 Review 的判断写成作者原话，也不要只是复制 Review。",
       "expected_route": [
+        "D",
+        "R",
         "L"
       ],
       "expected_output": "Learning 仍以原始材料建立可迁移模型，同时选择性利用 Review 暴露的关键边界来改善知识结构，并保持 source 与 sibling judgment 的来源边界。",
@@ -166,14 +229,27 @@
         "Learning 的主体知识模型仍能从原始材料独立成立，而不是把 Review 当作主要材料。",
         "如果 Review 中关于“示例不足以证明普遍结论”的提醒有助于学习，输出会把它转化为对结构性原则与适用边界的理解，而不是原样复制。",
         "输出不会把 Review 的判断写成作者原话或原材料已经证明的事实。",
-        "存在 reference context 不意味着必须逐条使用；输出只吸收真正有助于当前知识模型的部分。"
-      ]
+        "存在 reference context 不意味着必须逐条使用；输出只吸收真正有助于当前知识模型的部分。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
     },
     {
       "id": 10,
       "name": "learning-expert-probe-from-references",
       "prompt": "我要继续理解企业知识助手里的权限设计，并准备访谈研发负责人。已有 Review 发现和我之前 Learning 形成的 Knowledge Gap。请只选当前最值得向研发确认的一问，帮助我减少关键不确定性；不要把所有 prior findings 机械改成问题清单。",
       "expected_route": [
+        "D",
+        "R",
         "L"
       ],
       "expected_output": "Learning 把已有 Review finding 与 Knowledge Gap 转成一个高信息价值的专家确认问题，服务于知识模型更新，同时不把 prior finding 当成已经证实的事实。",
@@ -196,8 +272,19 @@
         "Learning 能把专家访谈视为补齐 Knowledge Gap 的 Project to Use，而不是独立 Questioning 任务。",
         "第一轮只选择一个最影响当前知识模型的问题，例如执行动作时继承谁的身份与权限。",
         "问题保持中性，不把“权限设计一定有问题”等 prior judgment 当成事实。",
-        "Prior findings 被重新解释为需要求证的不确定性，而不是原样复制。"
-      ]
+        "Prior findings 被重新解释为需要求证的不确定性，而不是原样复制。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
     },
     {
       "id": 11,
@@ -335,6 +422,8 @@
       "name": "learning-ground-before-abstract",
       "prompt": "你说 Chatbot 的核心对象是 Conversation，而 Workspace Agent 的核心对象是 Workspace + Task + Artifact。我还是不能理解这到底有多少差异，感觉这些概念像生造出来的。对我们实际每一项工作到底有多少帮助？请先让我真正看懂差异，不要继续堆 Agent 架构术语。",
       "expected_route": [
+        "D",
+        "R",
         "L"
       ],
       "expected_output": "Learning 先回到具体知识工作任务，用一个几乎没有差异的任务和一个长期、多文件、反复修改的任务做对照，指出用户当前额外承担的协调工作以及哪些工作可被系统接走，最后才把观察压缩成抽象。",
@@ -344,14 +433,27 @@
         "输出至少使用一个 Workspace Agent 几乎没有额外价值的低差异场景，例如一次性改写或单文件问答，以明确边界。",
         "输出至少使用一个持续性知识工作场景，逐步说明现有 Chat 使用中人仍在承担哪些材料选择、进度恢复、成果维护或影响判断工作。",
         "抽象结论出现在具体任务差异之后，并能被还原为“原来怎么做、引入后哪一步变化、谁少承担了什么”。",
-        "输出允许并明确指出某些任务里 Chat 与 Workspace Agent 没有实质差异，而不是为了维护概念强行制造优势。"
-      ]
+        "输出允许并明确指出某些任务里 Chat 与 Workspace Agent 没有实质差异，而不是为了维护概念强行制造优势。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
     },
     {
       "id": 15,
       "name": "learning-grounding-recovery",
       "prompt": "上一轮你已经用 Context Ownership、Action Ownership、State Ownership、五个 Runtime 给我解释过，但我还是觉得太抽象，像换了一套词继续解释。我现在只想知道现实工作到底哪里变了。",
       "expected_route": [
+        "D",
+        "R",
         "L"
       ],
       "expected_output": "Learning 将“还是太抽象”识别为 grounding failure，停止继续上提概念，回到用户熟悉的一个具体任务逐步跑过程，直到能指出实际变化，再决定是否需要重新抽象。",
@@ -360,14 +462,27 @@
         "输出明确降低抽象层级，不再用新的 taxonomy 或更高层框架作为主要解释。",
         "输出选择一个具体任务并按真实步骤展开，而不是只换一个比喻或重新定义已有术语。",
         "输出把重点放在“哪一步变了、原来谁负责、现在谁负责、没有这个能力会怎样”。",
-        "只有在具体变化已经清楚之后才允许再次命名或抽象；即使不重新抽象也应能够完成解释。"
-      ]
+        "只有在具体变化已经清楚之后才允许再次命名或抽象；即使不重新抽象也应能够完成解释。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
     },
     {
       "id": 16,
       "name": "learning-grounding-transfer-transaction",
       "prompt": "我还是不明白数据库事务实际有什么意义，不就是几条 SQL 吗？不要先背 ACID，先让我看见没有事务到底会发生什么。",
       "expected_route": [
+        "D",
+        "R",
         "L"
       ],
       "expected_output": "Learning 通过一个具体的多步写入失败场景让事务需求自然出现，例如转账中扣款成功但入账失败；先比较无事务与有事务的行为差异，再用 atomicity/rollback 等概念压缩已经看见的机制。",
@@ -377,14 +492,27 @@
         "输出使用一个具体的多步数据库操作，并展示中途失败时没有事务会留下什么现实错误状态。",
         "输出对比引入事务后哪一步行为改变以及系统接走了什么一致性恢复负担。",
         "atomicity、rollback 或其他抽象概念若出现，应位于具体失败场景之后，作为对已理解现象的命名和压缩。",
-        "该案例证明 grounding 规则可迁移到非 Agent 主题，而不是只针对 Workspace Agent 特判。"
-      ]
+        "该案例证明 grounding 规则可迁移到非 Agent 主题，而不是只针对 Workspace Agent 特判。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
     },
     {
       "id": 17,
       "name": "learning-mechanism-rerank",
       "prompt": "我知道 RAG 里 rerank 是把召回结果重新排序，但还是觉得这只是一个定义。你能不能让我真正看见 reranker 到底怎么工作，以及为什么不能直接拿它对全库文档打分？不要先给组件清单。",
       "expected_route": [
+        "D",
+        "R",
         "L"
       ],
       "expected_output": "Learning 选择一个小规模 query + 若干 chunk 的具体例子，让初始召回排序和 rerank 后排序真实变化，再解释 query-document 联合打分为何更精细、为何成本更高，并通过“候选集合扩大到全库”这个条件变化推出两阶段检索结构的必要性。",
@@ -394,14 +522,27 @@
         "输出展示至少一次排序或相关性判断的实际变化，使用户能看见 rerank 在流程中的具体作用。",
         "输出进一步解释为什么重新打分能比初始粗召回更精细，而不是停在“rerank 更准”的结论。",
         "输出改变一个关键条件，例如让候选数量从少量扩大到全库，并解释计算成本或延迟为什么变化。",
-        "两阶段 recall → rerank 架构若被抽象出来，应由前面的机制和约束自然推出，而不是要求用户背诵。"
-      ]
+        "两阶段 recall → rerank 架构若被抽象出来，应由前面的机制和约束自然推出，而不是要求用户背诵。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
     },
     {
       "id": 18,
       "name": "learning-mechanism-agent-state",
       "prompt": "我已经知道 Agent State 大概是任务当前状态，但这句话还是太虚。请不要再给定义，直接让我看到一次任务里 State 是怎么变化、重启后怎么影响下一步，以及为什么聊天记录不总能替代结构化 State。",
       "expected_route": [
+        "D",
+        "R",
         "L"
       ],
       "expected_output": "Learning 用一个最小多步骤 Agent 任务追踪执行前后 State 字段或事实如何变化，展示崩溃/重启后读取 State 如何避免重复动作，再对比自然语言聊天记录与可机器判定的结构化状态在可靠恢复上的差异。",
@@ -411,14 +552,27 @@
         "输出展示系统崩溃或重启后，已有 State 如何直接影响下一步动作选择。",
         "输出解释为什么某些自然语言历史虽然包含信息，却不适合可靠地作为后续程序决策条件。",
         "输出把状态表示方式与幂等、重复执行或恢复可靠性建立因果联系，而不是新增更多抽象术语。",
-        "最终抽象应压缩已经跑过的任务，而不是替代任务本身。"
-      ]
+        "最终抽象应压缩已经跑过的任务，而不是替代任务本身。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
     },
     {
       "id": 19,
       "name": "learning-analogy-to-mechanism",
       "prompt": "我读到一篇文章把 Attention 比喻成图书馆里根据问题去找相关书。这个比喻挺好懂，但我担心只记住比喻。请用这个比喻帮我进入真实机制，然后告诉我比喻在哪些地方会失真。",
       "expected_route": [
+        "D",
+        "R",
         "L"
       ],
       "expected_output": "Learning 保留比喻作为认知脚手架，明确其与 query/key/value、相关性打分和加权聚合之间的对应关系，再用一个极小 token 示例回到真实 Attention 计算逻辑，并指出图书馆比喻无法准确表达的连续权重、表示学习或并行交互等边界。",
@@ -428,8 +582,19 @@
         "输出随后把比喻逐项映射回 Attention 的真实对象或操作，而不是一直停留在类比层。",
         "输出至少让一个简化 Attention 过程真实跑一遍，使用户看到 query 与其他 token 的相关性如何影响信息聚合。",
         "输出明确指出至少一个比喻失真的地方，避免把类比误认为真实机制。",
-        "最终理解不依赖比喻也能成立，体现“脚手架逐渐拆除”。"
-      ]
+        "最终理解不依赖比喻也能成立，体现“脚手架逐渐拆除”。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
     },
     {
       "id": 20,
@@ -467,6 +632,275 @@
         "输出能区分“工具已经产生局部价值”和“第二阶段生产化仍需要治理、验收、流程与商业条件”这两个层次。",
         "预算采购可以被降权，但不能被错误改写成模型能力或治理问题；若被省略，也不应导致对第二阶段约束形成相反理解。",
         "输出不会强行宣称所有问题具有同一根因，也不会跨越 Source Boundary 引入外部事实。"
+      ]
+    },
+    {
+      "id": 22,
+      "name": "learning-problem-chain-tool-calling",
+      "prompt": "我知道 Agent 可以调用工具，但不要从 Tool、Runtime、Observation 的术语目录讲起。请从模型回答一个查询请求和真正完成查询之间差了什么开始，每解决一个问题再揭示下一个问题，最后让我看懂 Agent 的行动闭环。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "expected_output": "从真实行动失败出发推导受控执行、结果反馈、持续行动循环，再后置术语命名并明确边界。",
+      "files": [],
+      "assertions": [
+        "先讲可观察的任务失败，再讲 Runtime/Tool 等术语。",
+        "每引入一个必要行为都说明旧机制在哪一步仍然不够。",
+        "Tool Execution、Observation 和 Loop 的术语出现在其必要性已经被说明之后。",
+        "不会把某一具体开源框架或 API 当成实现该机制的唯一方式。",
+        "问题链在形成完整的行动闭环知识后停止，不自动展开产品开发清单。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
+    },
+    {
+      "id": 23,
+      "name": "learning-knowledge-vs-native-evidence",
+      "prompt": "一个开源 Agent 的文档只写了 Session 持久化，没有提 Workspace。是不是说明它不支持 Work continuity？我们是不是应该自己做 Task Store 和 Workflow Engine？请先解释问题和证据缺口，不要直接给实施方案。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "expected_output": "区分 Session persistence、Work continuity、尚未核实的框架能力和独立的自研决策。",
+      "files": [],
+      "assertions": [
+        "用真实任务或恢复案例解释恢复交互不自动等于恢复工作。",
+        "没有把‘文档未发现’直接写成‘能力已证实不存在’。",
+        "明确区分问题知识、原生框架能力证据和工程决策。",
+        "不声称实际运行过未执行的框架 Probe。",
+        "不把 UNKNOWN 自动变成 ABSENT，也不从 ABSENT 直接导出 BUILD。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
+    },
+    {
+      "id": 24,
+      "name": "learning-concept-first-appearance",
+      "prompt": "我想学会数据库事务的意义。请从一笔两步更新中途失败的业务开始，不要先列 ACID、MVCC、Undo Log 等名词；只有遇到实际需要解决的问题，再引入一个新概念。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "expected_output": "以具体失败和最小保证推导原子性等概念，术语后置，避免为讲完整知识谱系添加无关机制。",
+      "files": [],
+      "assertions": [
+        "先展示具体失败造成的错误状态，而不是事务名词表。",
+        "每个重要术语在首次出现前已有真实需要它的机制缺口。",
+        "不会把数据库某种具体的事务实现说成所有事务都必须采用的方式。",
+        "不强制展开 MVCC、隔离级别等与当前问题无关的知识。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
+    },
+    {
+      "id": 25,
+      "name": "learning-problem-chain-business-transfer",
+      "prompt": "领导说我们的系统员工使用率很低，所以大家不需要这个系统。我要学会判断这类说法是否成立。先从已有观察实际说明什么入手，不要堆数据分析框架术语；缺少数据的地方明确说不知道。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "expected_output": "根据观察和尚未解释的差异推导统计口径、使用机会与证据边界，形成可迁移的业务判断方法。",
+      "files": [],
+      "assertions": [
+        "明确低使用率是观察，‘不需要产品’是尚未验证的解释。",
+        "引入必要的比较口径或使用机会区分，解释这些区分解决什么疑问。",
+        "通过一个高信息量条件变化，说明结论可能变化。",
+        "没有虚构使用数据，也不强迫业务问题套技术框架 Probe。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
+    },
+    {
+      "id": 26,
+      "name": "learning-do-not-overbuild-chain",
+      "prompt": "请用一个特别简单的数字例子解释同比和环比有什么区别。我只需要读懂报表，不需要完整课程、审阅清单或工程方案。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "expected_output": "直接解释对比时间基准及相应示例，不用为普通概念强行制造长问题链。",
+      "files": [],
+      "assertions": [
+        "准确解释同比和环比的比较基准。",
+        "至少有一个便于人理解的具体数值或时间例子。",
+        "没有为了执行方法模板而构造多轮虚假失败。",
+        "不打印 Problem-chain/Concept-first/Boundary 三道 Gate 检查表。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
+    },
+    {
+      "id": 27,
+      "name": "learning-stabilization-repair-inline",
+      "prompt": "附件是一份技术学习提纲，但其中可能存在逻辑跳步、过早命名、把技术方案当成学习结论。请直接将它修复成连续的知识学习说明，帮我理解 Agent Runtime 与 Work Continuity 为什么不同，不要只列三道待执行 Gate。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "expected_output": "修复概念和因果链，去除未经证实的产品结论与自研必然性，直接交付稳定或明确不稳定的知识结果。",
+      "files": [
+        "evals/fixtures/learning-premature-framework-outline.md"
+      ],
+      "assertions": [
+        "不把 Session / Thread 持久化直接当成 Work 状态持久化。",
+        "先解释观察到的恢复失败，再引入 Work State 等术语。",
+        "纠正提纲中‘文档没提就没有能力’的未经验证判断。",
+        "不会直接得出必须自研通用 Enterprise Layer、Task Store 或 Workflow Engine。",
+        "输出经过修复的可阅读知识解释，而不是‘Stable Gate — 待执行’。",
+        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
+    },
+    {
+      "id": 28,
+      "name": "learning-preflight-independent-source",
+      "prompt": "请学懂这份 Agent 工作流论证，先理解作者如何推理，也要独立检查可能不成立的前提，最后形成我的知识模型。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/agent-workflow-argument.md"
+      ],
+      "expected_output": "D 忠实重建原文，R 不依赖 D 独立审阅，双方先于 L，L 返回真实对象和机制而非拼贴两篇报告。",
+      "assertions": [
+        "D 忠实恢复原材料论证，不预先吸纳 R 的判断。",
+        "R 独立从 Raw Input 审查论证，不能读取 D 的分析。",
+        "本轮 D/R 都完成后 L 才开始，若运行 Trace 不可见则隔离判定为未验证。",
+        "L 利用双方发现，但重新构建机制与知识模型，非 D+R 简单拼接。",
+        "R 的批评不能被写作原材料已证实的事实。"
+      ]
+    },
+    {
+      "id": 29,
+      "name": "learning-preflight-no-document",
+      "prompt": "没有附件，简单解释同比和环比有什么区别，再给一个数字例子。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [],
+      "expected_output": "无文件时 D/R 基于用户真实问题分别完成简洁问题复原和前提审阅，L 简要解释同比环比且不打印三篇报告。",
+      "assertions": [
+        "D/R 两阶段都必经；真实执行未被 Trace 证实时不可宣称隔离已验证。",
+        "D 不凭空假设存在原始文章或作者观点。",
+        "R 可以无重要发现，不为了审阅硬找错误。",
+        "L 用准确简短的例子说明概念，不机械输出三份结果。"
+      ]
+    },
+    {
+      "id": 30,
+      "name": "learning-preflight-scaffold-not-authority",
+      "prompt": "材料把 Session 等同于 Work，还说必须建设 Enterprise Layer。请先忠实理解、独立审查，再让我从真实问题推导哪些机制真的必要。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-premature-framework-outline.md"
+      ],
+      "expected_output": "D 保留原文错误论点，R 独立发现其前提问题，L 利用双方结果但重新建立真实问题链且不把评论当证据。",
+      "assertions": [
+        "D 保留材料本来写出的 Session=Work 观点，不静默修改作者意见。",
+        "R 在不读取 D 的情况下检查 Session/Work 混同问题。",
+        "L 读取本轮两个脚手架后回到真实对象和必要机制。",
+        "L 不将审阅意见当证据，不从未知原生能力自动推出必须自研。",
+        "仅最终文本出现 D/R/L 三个标题不等于真的执行了三阶段，需运行记录核实。"
       ]
     }
   ]
