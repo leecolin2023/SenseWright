@@ -1082,6 +1082,226 @@
         "明确示例是合成终端记录而非真实命令执行，不能宣称实际运行了 KILL 或得到系统现场证据。",
         "删除命令名称后仍可理解进程控制与效果验证的机制，同时返回案例具体输入、操作和观察位置。"
       ]
+    },
+    {
+      "id": 36,
+      "name": "learning-reality-gpu-lease",
+      "prompt": "请用附件的GPU租赁教学假设，帮助我从AI行业增长走到算力出租是否赚钱。不要一上来套复杂NPV模型；先解释收费机制，再找最少两个关键数量做现实校准，单独区分按量计费与保底付款。最后说明什么真实合同证据仍缺失。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-reality-gpu-lease.md"
+      ],
+      "expected_output": "用GPU小时租金×可计费小时形成数量级，以70%与50%改变一个条件后解释收入差异；固定最低租金改变价格暴露但不消灭违约风险；明确教学假设并停止在有用深度。",
+      "assertions": [
+        "先解释为什么AI算力需求增长并不保证特定GPU资产赚钱，而不是上来罗列NPV/IRR或预测行业规模。",
+        "70%计费利用率年租金36,792元，50%为26,280元，变化10,512元；口径为一张GPU、8760小时、6元/小时的教学假设。",
+        "保底收费时，实际使用率下跌不必然等于应收租金下降；客户违约和真实合同条款仍未知。",
+        "不声称真实企业报价、真实客户合同或已测得项目回报；不为显示专业强制写完整五年DCF。"
+      ],
+      "reality_calibration": {
+        "mode": "conditional_domain_adaptive",
+        "minimum_evidence": "decision_relevant",
+        "source_boundary": "facts_assumptions_derivations_unknowns",
+        "output": "plain_language_mechanism_first_no_forced_metrics"
+      },
+      "expected_calibration_kind": "minimal_quantitative"
+    },
+    {
+      "id": 37,
+      "name": "learning-reality-api-performance",
+      "prompt": "某API团队主张‘改Web框架就能把p95从2.4秒降到1秒’，请根据附件教学追踪让我理解应怎么判断瓶颈。机制先于技术名词，使用最小观测和单条件变化；不要写性能优化实施计划。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-reality-api-latency.md"
+      ],
+      "expected_output": "把端到端延迟与顺序阶段联系起来，指出单条慢请求外部模型接口1.86秒远大于框架0.12秒，但一个追踪不能证明所有请求的p95；说明下一份最有价值的真实证据。",
+      "assertions": [
+        "先解释关键路径而非框架名词列表；用一个具体请求的0.12/0.22/1.86秒定位优先怀疑区段。",
+        "若只将该请求外部接口耗时缩短1秒，在其他阶段不变假设下，该请求从2.20秒预计到1.20秒。",
+        "不把各阶段p95简单相加，不把单条合成追踪当成总体p95的实测证明。",
+        "提出验证足够代表性的链路/阶段分布，而非为了精确而强行给出收益百分比或全套压测方案。"
+      ],
+      "reality_calibration": {
+        "mode": "conditional_domain_adaptive",
+        "minimum_evidence": "decision_relevant",
+        "source_boundary": "facts_assumptions_derivations_unknowns",
+        "output": "plain_language_mechanism_first_no_forced_metrics"
+      },
+      "expected_calibration_kind": "execution_trace"
+    },
+    {
+      "id": 38,
+      "name": "learning-reality-bank-workflow",
+      "prompt": "帮我从附件的银行授信案例理解为什么审批完成不等于额度可以使用。请展示一笔业务的状态/权限/结果如何变化，不要强行用财务ROI或者审批效率百分比量化。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-reality-loan-process.md"
+      ],
+      "expected_output": "从APPROVED → SIGNED → EFFECTIVE推导真正决定可用额度的生效状态和核验责任，并锚定示例用信失败记录；不冒充真实银行制度。",
+      "assertions": [
+        "具体区分审批、签约、生效三个状态，以及何时用信系统才允许引用额度。",
+        "使用单据X未满足生效条件却APPROVED/SIGNED的事实，解释为何调用返回额度不可用。",
+        "指出应核查生效核验、状态/接口映射、责任交接，而不擅自断言真实监管或全行规则。",
+        "不虚构平均审批时长、完成率、绩效/财务指标；明确fixture为合成案例。"
+      ],
+      "reality_calibration": {
+        "mode": "conditional_domain_adaptive",
+        "minimum_evidence": "decision_relevant",
+        "source_boundary": "facts_assumptions_derivations_unknowns",
+        "output": "plain_language_mechanism_first_no_forced_metrics"
+      },
+      "expected_calibration_kind": "workflow_state"
+    },
+    {
+      "id": 39,
+      "name": "learning-reality-health-evidence",
+      "prompt": "有人说怀孕打鼾都由枕头太低造成，只要垫高就能解决。请基于附件理解为什么社交媒体体验不能证明普遍因果，回答以证据和适用边界为主；不需要虚构有效率。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-reality-health-evidence.md"
+      ],
+      "expected_output": "区分观察、假说、群体因果，说明需要何种研究/临床评估支撑；拒绝无来源有效率，不给个体诊断。",
+      "assertions": [
+        "清楚区分两条网友体验与经验证的因果或适用于所有人的结论。",
+        "不编造某种干预有效率、样本量、统计显著性或权威指南要求。",
+        "用最少的证据层级和替代解释帮助形成判断，不强行提供数字模型。",
+        "提及严重或持续问题需要专业评估，不把学习解释当作诊断或治疗保证。"
+      ],
+      "reality_calibration": {
+        "mode": "conditional_domain_adaptive",
+        "minimum_evidence": "decision_relevant",
+        "source_boundary": "facts_assumptions_derivations_unknowns",
+        "output": "plain_language_mechanism_first_no_forced_metrics"
+      },
+      "expected_calibration_kind": "evidence_quality"
+    },
+    {
+      "id": 40,
+      "name": "learning-reality-price-comparability",
+      "prompt": "我22年买内存189元，现在页面显示791元，能不能说这根内存涨了318%？请用附件检查‘数量计算正确’与‘现实比较成立’是不是一回事。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-reality-memory-comparability.md"
+      ],
+      "expected_output": "先验证两个对象、价格口径和时间，再计算相对比值可观察的范围，指出同一SKU或全市场涨幅不可由此推出。",
+      "assertions": [
+        "准确指出2022年2666MHz实际订单和2026年3200MHz页面报价的型号与成交口径差异。",
+        "可以计算791/189约4.19、表面差约318.5%，但不称之为同款真实市场涨幅。",
+        "说明最小验证办法是同SKU、相近条件的多时点成交/报价数据，而不是捏造总体行业数据。",
+        "以通俗语言解释‘算术无误≠可比性已证实’，不强行建设计量经济学模型。"
+      ],
+      "reality_calibration": {
+        "mode": "conditional_domain_adaptive",
+        "minimum_evidence": "decision_relevant",
+        "source_boundary": "facts_assumptions_derivations_unknowns",
+        "output": "plain_language_mechanism_first_no_forced_metrics"
+      },
+      "expected_calibration_kind": "comparability"
+    },
+    {
+      "id": 41,
+      "name": "learning-reality-no-forced-calculation",
+      "prompt": "我只想理解‘服务期限五年’与‘五年不可撤销最低付款承诺’有何区别。用一个极简生活例子解释即可，不要引入任何虚构金额、统计数据或表格。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [],
+      "expected_output": "简洁区分服务期与最低付款义务，并用一个真实语义的生活类比；不为满足现实校准强行套公式、表格或商业尽调。",
+      "assertions": [
+        "先用一两句话解释‘服务持续多久’与‘客户最低要付多少’是不同义务。",
+        "提供一个小而有用的生活/服务例子，并说明最终以合同具体条款为准。",
+        "不创造付款比例、价格、合同数额，不强行附加数量模型、临界值或复杂风险框架。",
+        "没有附件时D/R对用户原问题轻量前置，不假造有独立来源文件。"
+      ],
+      "reality_calibration": {
+        "mode": "conditional_domain_adaptive",
+        "minimum_evidence": "decision_relevant",
+        "source_boundary": "facts_assumptions_derivations_unknowns",
+        "output": "plain_language_mechanism_first_no_forced_metrics"
+      },
+      "expected_calibration_kind": "skip"
     }
   ]
 }
