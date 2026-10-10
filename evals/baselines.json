@@ -65,6 +65,12 @@
       "type": "git_commit",
       "ref": "7e4126b3976af9c530763e9a799c2ebfbbd5b658",
       "description": "Frozen SenseWright V2.8.1 baseline immediately before source-grounded Learning V0.6.2; mandatory D/R preflight and 49-line Learning Skill are preserved."
+    },
+    {
+      "name": "learning_v0_6_2_pre_reality_calibration",
+      "type": "git_commit",
+      "ref": "df364d2c444e99e522333554a66c351f507120ad",
+      "description": "Frozen main immediately before the conditional domain-adaptive Reality Calibration refinement; same Learning V0.6.2 skill line."
     }
   ]
 }
