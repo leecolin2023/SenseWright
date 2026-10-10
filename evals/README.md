@@ -8,7 +8,7 @@ V0.1 不建立某一家模型供应商专用 benchmark 平台，而是先固定 
 
 `triggering.json` 检查根 Skill 的 `description` 是否覆盖真正应该触发的场景，同时避开相邻但不属于本 Suite 的任务。
 
-V0.1 当前使用 25 个 query：14 个应触发、11 个不应触发。负样本优先使用 near-miss，而不是完全无关问题。
+样本数量以 `triggering.json` 与验证器输出为准。负样本优先使用 near-miss，而不是完全无关问题。
 
 触发行为依赖具体 Agent Runtime，因此仓库保存 test set 与结果，但不假设不同 Runtime 的 discovery 机制完全一致。
 
@@ -145,6 +145,23 @@ Cases **31–35** test one general Learning contract, not a code-only special ca
 Two quality gates: **Mechanism Independence** (remove function/product/command names, and why/how must still make sense) and **Implementation Grounding** (map every important behavior back to the real artifact and its evidence). The optional `mechanism_mapping` metadata applies across evidence media, with controlled specificity for source-code/line-number tasks. No forced five-section templates or invented external facts.
 
 New fixtures are explicitly synthetic. Static validators ensure structure/metadata, not model quality, actual experiment execution or D/R runtime separation. Use frozen `learning_v0_6_1` for matched A/B evaluation.
+
+### Learning V0.6.2 follow-up — Conditional Reality Calibration
+
+Cases **36–41** 在不新增 Skill/版本号和固定输出模板的前提下，测试 Learning 是否会根据**真实结论依赖的变量**选择最小现实校准，而不是把金融计算推广到所有问题：
+
+- **36：财务/经营**：从一张GPU的收入形成过程出发，最少计算70%→50%计费使用率的差异；保底付款情景不能把使用率当作实收金额，未知合同应明确。
+- **37：技术性能**：基于合成trace识别API延迟关键路径，改变一个阶段；区分个别请求与总体p95，不能把p95阶段值直接相加。
+- **38：银行流程**：用一笔审批—签约—生效业务的状态、交接与返回结果做现实锚定，不强行计算ROI/完成率。
+- **39：健康证据**：区分评论体验与群体因果证据，不捏造有效率、不代替诊断。
+- **40：消费价格**：不同频率的内存+挂牌价/成交价，正确的算术比值不能直接升级为同款市场涨幅。
+- **41：必要时跳过**：简明解释“服务期≠不可撤销付款义务”，不能无增益地强制量化或生成表格。
+
+每个 case 使用可选 `reality_calibration` 一致性契约和 `expected_calibration_kind` 类型。类型为 `minimal_quantitative`、`execution_trace`、`workflow_state`、`evidence_quality`、`comparability`、`skip`。静态验证检查元数据、fixture和路由，并不判定回答实际达到理解效果。
+
+**验收先后**：校验比较对象/来源 → 机制和现实锚定是否一致 → 最小数量或状态变化能否改变/界定结论 → 是否明确事实/假设/推导/未知 → 是否停止在对学习真正有用的深度。注意“高技术含量”不等于“高理解价值”。
+
+冻结 `learning_v0_6_2_pre_reality_calibration` 为相邻A/B基线。人工比较除正确性以外，还要关注简洁度、没有不必要的数字与输出负担。对缺乏执行 Trace 的 D/R 隔离，仍必须标为 **UNVERIFIED**。
 
 ### Practice Engineering Transfer
 
