@@ -71,6 +71,12 @@
       "type": "git_commit",
       "ref": "df364d2c444e99e522333554a66c351f507120ad",
       "description": "Frozen main immediately before the conditional domain-adaptive Reality Calibration refinement; same Learning V0.6.2 skill line."
+    },
+    {
+      "name": "learning_v0_6_2_pre_problem_discovery",
+      "type": "git_commit",
+      "ref": "16f60888b2298aef2427496616c5266d2ace0c8c",
+      "description": "Frozen main before learning question-validity and problem-discovery refinement; Reality Calibration present."
     }
   ]
 }
