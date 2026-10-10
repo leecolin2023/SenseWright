@@ -66,6 +66,8 @@ python scripts/validate_skills.py
 python scripts/validate_evals.py
 ~~~
 
+[Reality Calibration design](docs/learning-reality-calibration.md) explains when to use numbers, process traces, comparable evidence or nothing extra.
+
 [Evaluation guidelines](evals/README.md) cover route tests, regression cases, and baseline comparisons. Passing the static validators does **not** establish behavioral superiority or actual Runtime isolation.
 
 The detailed evolution and rationale are retained in [CHANGELOG.md](CHANGELOG.md), [method migration notes](docs/learning-problem-chain-migration.md), and [D/R preflight specification](docs/learning-mandatory-dr-preflight.md). They are not required reading for ordinary Skill execution.
