@@ -21,7 +21,8 @@
                        |
                        v
                   Learning (L)
-  Ground → Mechanism → Reality Check* → Boundary
+   Ground → Problem Discovery* → Mechanism
+           → Reality Check* → Boundary
                        |
                        v
                 Practice (P)
@@ -36,10 +37,10 @@ The host Runtime must enforce actual isolation and a completion barrier. This re
 
 ## Learning behavior
 
-1. Ground the question in an observable example; check unsupported premises.
-2. When necessary, advance through a real failure → minimal required mechanism → next meaningful problem.
+1. Ground the task in an observable example; check unsupported premises. For exploratory/multi-source problems, **discover and validate the main research question before building a causal chain**. A given topic, list of items or surface-level question is not automatically the best research question.
+2. When necessary, advance through a real failure or evidence-backed tension → minimal required mechanism → next meaningful problem. Revise the starting question if it cannot explain the important difference.
 3. Trace technical mechanisms with a minimal run; use a single high-information condition change when it clarifies boundaries.
-4. When the conclusion depends on magnitude, observed behavior, workflow state or evidence comparability, apply a **minimal, domain-adaptive Reality Check**: an estimate/threshold, one execution trace, one handoff case, or a source/contrast test. *Skip it when it adds no understanding.*
+4. When the conclusion depends on magnitude, observed behavior, workflow state or evidence comparability, apply a **minimal, domain-adaptive Reality Check**: an estimate/threshold, one execution trace, one handoff case, or a source/contrast test. *Skip it when it adds no understanding.* Likewise, *Problem Discovery is skipped when the question is already precise and consequential*.
 5. Distinguish source facts, derived knowledge, external evidence, assumptions and unknowns; repair unsupported claims before delivery. Output one coherent answer instead of internal audit logs.
 
 Learning **does not imply an implementation decision**. Practice is for design and real engineering execution, not merely testing whether the user can answer questions.
@@ -65,6 +66,8 @@ D and R remain independent and source-facing; the explanation reorder is owned b
 python scripts/validate_skills.py
 python scripts/validate_evals.py
 ~~~
+
+[Problem Discovery design](docs/learning-problem-discovery.md) explains how to find a consequential, answerable question before tracing mechanisms.
 
 [Reality Calibration design](docs/learning-reality-calibration.md) explains when to use numbers, process traces, comparable evidence or nothing extra.
 

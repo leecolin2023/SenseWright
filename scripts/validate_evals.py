@@ -73,6 +73,21 @@ def main():
                 errors.append(f"{prefix}: invalid expected_calibration_kind")
             if kind != "skip" and not case.get("files"):
                 errors.append(f"{prefix}: calibrated evidence case must have a fixture")
+        if "problem_discovery" in case:
+            expected_discovery = {
+                "mode": "conditional",
+                "question_test": "grounded_discriminating_user_aligned",
+                "outcome": "select_revise_bound_or_preserve",
+                "anti_pattern": "abstraction_is_not_depth",
+            }
+            discovery = case.get("problem_discovery", {})
+            outcome = discovery.get("expected_outcome")
+            if "L" not in route or {
+                k: v for k, v in discovery.items() if k != "expected_outcome"
+            } != expected_discovery or outcome not in {"reframe", "preserve"}:
+                errors.append(f"{prefix}: invalid Problem Discovery contract")
+            if outcome == "reframe" and not case.get("files"):
+                errors.append(f"{prefix}: reframe eval must have raw evidence fixture")
         if not case.get("assertions"):
             errors.append(f"{prefix}: assertions must not be empty")
         for rel in case.get("files", []):
