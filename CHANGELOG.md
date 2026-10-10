@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — Learning reality calibration (V0.6.2 in-place refinement)
+- 不新增第五条 Skill，不更改 D/R/L/P 编排；在 Learning V0.6.2 中新增按需触发的 **Reality Calibration / 现实校准**，延续既有 Mechanism-to-Implementation Mapping 与 Contrast & Vary。
+- 不将“财务量化”升格为通用硬门槛：数量敏感用最小临界值/数量级；流程用状态与交接；程序用执行证据；医学/历史/社会观察用证据层级、可比性和反例；简单概念允许跳过。
+- 明确同口径比较、事实/假设/推导/未知、单变量变化、结论修正和停止条件。真实证据缺失时只说明最小需核验的证据，不捏造测量数据。
+- 增加覆盖金融、性能、业务流程、健康证据、硬件价格可比性、短概念的回归测试；静态验证结构与元数据，行为优劣仍需匹配 Runtime 评测与人工审查。
+
 ## V2.8.2 — Mechanism-to-Implementation Mapping in Learning V0.6.2
 - 新增 `skills/system-learning-v0.6.2/SKILL.md` 并替换活跃 `V0.6.1` 路由；保留本轮独立 **D + R → L**，其他 D/R/P Skill 版本不变。
 - 将原源码专项规则**泛化为通用“机制到实现映射”**：技术书、算法、源码、配置、命令、实验、协议及工程/业务流程皆适用；区分研究顺序（先核实材料/行为，再判断机制）与教学顺序（问题→必要机制→具体实现→可核验证据→有意义的新问题）。
