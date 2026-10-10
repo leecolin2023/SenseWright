@@ -161,6 +161,26 @@
     {
       "query": "替我在生产环境跑压测并调优数据库，不需要学习解释。",
       "should_trigger": false
+    },
+    {
+      "query": "这12只涨幅股票我已经有个股评论和行业报告，但原来的Learning问题都很浅。请从矛盾和对照中真正找到值得研究的问题，再教我机制。",
+      "should_trigger": true
+    },
+    {
+      "query": "研究AI创作降本时，我不想从行业乐观结论开始，先帮我找一个能分辨不同解释的核心问题。",
+      "should_trigger": true
+    },
+    {
+      "query": "我已经知道这段业务是APPROVED但没EFFECTIVE，帮我学懂这个流程的真实状态边界，不要扩大话题。",
+      "should_trigger": true
+    },
+    {
+      "query": "帮我把现有股票研究报告的标题替换成更深刻的标题，不需要核实内容。",
+      "should_trigger": false
+    },
+    {
+      "query": "请给一段文字自动生成20个哲学式为什么问题，不要求证据。",
+      "should_trigger": false
     }
   ]
 }
