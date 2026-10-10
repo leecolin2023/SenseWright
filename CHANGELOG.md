@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — Learning problem discovery and question validity (V0.6.2 refinement)
+- 修复 Learning “默认已有问题是正确问题”的深层缺陷。在 Ground 之后、Problem Chain 之前新增**按需触发的 Problem Discovery / Framing**，把用户任务/选样规则、主研究问题、机制子问题和证据核验问题分开；不新增独立 Skill。
+- 在真实矛盾、异常、竞争机制和关键现实约束中筛选问题；用**解释力、区分力、可验证性及用户价值**替代“抽象得更高就是更深刻”；不得从选出的上涨股票倒推涨价因果。
+- 加入修题回路与停止条件：后续证据推翻起点时先改问题；单纯定义/精确问题不强制升级成宏观研究；不自行改写用户使命，不预写结论。
+- 补充股价强势样本、两家业务逆差、代码执行、银行流程、明确短问题等跨领域回归；更新 README/Router 和设计说明。静态检查不能证明输出行为与 D/R 隔离真实有效。
+
 ## Unreleased — Learning reality calibration (V0.6.2 in-place refinement)
 - 不新增第五条 Skill，不更改 D/R/L/P 编排；在 Learning V0.6.2 中新增按需触发的 **Reality Calibration / 现实校准**，延续既有 Mechanism-to-Implementation Mapping 与 Contrast & Vary。
 - 不将“财务量化”升格为通用硬门槛：数量敏感用最小临界值/数量级；流程用状态与交接；程序用执行证据；医学/历史/社会观察用证据层级、可比性和反例；简单概念允许跳过。
