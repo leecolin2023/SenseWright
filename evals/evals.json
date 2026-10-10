@@ -1302,6 +1302,189 @@
         "output": "plain_language_mechanism_first_no_forced_metrics"
       },
       "expected_calibration_kind": "skip"
+    },
+    {
+      "id": 42,
+      "name": "learning-question-find-value-in-stock-sample",
+      "prompt": "前一轮为三大交易所当日涨幅股收集了个股评论与行业研究，生成的Learning只是逐家问‘行业增长能否变成利润’，太表面。请基于材料重新找出真正值得研究的问题，解释为何比原来强，再用不同公司的事实推进一小段机制分析。不要臆测当天上涨原因或预测买卖。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-problem-a-share-sample.md"
+      ],
+      "expected_output": "先区分涨幅选样与实际研究问题，由不同经营结果与行业论证之间的张力提出能够区分价值捕获机制的研究问题，再用不同公司展示至少一个初步检验；保留材料无法回答的根本缺口。",
+      "assertions": [
+        "指出三所涨幅股只是样本选择，不能用只选上涨股推导上涨原因、普遍投资规律或当日催化。",
+        "识别至少两条真正不同的现实张力（如内容业务快增却亏损、AI安全订单预期与亏损、化工利润价差），而不是每家公司贴‘需求是否转成利润’模板。",
+        "提出一个与用户学习任务对齐且能够区分至少两种解释的主研究问题，说明为何这个问题更有解释价值及需要的关键证据。",
+        "不预写‘平台必然掠夺利润’等结论，不将研究报告评级当成事实，不擅自转成选股/买卖建议；证据不足时明确。"
+      ],
+      "problem_discovery": {
+        "mode": "conditional",
+        "question_test": "grounded_discriminating_user_aligned",
+        "outcome": "select_revise_bound_or_preserve",
+        "anti_pattern": "abstraction_is_not_depth",
+        "expected_outcome": "reframe"
+      }
+    },
+    {
+      "id": 43,
+      "name": "learning-question-content-value-capture",
+      "prompt": "AI让短剧制作更便宜，但这意味着制作公司一定能多赚钱吗？根据附件先审视问题到底缺少什么条件，找比‘成本下降会不会增利’更有区分力的研究问题，再给一个最小的条件变化说明问题价值。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-problem-content-economics.md"
+      ],
+      "expected_output": "从制作成本降低与分发收款变化相互抵消的矛盾中，找到对收益分配与用户关系的关键问题；不能把某个渠道作为未经证明的唯一罪魁。",
+      "assertions": [
+        "基于合成案例指出A单片由150-100=50变为115-70=45，虽然制作成本下降30却贡献收益下降5；并指出B 160-100=60的对照。",
+        "主问题能区分制作成本、定价/分账、渠道、留存等竞争机制，而不是套术语或预先断言平台控制全部利润。",
+        "明确合成数据是假设且没有真实平台份额、内容IP竞争或用户留存数据。",
+        "解释这个问题将改变搜集什么证据，不强制做完整DCF或股票估值。"
+      ],
+      "problem_discovery": {
+        "mode": "conditional",
+        "question_test": "grounded_discriminating_user_aligned",
+        "outcome": "select_revise_bound_or_preserve",
+        "anti_pattern": "abstraction_is_not_depth",
+        "expected_outcome": "reframe"
+      }
+    },
+    {
+      "id": 44,
+      "name": "learning-question-agent-evidence-break",
+      "prompt": "同事抱怨内部Agent‘模型太笨’，因为他说‘已经读完文件’但摘要金额写错。请阅读附件，从一个真正重要的可验证问题开始学习这个失败，别预设‘换大模型’就会解决。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-problem-agent-misdiagnosis.md"
+      ],
+      "expected_output": "从声称已执行与受控执行证据之间的缺口找关键研究问题，通过竞争解释识别下一份日志或文件证据。",
+      "assertions": [
+        "区分助手文本声称读取与结构化Tool Call、真实文件读入、Tool Result/Observation、文件版本。",
+        "不能仅凭缺少日志就断言没有执行；至少区分调用没发生、文件版本错、已读但理解错等竞争机制。",
+        "提出最小区分性证据并解释它如何改变问题方向，不预设需要更大模型或首先堆提示词。",
+        "不得伪造真实源码、已执行Probe或外部系统日志；机制问题服务用户定位失败。"
+      ],
+      "problem_discovery": {
+        "mode": "conditional",
+        "question_test": "grounded_discriminating_user_aligned",
+        "outcome": "select_revise_bound_or_preserve",
+        "anti_pattern": "abstraction_is_not_depth",
+        "expected_outcome": "reframe"
+      }
+    },
+    {
+      "id": 45,
+      "name": "learning-question-preserve-specific-bank-problem",
+      "prompt": "请教我为什么一笔授信业务审批通过且签约后，仍然不能在用信系统使用额度。材料给了具体的生效条件和状态，请在这个明确问题上学习，必要时用一个流程片段解释，别重新定义成金融科技数字化转型的根本难题。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-reality-loan-process.md"
+      ],
+      "expected_output": "识别现有问题已足够具体且能被状态转移直接检验，准确回答审批/签约/生效的区别，而不追求虚假的宏大问题。",
+      "assertions": [
+        "明确直接保留原问题比升级成宏观数字化或组织治理问题更有价值。",
+        "对照APPROVED、SIGNED、EFFECTIVE状态与生效条件，解释示例额度不可用。",
+        "不要编造银行真实制度或数字指标；标注为合成案例。",
+        "不为‘问题发现’输出多个互不相关的候选问题清单。"
+      ],
+      "problem_discovery": {
+        "mode": "conditional",
+        "question_test": "grounded_discriminating_user_aligned",
+        "outcome": "select_revise_bound_or_preserve",
+        "anti_pattern": "abstraction_is_not_depth",
+        "expected_outcome": "preserve"
+      }
+    },
+    {
+      "id": 46,
+      "name": "learning-question-skip-on-short-definition",
+      "prompt": "请用一句话解释‘服务期限五年’和‘五年不可撤销的最低付款承诺’的区别。我已经有精确问题，不想听行业根本问题、研究假说或长篇案例。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [],
+      "expected_output": "保持简明的定义区别，不强制重构根本问题或增加问题链。",
+      "assertions": [
+        "直接区分前者是服务时长、后者是最低付款义务，两者需要具体合同判断。",
+        "尊重用户的一句话要求，不新增宏观商业研究任务或投资推荐。",
+        "不强行使用多层问题发现表格、公式或假设数据。",
+        "根据Learning现有要求保持D/R的轻量前置，不编造独立文件。"
+      ],
+      "problem_discovery": {
+        "mode": "conditional",
+        "question_test": "grounded_discriminating_user_aligned",
+        "outcome": "select_revise_bound_or_preserve",
+        "anti_pattern": "abstraction_is_not_depth",
+        "expected_outcome": "preserve"
+      }
     }
   ]
 }
