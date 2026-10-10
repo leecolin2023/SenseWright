@@ -21,7 +21,7 @@
                        |
                        v
                   Learning (L)
-          Ground → Mechanism → Boundary
+  Ground → Mechanism → Reality Check* → Boundary
                        |
                        v
                 Practice (P)
@@ -39,8 +39,8 @@ The host Runtime must enforce actual isolation and a completion barrier. This re
 1. Ground the question in an observable example; check unsupported premises.
 2. When necessary, advance through a real failure → minimal required mechanism → next meaningful problem.
 3. Trace technical mechanisms with a minimal run; use a single high-information condition change when it clarifies boundaries.
-4. Distinguish source facts, derived knowledge, external evidence, and unknowns.
-5. Repair broken explanation chains and unsupported claims before delivery. Output one coherent answer instead of internal audit logs.
+4. When the conclusion depends on magnitude, observed behavior, workflow state or evidence comparability, apply a **minimal, domain-adaptive Reality Check**: an estimate/threshold, one execution trace, one handoff case, or a source/contrast test. *Skip it when it adds no understanding.*
+5. Distinguish source facts, derived knowledge, external evidence, assumptions and unknowns; repair unsupported claims before delivery. Output one coherent answer instead of internal audit logs.
 
 Learning **does not imply an implementation decision**. Practice is for design and real engineering execution, not merely testing whether the user can answer questions.
 
@@ -65,6 +65,8 @@ D and R remain independent and source-facing; the explanation reorder is owned b
 python scripts/validate_skills.py
 python scripts/validate_evals.py
 ~~~
+
+[Reality Calibration design](docs/learning-reality-calibration.md) explains when to use numbers, process traces, comparable evidence or nothing extra.
 
 [Evaluation guidelines](evals/README.md) cover route tests, regression cases, and baseline comparisons. Passing the static validators does **not** establish behavioral superiority or actual Runtime isolation.
 

@@ -55,6 +55,24 @@ def main():
                 errors.append(f"{prefix}: invalid Mechanism-to-Implementation Mapping contract")
             if not case.get("files"):
                 errors.append(f"{prefix}: mechanism-mapping eval must have source fixtures")
+        if "reality_calibration" in case or "expected_calibration_kind" in case:
+            expected_calibration = {
+                "mode": "conditional_domain_adaptive",
+                "minimum_evidence": "decision_relevant",
+                "source_boundary": "facts_assumptions_derivations_unknowns",
+                "output": "plain_language_mechanism_first_no_forced_metrics",
+            }
+            supported_kinds = {
+                "minimal_quantitative", "execution_trace", "workflow_state",
+                "evidence_quality", "comparability", "skip",
+            }
+            if "L" not in route or case.get("reality_calibration") != expected_calibration:
+                errors.append(f"{prefix}: invalid domain-adaptive Reality Calibration contract")
+            kind = case.get("expected_calibration_kind")
+            if kind not in supported_kinds:
+                errors.append(f"{prefix}: invalid expected_calibration_kind")
+            if kind != "skip" and not case.get("files"):
+                errors.append(f"{prefix}: calibrated evidence case must have a fixture")
         if not case.get("assertions"):
             errors.append(f"{prefix}: assertions must not be empty")
         for rel in case.get("files", []):

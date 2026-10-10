@@ -137,6 +137,30 @@
     {
       "query": "照教材给出的命令直接帮我排查 Linux 进程并终止它，不需要讲解机制。",
       "should_trigger": false
+    },
+    {
+      "query": "我看到一家企业突然采购2万张GPU，帮我学习为什么算力租赁能赚钱，用几个关键数字和合同条件校准这个判断。",
+      "should_trigger": true
+    },
+    {
+      "query": "帮我学懂为什么API延迟很高不一定是框架慢，从链路追踪找一个最小可验证的机制。",
+      "should_trigger": true
+    },
+    {
+      "query": "请解释授信审批通过、合同签约和生效可用的区别，用一笔示例流程验证，别强行量化。",
+      "should_trigger": true
+    },
+    {
+      "query": "请直接计算791除以189等于多少，不需要解释原因或学习机制。",
+      "should_trigger": false
+    },
+    {
+      "query": "请帮我生成完整GPU租赁财务测算Excel，用给定输入填现金流公式。",
+      "should_trigger": false
+    },
+    {
+      "query": "替我在生产环境跑压测并调优数据库，不需要学习解释。",
+      "should_trigger": false
     }
   ]
 }
