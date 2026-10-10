@@ -163,6 +163,20 @@ Cases **36–41** 在不新增 Skill/版本号和固定输出模板的前提下�
 
 冻结 `learning_v0_6_2_pre_reality_calibration` 为相邻A/B基线。人工比较除正确性以外，还要关注简洁度、没有不必要的数字与输出负担。对缺乏执行 Trace 的 D/R 隔离，仍必须标为 **UNVERIFIED**。
 
+### Learning V0.6.2 follow-up — Problem Discovery & Question Validity
+
+**Cases 42–46** repair a failure upstream of Problem Chain: a model may deeply explain a weak surface question. This is not solved by longer reasoning or Reality Calibration. Learning must determine whether it has **a worthwhile, grounded, discriminating research question** before mapping mechanisms.
+
+- **42, A股涨幅样本**: samples selected by one-day gains are not evidence of why they rose. From heterogeneous firms and conflicting operating outcomes, frame a source-grounded research question; do not collapse all firms into one mechanism or output buy/sell advice.
+- **43, AI内容成本 vs 留存收益**: lower production cost and lower publisher revenue can coexist; reframe from cost growth to economic benefit distribution without presupposing platform capture as the truth.
+- **44, Agent action failure**: user's diagnosis “模型不聪明” is not the root question if structured tool action and file version evidence is missing; identify competing causes and discriminating evidence.
+- **45, clear banking process question**: preserve the exact APPROVED / SIGNED / EFFECTIVE problem; do not force a grand theory.
+- **46, precise concept query**: one sentence may be enough; question discovery is not a mandatory verbose artifact.
+
+Optional `problem_discovery` metadata expresses a **conditional** contract and expected outcome (`reframe` / `preserve`). Static validation checks route/fixture/contract shape, **not** whether proposed questions are truly better.
+
+Assess behavior against frozen pre-change main under matched model settings: question groundedness, discrimination between competing mechanisms, next evidence to seek, alignment with the original user objective, and avoidance of high-level rhetoric. Compare before/after content length, as over-framing is a regression. Neither static CI nor the final answer alone proves D/R Runtime isolation.
+
 ### Practice Engineering Transfer
 
 Practice V0.2 不再以 capability test 为核心，而是验证 **Knowledge → Executable Engineering Model**：
