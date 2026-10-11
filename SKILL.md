@@ -5,7 +5,7 @@ description: Route knowledge work among independent source-faithful Deep Read, s
 
 # SenseWright V2.9.0
 
-Choose the task by **user goal**, not by the existence of an attachment:
+按**用户希望得到的认知成果**选择路由，而不是按附件类型或有无附件选择：
 
 | Mode | Goal | Skill |
 |---|---|---|
