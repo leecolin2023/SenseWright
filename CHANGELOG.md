@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — Practice V0.3 situated transfer and consequential branching (2026-10-11)
+- 新增 `skills/practice-v0.3/SKILL.md`；Practice 从单一工程落地扩展到技术面试深追、架构/业务决策、工程实现和研究情境中的知识迁移；保留 V0.2 工程深入路径作为模式。
+- 使用条件变化是否改变解释/行动/预测/成败，筛掉低价值术语题；强制区分源代码、推演、实际 probe，禁止自演练给用户打分；重大知识缺口返回新一轮 D/R/L。
+- 更新根路由、README、触发集和回归案例 #59–63；补 Agent Loop 情境演练、DeepSeek Harness 固定代码锚点与单独 sqlite 重复写入最小 probe，明确未进行 DSH 端到端和真实用户考核。
+
+
 ## Unreleased — Learning general-core refactor, 2026-10-11
 - 完整审计 10/09–10/11 的四轮修改：Mechanism-to-Implementation、Reality Calibration、Problem Discovery、Domain Anchor 均回应真实失败，但“由案例追加新步骤”导致全领域指令膨胀、阶段串联和金融知识入侵。
 - 重写活跃 `system-learning-v0.6.2/SKILL.md`，压缩约 56%，只保留 Orient / Frame / Explain / Anchor / Challenge & Rebuild 的**认知责任**，不是强制执行步骤或输出模板。研究先核对证据，讲解先解释机制。
