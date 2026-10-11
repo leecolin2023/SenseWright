@@ -33,8 +33,8 @@
 - **Orient** — understand the user's learning intent and the real object. Distinguish a selected sample, a convenient metric and the actual purpose.
 - **Frame** — activate *relevant and appropriately scoped* prior knowledge, then keep, revise or discover the research question. Neither the deepest-sounding question nor a single universal terminal criterion is automatically right.
 - **Explain** — derive the smallest necessary causal, procedural, conceptual or formal mechanism, using a real example where useful.
-- **Anchor** — connect the mechanism to original source, code, observed behavior, comparable evidence or proportionate quantitative reasoning. Distinguish verified facts, inferences, assumptions and unknowns.
-- **Challenge & rebuild** — try a competing explanation or consequential changed condition, revise as needed, and give a coherent explanation at the user's requested depth. Stop when more work adds no real understanding.
+- **Anchor** — connect the mechanism to original source, code, observed behavior, comparable evidence or proportionate quantitative reasoning. **Distinguish an example that illustrates a concept from evidence that actually tests the main claim**; when a key claim needs testing, choose comparisons where rival explanations could yield different observations. Distinguish verified facts, inferences, assumptions and unknowns.
+- **Challenge & rebuild** — check whether the selected example answers the **original question** or only an easier neighboring one; try a discriminating competing explanation or consequential changed condition when needed, revise as needed, and give a coherent explanation at the user's requested depth. Stop when more work adds no real understanding.
 
 These are **responsibilities that can recur**. They are not six headings that every answer must print; simple definitions may need only a short answer, while complex source analysis may require multiple evidence loops.
 
@@ -49,7 +49,7 @@ python scripts/validate_skills.py
 python scripts/validate_evals.py
 ```
 
-The [learning refactor review](docs/learning-core-refactor-20261011.md) audits the October 9–11 iteration history, identifies which capabilities to retain or externalize, and defines regression goals. [Evaluation guidelines](evals/README.md) retain old and new domain-specific cases as **test data**, not runtime instructions.
+The [learning refactor review](docs/learning-core-refactor-20261011.md) and [question–evidence alignment review](docs/learning-question-evidence-alignment.md) audits the October 9–11 iteration history, identifies which capabilities to retain or externalize, and defines regression goals. [Evaluation guidelines](evals/README.md) retain old and new domain-specific cases as **test data**, not runtime instructions.
 
 Historical design notes: [Mechanism / Problem Chain](docs/learning-problem-chain-migration.md), [Reality Calibration](docs/learning-reality-calibration.md), [Problem Discovery](docs/learning-problem-discovery.md), [Domain Anchor](docs/learning-domain-anchor.md), and [D/R orchestration](docs/learning-mandatory-dr-preflight.md). They document earlier reasoning and concrete examples, **not separate mandatory Learning stages**.
 
