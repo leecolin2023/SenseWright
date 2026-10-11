@@ -342,3 +342,9 @@ Cases **59–63** 覆盖真实面试追问、Agent Loop 副作用歧义故障、
 ### Practice V0.3 topology coverage repair
 
 Cases **64–65** are adversarial regressions based on a real missed issue: a one-branch lost-ack drill was presented as comprehensive despite overlooking the upstream choice mechanism. They require a **causal topology audit BEFORE severity ranking**, include intent/tool-need/visible-capability/selection/arguments, and prevent inventing a fixed intent classifier. The original drill's overall acceptance has been withdrawn; see [corrected Agent Loop audit](../docs/practice-agent-loop-topology-repair-v0.3.md). These fixtures specify expectations, not observed model A/B performance.
+
+### Practice V0.3 — Simplified branch-exploration core
+
+当前运行 Skill 已整体收缩：**主干检查 → 发现问题空间 → 选重要问题 → 深入/验证 → 回流** 是认知责任，不是固定五阶段模板。默认目标是发现并研究知识主干遗漏的关键问题，不再将工程实施、情境测评或固定分支数量写成通用硬要求。先识别主干缺口（如 Agent 为什么选某个 Tool），再筛选独立枝干。保留旧版工程实践类用例用于回归验证，不能让它们反过来决定通用 Skill 的结构。
+
+回归必须特别防止：只挑一个高严重性异常、忽略基础行动选择；把一段简单概念答复做成复杂工程清单；把纯问题地图伪装成已深入验证；模型自演练替用户评分。静态 validator 不能证明这些行为已通过。
