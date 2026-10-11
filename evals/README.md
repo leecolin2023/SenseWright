@@ -338,3 +338,7 @@ Cases **59–63** 覆盖真实面试追问、Agent Loop 副作用歧义故障、
 验收强调：情境影响、分支改变什么判断、一次真实应对与区分性挑战、源码/模拟/实际运行证据分层、能力缺口归因与回流；没有真实用户回答不得给用户评分。Agent Loop 演练见 [Practice V0.3 source-grounded drill](../docs/practice-agent-loop-drill-v0.3.md)。
 
 **静态检查仅验证用例结构**。如果没有同模型、同输入、同配置的旧版/新版运行结果，就不能报告行为 A/B 胜出；若没有真实 dsh 故障注入，就不能报告真实 Harness E2E 通过。
+
+### Practice V0.3 topology coverage repair
+
+Cases **64–65** are adversarial regressions based on a real missed issue: a one-branch lost-ack drill was presented as comprehensive despite overlooking the upstream choice mechanism. They require a **causal topology audit BEFORE severity ranking**, include intent/tool-need/visible-capability/selection/arguments, and prevent inventing a fixed intent classifier. The original drill's overall acceptance has been withdrawn; see [corrected Agent Loop audit](../docs/practice-agent-loop-topology-repair-v0.3.md). These fixtures specify expectations, not observed model A/B performance.
