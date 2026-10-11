@@ -1,78 +1,56 @@
 # SenseWright V2.8.2
 
-**Four cognitive skills, one entrypoint:** [SKILL.md](SKILL.md).
+**Four independent cognitive skills, one entrypoint:** [SKILL.md](SKILL.md).
 
 | Skill | Primary job |
 |---|---|
-| [Deep Read V6.4](skills/article-deep-read-v6.4/SKILL.md) | Faithfully reconstruct a source and preserve the reasoning that matters |
-| [Review V0.10](skills/vibe-review-v0.10/SKILL.md) | Independently review the original source, covering all units before prioritizing issues |
-| [Learning V0.6.2](skills/system-learning-v0.6.2/SKILL.md) | Rebuild grounded understanding and necessary mechanisms from a real problem |
-| [Practice V0.2](skills/practice-v0.2/SKILL.md) | Transfer understood knowledge into executable, verifiable engineering work |
+| [Deep Read V6.4](skills/article-deep-read-v6.4/SKILL.md) | Faithfully reconstruct source reasoning |
+| [Review V0.10](skills/vibe-review-v0.10/SKILL.md) | Independently evaluate sources and claims |
+| [Learning V0.6.2](skills/system-learning-v0.6.2/SKILL.md) | Build transferable, evidence-grounded understanding |
+| [Practice V0.2](skills/practice-v0.2/SKILL.md) | Implement, operate, and verify an engineering result |
 
-## How Learning works
+## Learning: orchestration vs cognitive method
 
-~~~text
-                   Raw Input
-                  /         \
-      Deep Read (D)        Review (R)
-       [isolated]          [isolated]
-                  \         /
-                 both complete
-                       |
-                       v
-                  Learning (L)
-   Ground → Domain Anchor* → Problem Discovery*
-           → Mechanism → Reality Check* → Boundary
-                       |
-                       v
-                Practice (P)
-               [only if needed]
-~~~
+```text
+             Current Raw Input
+              /           \
+      Deep Read (D)     Review (R)
+       [isolated]        [isolated]
+              \           /
+             both complete
+                   |
+             Learning (L)
+       Adaptive understanding loop
+                   |
+          Practice (P) only if
+         execution is requested
+```
 
-Every Learning run requires **fresh D and R** on the same raw input, independently executed. Learning reads both results as cognitive scaffolds, not extra evidence; it must return to the real object and mechanism rather than copy or concatenate the upstream reports.
+**Orchestration contract:** Learning still requires fresh D/R from the same input with independent contexts and a completion barrier. Both outputs inform L but are not independent new evidence. For query-only prompts, preflight is brief and source-honest. The runtime, not Skill prose, must prove actual execution isolation with a Trace.
 
-For a question without an attached document, D/R operate briefly on the actual user question and its premises. This is still required; no source or critique should be invented. D-only, R-only, D+R, and P-only requests keep their independent paths.
+**General cognitive loop (not a mandatory sequence):**
 
-The host Runtime must enforce actual isolation and a completion barrier. This repository's skill instructions and static checks **do not by themselves prove** that two isolated calls occurred.
+- **Orient** — understand the user's learning intent and the real object. Distinguish a selected sample, a convenient metric and the actual purpose.
+- **Frame** — activate *relevant and appropriately scoped* prior knowledge, then keep, revise or discover the research question. Neither the deepest-sounding question nor a single universal terminal criterion is automatically right.
+- **Explain** — derive the smallest necessary causal, procedural, conceptual or formal mechanism, using a real example where useful.
+- **Anchor** — connect the mechanism to original source, code, observed behavior, comparable evidence or proportionate quantitative reasoning. Distinguish verified facts, inferences, assumptions and unknowns.
+- **Challenge & rebuild** — try a competing explanation or consequential changed condition, revise as needed, and give a coherent explanation at the user's requested depth. Stop when more work adds no real understanding.
 
-## Learning behavior
+These are **responsibilities that can recur**. They are not six headings that every answer must print; simple definitions may need only a short answer, while complex source analysis may require multiple evidence loops.
 
-1. Ground the task in an observable example; check unsupported premises. For exploratory/multi-source problems, **identify the domain's governing mechanism and terminal criterion before discovering and validating the main research question**. A given topic, list of items or surface-level question is not automatically the best research question.
-2. When necessary, advance through a real failure or evidence-backed tension → minimal required mechanism → next meaningful problem. Revise the starting question if it cannot explain the important difference.
-3. Trace technical mechanisms with a minimal run; use a single high-information condition change when it clarifies boundaries.
-4. When the conclusion depends on magnitude, observed behavior, workflow state or evidence comparability, apply a **minimal, domain-adaptive Reality Check**: an estimate/threshold, one execution trace, one handoff case, or a source/contrast test. *Skip it when it adds no understanding.* Likewise, *Problem Discovery is skipped when the question is already precise and consequential*.
-5. Distinguish source facts, derived knowledge, external evidence, assumptions and unknowns; repair unsupported claims before delivery. Output one coherent answer instead of internal audit logs.
+**Research order differs from teaching order:** check materials and observations before deciding what mechanism they support; teach the problem and mechanism first, then show the evidence. Source code learning should cite exact control/data/state links and line anchors when available; claims of actual execution require an actual run. Subject-specific theories must come from the task context or trustworthy subject sources, **not from hardcoded finance, banking, health or product examples in the generic Learning Skill**.
 
-Learning **does not imply an implementation decision**. Practice is for design and real engineering execution, not merely testing whether the user can answer questions.
+**Boundaries:** D restores source faithfully; R critiques source independently; L builds understanding; P builds and tests real artifacts. Learning does not automatically authorize market forecasts, clinical decisions or implementing systems.
 
-## Mechanism-to-Implementation Mapping
+## Evaluation and historical context
 
-**Universal principle:** Understand the real problem, derive the necessary mechanism, then anchor the explanation in concrete reality. This applies to technical books, algorithms, source code, CLI operations, SQL examples, protocols, experiments, architecture and business workflows—not only coding.
-
-**Research order** and **teaching order** are distinct:
-- **Research:** inspect original materials and verifiable behavior first, then determine which mechanism the evidence supports. Do not turn unexecuted examples into measured results.
-- **Teaching:** real problem → necessary mechanism → concrete realization or operation → minimal verifiable evidence → next meaningful problem (only if useful).
-
-**Two internal checks:** (1) After removing framework/API/command names, can the learner explain why the mechanism exists and how it works? (2) After reintroducing the concrete realization, does each important claim map to actual materials, observed input/output or source? If evidence contradicts the expected mechanism, revise the model, not the implementation.
-
-**Precise coding intent:** Learning requests such as "why is this function designed this way?", "understand the agent loop from source", "trace tool calls" still route **D + R → L**. L should map the mechanism to actual control/data flow and relevant, verifiable file/line anchors, without an API inventory. A request to debug or implement code without a learning goal remains Practice (P); a source-faithful file inventory can be D alone. This teaching rule does not force a large implementation section onto short conceptual questions.
-
-D and R remain independent and source-facing; the explanation reorder is owned by L.
-
-
-## Validation
-
-~~~bash
+```bash
 python scripts/validate_skills.py
 python scripts/validate_evals.py
-~~~
+```
 
-[Domain Anchor design](docs/learning-domain-anchor.md) explains how fundamental domain theories constrain problem selection and prevent intermediate metrics from becoming the goal.
+The [learning refactor review](docs/learning-core-refactor-20261011.md) audits the October 9–11 iteration history, identifies which capabilities to retain or externalize, and defines regression goals. [Evaluation guidelines](evals/README.md) retain old and new domain-specific cases as **test data**, not runtime instructions.
 
-[Problem Discovery design](docs/learning-problem-discovery.md) explains how to find a consequential, answerable question before tracing mechanisms.
+Historical design notes: [Mechanism / Problem Chain](docs/learning-problem-chain-migration.md), [Reality Calibration](docs/learning-reality-calibration.md), [Problem Discovery](docs/learning-problem-discovery.md), [Domain Anchor](docs/learning-domain-anchor.md), and [D/R orchestration](docs/learning-mandatory-dr-preflight.md). They document earlier reasoning and concrete examples, **not separate mandatory Learning stages**.
 
-[Reality Calibration design](docs/learning-reality-calibration.md) explains when to use numbers, process traces, comparable evidence or nothing extra.
-
-[Evaluation guidelines](evals/README.md) cover route tests, regression cases, and baseline comparisons. Passing the static validators does **not** establish behavioral superiority or actual Runtime isolation.
-
-The detailed evolution and rationale are retained in [CHANGELOG.md](CHANGELOG.md), [method migration notes](docs/learning-problem-chain-migration.md), and [D/R preflight specification](docs/learning-mandatory-dr-preflight.md). They are not required reading for ordinary Skill execution.
+Passing static CI verifies assets and metadata, **not** teaching quality, domain generalization or independent D/R runtime execution. Behavioral claims require paired model runs under matched inputs and settings plus human review.
