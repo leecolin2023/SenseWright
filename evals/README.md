@@ -1,362 +1,129 @@
-# SenseWright Eval V0.1
+# SenseWright 评测指南
 
-V0.1 不建立某一家模型供应商专用 benchmark 平台，而是先固定 **Skill 迭代的最小证据链**。
+> **现行评测入口 · Eval V0.1**。本文介绍目前如何检查与评估四条 Skill；各阶段历史设计、旧版技术细节和案例变化保留于 [评测历史记录](HISTORY.md)。**评测数据不是运行时规则**。
 
-## 1. 两类评测
+## 一、为什么要评测
 
-### Triggering
+四条 Skill 很容易出现“输出写得更长，却没有变得更好”的问题。真正关心的是：
 
-`triggering.json` 检查根 Skill 的 `description` 是否覆盖真正应该触发的场景，同时避开相邻但不属于本 Suite 的任务。
+- **D：** 是否完整而忠实地恢复材料的认知结构；压缩是否符合用户意图？
+- **R：** 是否审过全部重要语义单元，而非提前只挑重点？判断是否独立且合理？
+- **L：** 是否解释真实机制，案例能否支撑它声称解释的主问题？是否保持证据边界？
+- **P：** 是否找到了已有知识主干遗漏的必要前提和独立研究枝干？是否对重点问题真正深入，而非凑题数或固定工程流程？
 
-样本数量以 `triggering.json` 与验证器输出为准。负样本优先使用 near-miss，而不是完全无关问题。
+评测既要发现真实改进，也要防止为个别案例不断向通用 Skill 加特殊规则。
 
-触发行为依赖具体 Agent Runtime，因此仓库保存 test set 与结果，但不假设不同 Runtime 的 discovery 机制完全一致。
+## 二、评测文件和当前范围
 
-### Task Quality
+| 文件或目录 | 用途 |
+| --- | --- |
+| [evals.json](evals.json) | 任务案例，包含 `prompt`、`files`、`expected_route`、`expected_output` 与 `assertions` |
+| [triggering.json](triggering.json) | 正例及相邻负例，用于检查是否错误触发 Skill |
+| [fixtures/](fixtures/) | 原材料和情景输入；不是对所有任务生效的指令 |
+| [baselines.json](baselines.json) | 经过冻结的旧版本对照基线 |
+| [HISTORY.md](HISTORY.md) | 旧版方法、案例来源和评测方案演变 |
+| [../scripts/](../scripts/) | 基础验证、初始化工作区、汇总统计 |
 
-`evals.json` 覆盖 D / R / L / P 与主要复合路由。每个 case 包含 prompt、files、expected_route、expected_output、assertions。
+当前 `main` 数据含 **70 个任务案例和 59 个触发样例**。其中 **#59–63** 对应 Learning 问题—证据对齐回归，**#64–70** 对应 Practice 的分支发现等回归。精确数量以 JSON 和脚本结果为准，避免手工维护多个数字来源。
 
-assertions 只写尽量客观、可复核的要求；文风、洞察力等主观质量继续交给 human review。
+### 评价时不要混淆输入与答案
 
-### Deep Read Dual Compression
+- `files` 只提供待阅读材料，不应直接泄露预期问题清单；
+- `expected_output` / `assertions` 是评测合同，不应回填成模型生成时的提示词；
+- `gold_review_units` 可记录 Review 的覆盖目标（字段 `id` 与 `description`），不能误读成只需检查这些单元；
+- `reference_context` 可以模拟已有学习记录，但不能冒充本轮 D/R 已独立执行。
 
-Deep Read V6.4 增加同源双契约回归，用同一份多议题材料验证“交付意图而不是材料类型”决定压缩方式：
+## 三、结构检查
 
-- **Coverage-Preserving**：检查所有独立认知单元是否仍可追踪，同时确认重复案例和语言冗余被压缩；
-- **Cognitive-Synthesis**：检查是否真正跨单元形成更高密度理解，而不是逐项换写原文；同时确认压缩没有改变核心认知模型；
-- 两条路线都继续验证 Source Boundary、认知发动机和必要解释冗余。
+在项目根目录执行：
 
-当前相邻版本 baseline：`deep_read_v6_1`。
+```bash
+python scripts/validate_skills.py
+python scripts/validate_evals.py
+```
 
-### Review Coverage / Atomic Review Units
+对应 GitHub Actions 的 [CI 定义](../.github/workflows/skill-ci.yml) 在推送和 PR 时执行上述两条脚本。
 
-Vibe Review V0.10 增加 coverage-oriented eval。
+**通过只表示：** Skill 元数据、任务字段、部分路由约束、测试素材引用和正负触发样例结构符合检查规则。
 
-Review case 可以声明可选的 `gold_review_units`：
+**不代表：** 模型真正遵守了这些方法、Learning 的 D/R 在独立上下文运行、案例质量提升，或任何实际工具/业务系统的端到端执行成功。
 
-~~~json
-"gold_review_units": [
-  {"id": "U01", "description": "一个可独立审阅的语义单元"}
-]
-~~~
+## 四、怎样开展行为对照
 
-它的作用不是要求最终答案逐条打印，而是让 grader / human review 有一个 coverage 基准。
+选择待评版本与 [冻结基线](baselines.json)，尽量固定模型、参数、原始输入、宿主能力、环境和评审标准；不要把数天后不同模型的输出硬当作有效 A/B。
 
-Review coverage 重点看三件事：
-- **Unit Recall**：原材料中的 Gold Atomic Review Units 是否进入审阅；
-- **Relation Preservation**：条件、例外、冲突、依赖等是否在拆解后仍被保留；
-- **Selective Reporting**：内部完整 coverage 是否仍能收敛为面向用户的重点发现。
+### 1. 生成本地工作区
 
-当前 `review-atomic-coverage` fixture 故意把问题分散在数字、控制流程、例外和结论中，用来捕捉“先挑重点、后审阅”导致的漏审。
-
-升级前 Review V0.9 baseline：
-`46ec079238fd58e6771ebbb1234d170ed7f68087`
-
-### Reference Context
-
-V2.5.0 在 Eval metadata 中增加可选 `reference_context`，用于验证非对称协作：
-
-~~~json
-"reference_context": [
-  {
-    "source_skill": "R",
-    "file": "evals/fixtures/reference-review-agent-workflow.md",
-    "purpose": "optional_reference"
-  }
-]
-~~~
-
-规则：
-- 只有 expected route 包含 **L 或 P** 的 case 才允许声明 `reference_context`；
-- 纯 D / R case 若配置 reference context，静态校验直接失败；
-- reference 的目标是测试“选择性吸收”，不是把 sibling output 当 source。
-
-Eval 当前重点验证：
-- **Source isolation**：D / R 不消费 sibling result；
-- **Selective reference**：L / P 能利用真正有价值的 prior finding，同时不继承为事实或结论。
-
-### Learning Adaptive Probe
-
-原 Questioning 中用于“补知识”的能力已迁入 Learning。
-
-相关 Eval 验证：
-- 当用户自身语境是关键缺口时，Learning 会先澄清，而不是凭常识补原因；
-- 默认一次只问一个高信息价值问题；
-- 专家访谈问题服务于 Knowledge Model 更新；
-- 提问不是独立终点。
-
-### Learning Grounding
-
-System Learning V0.5.1 增加 grounding-oriented regression，用来捕捉“知识模型结构完整，但用户仍然不知道现实里到底改变了什么”的失败。
-
-相关 Eval 验证：
-- **Ground before abstract**：先用具体对象和任务解释，再形成上位模型；
-- **Contrastive grounding**：对概念差异同时找低差异与高差异场景，避免强行制造价值；
-- **Grounding recovery**：用户明确反馈“没理解 / 太抽象”后，必须降低抽象层级而不是继续增加术语；
-- **Cross-domain transfer**：同一规则应能解释数据库事务等非 Agent 概念，而不是只针对某个案例特判。
-
-当前相邻版本 baseline：`learning_v0_5_0`。
-
-### Learning Mechanism Depth
-
-System Learning V0.5.2 在 V0.5.1 grounding 基础上增加技术机制深度回归。
-
-相关 Eval 验证：
-- **Run once**：机制型技术不能只停在组件说明，至少让一个最小实例真实运行；
-- **Mechanism causality**：不仅说明发生了什么，还解释关键步骤为什么存在；
-- **Teaching variation**：改变一个主要条件并解释结果变化，答案可直接展示，仍属于 Learning；
-- **Prediction check**：当前模型应足以解释至少一个相邻条件变化，而不是只复述定义；
-- **Analogy scaffolding**：Deep Read 保留下来的比喻/故事可以帮助进入机制，但 Learning 最终应映射回真实系统并说明类比边界。
-
-当前相邻版本 baseline：`learning_v0_5_1`。
-
-### Learning V0.6.0 — Problem Chain & Built-in Stabilization
-
-Cases **22–27** cover: a causal Agent action loop; Framework Evidence vs stable Knowledge and architecture selection; transaction concepts appearing only after failure; business/usage-rate cross-domain transfer; simple tasks where long chains harm clarity; and repairing a deliberately flawed outline rather than leaving Gates pending.
-
-Three internal gates: **Problem-chain Review → Concept First-Appearance Audit → Boundary & Evidence Review**, with repair and re-check *before* delivery. Verify that these checks change actual explanations, not just append a checklist. The old `learning_v0_5_3` baseline is pinned to `6bfc5519e089d8a1b08d254d500e947388400e78`.
-
-The fixture `learning-premature-framework-outline.md` contains intentionally incorrect claims and should never be treated as verified product evidence. A static validator pass does not imply behavioral success. Run each case on old and new Skill under matched model, configuration and time, save outputs/grading and perform human review.
-
-### Learning V0.6.1 — Mandatory D + R Preflight
-
-Every L eval now includes the route prefix ["D","R","L"] and the following contract:
-
-~~~json
-{
-  "required_before_L": ["D", "R"],
-  "source_policy": "same_raw_input_independent_contexts",
-  "completion_barrier": "both_complete_before_L",
-  "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
-  "output_policy": "integrated_learning_unless_explicit"
-}
-~~~
-
-D/R independently consume current Raw Input. Both are mandatory and must finish before L; L reads both as cognitive scaffolds, while returning to the real object and mechanism. Historical optional reference_context cannot replace current D/R. Query-only prompts still receive two concise preflight stages without fabricating sources. Cases 28–30 cover source preflight, no-document preflight, and non-authoritative scaffold handling. **Static validation cannot prove actual runtime isolation**: check execution traces or mark isolation and barrier UNVERIFIED.
-
-### Learning V0.6.2 — Mechanism-to-Implementation Mapping
-
-Cases **31–35** test one general Learning contract, not a code-only special case: **research original materials / behavior before forming conclusions; teach real problem → necessary mechanism → concrete realization → minimal verifiable evidence → next meaningful problem**. Fresh independent D/R preflight is unchanged.
-
-- **31–33, code-specific:** toy Agent loop must derive Tool Execution from the problem *before* citing code; a counterexample must shrink unsupported claims; types-only input cannot be treated as executed capability. Exact function/data-flow and source anchors remain essential where source code exists.
-- **34, technical textbook / SQL:** use a two-update inconsistency to derive transaction atomicity before listing BEGIN/COMMIT/ROLLBACK; anchor in the teaching SQL and clearly label hypothetical outcomes, not executed database evidence.
-- **35, operational technical textbook / Linux:** derive why external process control and subsequent state observation matter, then map to sample terminal commands/signals; do not treat the mock terminal transcript as actually run.
-
-Two quality gates: **Mechanism Independence** (remove function/product/command names, and why/how must still make sense) and **Implementation Grounding** (map every important behavior back to the real artifact and its evidence). The optional `mechanism_mapping` metadata applies across evidence media, with controlled specificity for source-code/line-number tasks. No forced five-section templates or invented external facts.
-
-New fixtures are explicitly synthetic. Static validators ensure structure/metadata, not model quality, actual experiment execution or D/R runtime separation. Use frozen `learning_v0_6_1` for matched A/B evaluation.
-
-### Learning V0.6.2 follow-up — Conditional Reality Calibration
-
-Cases **36–41** 在不新增 Skill/版本号和固定输出模板的前提下，测试 Learning 是否会根据**真实结论依赖的变量**选择最小现实校准，而不是把金融计算推广到所有问题：
-
-- **36：财务/经营**：从一张GPU的收入形成过程出发，最少计算70%→50%计费使用率的差异；保底付款情景不能把使用率当作实收金额，未知合同应明确。
-- **37：技术性能**：基于合成trace识别API延迟关键路径，改变一个阶段；区分个别请求与总体p95，不能把p95阶段值直接相加。
-- **38：银行流程**：用一笔审批—签约—生效业务的状态、交接与返回结果做现实锚定，不强行计算ROI/完成率。
-- **39：健康证据**：区分评论体验与群体因果证据，不捏造有效率、不代替诊断。
-- **40：消费价格**：不同频率的内存+挂牌价/成交价，正确的算术比值不能直接升级为同款市场涨幅。
-- **41：必要时跳过**：简明解释“服务期≠不可撤销付款义务”，不能无增益地强制量化或生成表格。
-
-每个 case 使用可选 `reality_calibration` 一致性契约和 `expected_calibration_kind` 类型。类型为 `minimal_quantitative`、`execution_trace`、`workflow_state`、`evidence_quality`、`comparability`、`skip`。静态验证检查元数据、fixture和路由，并不判定回答实际达到理解效果。
-
-**验收先后**：校验比较对象/来源 → 机制和现实锚定是否一致 → 最小数量或状态变化能否改变/界定结论 → 是否明确事实/假设/推导/未知 → 是否停止在对学习真正有用的深度。注意“高技术含量”不等于“高理解价值”。
-
-冻结 `learning_v0_6_2_pre_reality_calibration` 为相邻A/B基线。人工比较除正确性以外，还要关注简洁度、没有不必要的数字与输出负担。对缺乏执行 Trace 的 D/R 隔离，仍必须标为 **UNVERIFIED**。
-
-### Learning V0.6.2 follow-up — Problem Discovery & Question Validity
-
-**Cases 42–46** repair a failure upstream of Problem Chain: a model may deeply explain a weak surface question. This is not solved by longer reasoning or Reality Calibration. Learning must determine whether it has **a worthwhile, grounded, discriminating research question** before mapping mechanisms.
-
-- **42, A股涨幅样本**: samples selected by one-day gains are not evidence of why they rose. From heterogeneous firms and conflicting operating outcomes, frame a source-grounded research question; do not collapse all firms into one mechanism or output buy/sell advice.
-- **43, AI内容成本 vs 留存收益**: lower production cost and lower publisher revenue can coexist; reframe from cost growth to economic benefit distribution without presupposing platform capture as the truth.
-- **44, Agent action failure**: user's diagnosis “模型不聪明” is not the root question if structured tool action and file version evidence is missing; identify competing causes and discriminating evidence.
-- **45, clear banking process question**: preserve the exact APPROVED / SIGNED / EFFECTIVE problem; do not force a grand theory.
-- **46, precise concept query**: one sentence may be enough; question discovery is not a mandatory verbose artifact.
-
-Optional `problem_discovery` metadata expresses a **conditional** contract and expected outcome (`reframe` / `preserve`). Static validation checks route/fixture/contract shape, **not** whether proposed questions are truly better.
-
-Assess behavior against frozen pre-change main under matched model settings: question groundedness, discrimination between competing mechanisms, next evidence to seek, alignment with the original user objective, and avoidance of high-level rhetoric. Compare before/after content length, as over-framing is a regression. Neither static CI nor the final answer alone proves D/R Runtime isolation.
-
-### Learning V0.6.2 follow-up — Domain Anchor before Problem Discovery
-
-Cases **47–50** test the failure where a correctly reasoned Problem Discovery still misses the **domain's accepted theory and terminal criterion**.
-
-- **47**: Stock-value study over a 12-company sample: business mechanisms (content cost, subscription, AI security budget, commodity margins) must ultimately connect to future owner cash flows, timing and risk, with current market price reflecting expectations. No compulsory per-stock target price or trading forecast.
-- **48**: High accounting profit with huge capex / working-capital demands: FCFF arithmetic and future reinvestment economics, with correct enterprise-value vs equity-value bridge; one negative FCF year does not prove low valuation.
-- **49**: Nonfinancial business system: document assistant with fast p95 but wrong contract version. Its final success criterion is task correctness under reliability/performance constraints, not a financial value model.
-- **50**: Pure A-share ranking request. Do not misroute a factual lookup into a stock valuation problem.
-
-`domain_anchor` metadata expresses a conditional theoretical-anchor contract with expected outcome `anchor` or `skip`. Static CI checks metadata and fixtures; real behavior requires matched A/B and human review. Avoid interpreting this addition as “all problems have one scalar value function”; some domains have competing priorities, so specify the theory's scope and constraints.
-
-### Learning core refactor — domain-neutral adaptive reasoning
-
-The 2026-10-11 refactor **replaces the rigid layered runtime prose** with a short common learning contract. It does **not** remove any earlier fixtures: `#1–50` remain historical acceptance and regression cases, including stock valuation `#47–48`, financial reality grounding, bank workflows, source-code tracing, and easy skip cases.
-
-New **#51–58** target out-of-sample non-financial tasks: observational causality, institutional policy exceptions, conflicting historical accounts, mathematical proof conditions, literary ambiguity, multi-goal service design, async code state, and a simple definition. These tasks test:
-- correct goal and relevant domain concepts, without one universal financial or scalar value goal;
-- question discovery **only when useful**, rather than mandatory grander abstraction;
-- source-facing mechanism/condition explanation, with domain-appropriate evidence;
-- revised confidence and boundaries, no invented probes or statistics;
-- proportionate answer length and preservation of simple tasks.
-
-Use `learning_v0_6_2_pre_general_refactor` (main@8aae453) as the frozen adjacent baseline. Matched-runtime comparisons must score **both old and new domain tasks**, not solely the new evals; include source accuracy, explanatory usefulness, transfer, unsupported claims, length and latency. Static scripts only confirm evaluation schema/fixtures and cannot substantiate runtime skill quality.
-
-Read [refactor audit](../docs/learning-core-refactor-20261011.md) for the architectural root cause. Older notes about Domain Anchor, Reality Calibration and Problem Discovery are **historical design cases**, not simultaneous mandatory pipeline stages.
-
-### Learning V0.6.2 follow-up — Question–Evidence Alignment
-
-Cases **#59–63** test a general failure not covered by merely supplying a correct computation or trace: **an example may prove a neighboring trivial statement rather than the question Learning selected**. This is a small amendment to Anchor / Challenge, not a new generic stage.
-
-- **59 Investment**: proving leverage magnifies losses is not adequate evidence for “high conviction justifies leverage”; choose a price, compounding, or path/financing comparison that can actually change the claim.
-- **60 Agent**: showing successful execution of a tool does not explain **why that tool was selected**; contrast user intent and available tool descriptions without fabricating hidden model reasoning.
-- **61 Banking**: a normal authorized case passes both a correct gate and a faulty gate. The unfulfilled-condition negative example discriminates the two.
-- **62 Observational science**: a group mean difference does not isolate cause; contrast a confounded observation against evidence that can isolate the variable.
-- **63 Low-complexity counterexample**: a clear short definition does not require a discriminating experiment; avoid making the fix a rigid template.
-
-Assess on real model outputs: (a) identifies the main claim, (b) describes what the original case *actually* shows, (c) selects the least additional evidence or varied condition needed to distinguish relevant conclusions, (d) labels thought experiments vs real proof, and (e) **avoids forced testing** where simple illustration suffices. Require matched-runtime evaluation against `learning_v0_6_2_pre_question_case_alignment`; metadata validation alone establishes none of this behavior.
-
-### Practice Engineering Transfer
-
-Practice V0.2 不再以 capability test 为核心，而是验证 **Knowledge → Executable Engineering Model**：
-
-- **Scenario grounding**：不是给定义套故事，而是进入真实工程目标与约束；
-- **System placement**：明确概念在系统里的位置、责任边界、输入输出与依赖；
-- **Implementation specificity**：具体到组件、Schema、接口、状态、配置或工程产物；
-- **Run one path**：至少让一个具体输入真实跑完整链路；
-- **Verification**：提供可以判断“做对没有”的反馈机制；
-- **Troubleshooting**：展示高信息价值的 failure symptom → diagnosis → fix；
-- **Artifact readiness**：用户知道真正动手时要创建、运行和验收哪些东西；
-- **Generalization**：区分概念本身的不变量与当前项目的实现选择。
-
-当前回归主题使用 **RAG 文档切分** 与 **Agent State**，用于验证 Practice 是否真正填平“知道 → 知道怎么做”的鸿沟。
-
-当前相邻版本 baseline：`practice_v0_1`.
-
-
-## 2. Baseline 策略
-
-这是一个已存在的 Skill Suite，所以第一次评测优先比较：
-
-- `with_skill`：当前版本
-- `old_skill`：改造前版本 `ffdb60e1f27ae99011d18c29c683dc747cec64f1`
-
-`without_skill` 作为可选控制组，用于回答“整个 Suite 相比无 Skill 到底提供多少价值”。
-
-同一 iteration 尽量在相同模型、参数和相近时间窗口内完成 with-skill 与 baseline，避免先跑一组、过几天再补另一组。
-
-## 3. 初始化 workspace
-
-~~~bash
+```bash
 python scripts/init_eval_workspace.py --iteration 1 --baseline old_skill
-~~~
+```
 
-默认生成：
+脚本将根据全部任务案例建立 `.eval-workspace/iteration-1/`、`manifest.json`、每项 `eval_metadata.json`，以及 `with_skill/` 和基线对应的输出目录。
 
-~~~text
-.eval-workspace/
-└── iteration-1/
-    ├── deep-read-faithful/
-    │   ├── eval_metadata.json
-    │   ├── with_skill/
-    │   │   └── outputs/
-    │   └── old_skill/
-    │       └── outputs/
-    └── ...
-~~~
+**注意：该脚本只生成评测目录与清单，不会自动调用模型、生成回答或评分。** 所有案例初始化和逐例运行是两个不同动作。
 
-`.eval-workspace/` 是运行产物，不提交 Git。
+### 2. 实际运行并留下证据
 
-## 4. 每个 run 保存什么
+对同一案例分别在新旧 Skill 条件下运行，并保存至少：
 
-建议至少保存：
+```text
+iteration-1/
+  <案例名称>/
+    eval_metadata.json
+    with_skill/
+      outputs/response.md
+      transcript.md       # 有记录才保存
+      grading.json        # 对照断言给出证据
+      timing.json         # Runtime 能提供才记录
+    old_skill/
+      outputs/response.md
+      grading.json
+      timing.json
+```
 
-~~~text
-with_skill/
-├── outputs/
-│   └── response.md
-├── transcript.md
-├── grading.json
-└── timing.json
-~~~
+`grading.json` 中 `expectations` 是包含 `text`、`passed`、`evidence` 等信息的数组。没有充分证据就不应填 `passed: true`。耗时和 Token 用量不能靠估算补齐。
 
-`old_skill/` 使用同样结构。
+### 3. 汇总结果
 
-### grading.json
-
-~~~json
-{
-  "expectations": [
-    {
-      "text": "输出忠实解释材料主线，没有把独立批评混入 Deep Read。",
-      "passed": true,
-      "evidence": "response.md 中的具体证据"
-    }
-  ]
-}
-~~~
-
-如果 assertion 能由程序确定，优先脚本检查；不能客观判断的内容交给独立 grader 或 human review。
-
-### timing.json
-
-~~~json
-{
-  "total_tokens": 12480,
-  "duration_ms": 8120,
-  "total_duration_seconds": 8.12
-}
-~~~
-
-Runtime 不提供的数据可以省略，不要估算。
-
-## 5. 聚合 benchmark
-
-~~~bash
+```bash
 python scripts/aggregate_benchmark.py .eval-workspace/iteration-1
-~~~
+```
 
-输出 `benchmark.json` 和 `benchmark.md`。V0.1 聚合 assertion pass rate、token mean/stddev、duration mean/stddev。
+当逐项评分与测量文件已经存在时，脚本生成 `benchmark.json` 和 `benchmark.md`，汇总断言通过率、Token/耗时统计（有数据时）及逐案例表现。
 
-不要只看总 pass rate，还要检查：
+**不要在空工作区运行后把缺失的评分误读成“全部失败”，也不要把自动汇总误认为脚本已经检查过语义正确性。**
 
-- assertion 是否两个版本都总能通过，导致没有区分度；
-- 某个 case 是否波动特别大；
-- 质量提升是否以明显 token / latency 增长为代价；
-- 新版本是否修复目标问题却破坏其他路由。
+### 4. 独立人工复核
 
-## 6. Human Review
+至少抽查改变判断的案例、失败案例和成本显著变化案例：
 
-量化不是最终裁决。对每个 case 同时看 with-skill 与 baseline：
+- 哪个版本更忠实、更全面、更能支持用户当前目标？
+- 哪些差异只是篇幅增长、术语增加或格式美化？
+- 是否新增了隐含的硬步骤和领域过拟合？
+- 模型“解释自己做了什么”能否被运行记录证实？
+- 是否存在两版都通过、但断言本身太浅而没有判别力的情况？
 
-- 哪个更忠实、更有判断价值，或更能让用户先形成具体理解再形成知识模型；
-- 哪些差异真正改变理解或行动；
-- 哪些改善只是“写得更长”；
-- 哪些 failure 应该修改 Skill，而不是修改测试去迎合 Skill。
+只有在**可比环境 + 真实输出 + 评分证据 + 独立复核**具备时，才适合讨论实际行为改进。
 
-建议把人工反馈保存为 iteration 下的 `feedback.json`，下一轮修改前先读它。
+## 五、四条 Skill 的专项回归关注点
 
-## 7. 下一轮
+| Skill | 必须防止的回归 |
+| --- | --- |
+| D · Deep Read V6.4 | 将 Coverage-Preserving 做成逐字复述；或 Cognitive-Synthesis 压掉必要解释；混入 R 的独立评判 |
+| R · Vibe Review V0.10 | 在原子覆盖前先筛重要性；遗漏表格、例外、数字、责任转换；把所有小问题都堆成最终报告 |
+| L · System Learning V0.6.2 | 没有本轮 D/R 前置；把解释例子当作主问题的因果验证；不必要地固化领域模型或阶段 |
+| P · Practice V0.3 | 只挑一个下游异常，漏掉上游必需机制；机械罗列追问；默认要求工程施工或给未答题用户评分 |
 
-~~~bash
-python scripts/init_eval_workspace.py --iteration 2 --baseline old_skill
-~~~
+Learning 的回归还需要核实 `expected_route` 使用 **D、R、L** 顺序和 `learning_preflight` 的合同；但这只验证元数据，不能代替宿主调用 Trace。
 
-V0.1 默认保持最初 old-skill baseline 稳定，便于观察累计改进。以后如果需要相邻版本比较，可以新增 baseline，而不是覆盖历史记录。
+## 六、结果说明方式
 
-## Practice V0.3 — Situated Transfer & Consequential Branching
+每份评测报告应当明确写清：
 
-Cases **64–68** 覆盖真实面试追问、Agent Loop 副作用歧义故障、跨域银行状态判断、避免过度分支、以及知识缺口回流 Learning。新 Skill 不再把深度面试模拟整体排除在 Practice 之外；单纯“列出15个问题”仍是题库任务，不自动要求 P。
+1. **评测对象与基线**：具体 Git 提交、Skill 版本和模型配置；
+2. **样本与任务**：真实材料、合成材料、样本量及限制；
+3. **证据类型**：静态验证 / 模型对照 / 人工审阅 / 实际执行；
+4. **发现与失败**：指出具体案例，不只报总分；
+5. **结论边界**：哪些结果尚不能推广或仍未验证。
 
-验收强调：情境影响、分支改变什么判断、一次真实应对与区分性挑战、源码/模拟/实际运行证据分层、能力缺口归因与回流；没有真实用户回答不得给用户评分。Agent Loop 演练见 [Practice V0.3 source-grounded drill](../docs/practice-agent-loop-drill-v0.3.md)。
-
-**静态检查仅验证用例结构**。如果没有同模型、同输入、同配置的旧版/新版运行结果，就不能报告行为 A/B 胜出；若没有真实 dsh 故障注入，就不能报告真实 Harness E2E 通过。
-
-### Practice V0.3 topology coverage repair
-
-Cases **69–70** are adversarial regressions based on a real missed issue: a one-branch lost-ack drill was presented as comprehensive despite overlooking the upstream choice mechanism. They require a **causal topology audit BEFORE severity ranking**, include intent/tool-need/visible-capability/selection/arguments, and prevent inventing a fixed intent classifier. The original drill's overall acceptance has been withdrawn; see [corrected Agent Loop audit](../docs/practice-agent-loop-topology-repair-v0.3.md). These fixtures specify expectations, not observed model A/B performance.
-
-### Practice V0.3 — Simplified branch-exploration core
-
-当前运行 Skill 已整体收缩：**主干检查 → 发现问题空间 → 选重要问题 → 深入/验证 → 回流** 是认知责任，不是固定五阶段模板。默认目标是发现并研究知识主干遗漏的关键问题，不再将工程实施、情境测评或固定分支数量写成通用硬要求。先识别主干缺口（如 Agent 为什么选某个 Tool），再筛选独立枝干。保留旧版工程实践类用例用于回归验证，不能让它们反过来决定通用 Skill 的结构。
-
-回归必须特别防止：只挑一个高严重性异常、忽略基础行动选择；把一段简单概念答复做成复杂工程清单；把纯问题地图伪装成已深入验证；模型自演练替用户评分。静态 validator 不能证明这些行为已通过。
+历史详解和旧案例映射见 [评测历史记录](HISTORY.md)，方法总体边界见 [整体架构与边界](../docs/architecture.md)。
