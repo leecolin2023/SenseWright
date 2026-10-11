@@ -1873,6 +1873,96 @@
         "简短直接，不增加根本价值理论、强制反例实验、表格或无关问题。",
         "不得宣称运行程序，D/R仍以当前输入轻量前置且无Runtime Trace时不声称隔离已验证。"
       ]
+    },
+    {
+      "id": 59,
+      "name": "practice-agent-loop-interview-branch",
+      "prompt": "我已学过 Agent Loop。请基于源码真实机制按高级技术面试的强度做一次追问演练，别给我10道术语题；找最能区分理解的枝干，回答后再通过反事实拷打。",
+      "expected_route": [
+        "P"
+      ],
+      "files": [
+        "evals/fixtures/practice-agent-loop-branching.md"
+      ],
+      "expected_output": "锚定主干，优先挑选外部工具结果不确定性的高价值分支，展示可辩护回答、条件变化和证据缺口；不对用户能力打分。",
+      "assertions": [
+        "追问必须能改变成功/失败判断或执行决策，不能仅罗列术语。",
+        "区分 Harness 对 tool/call 与 tool/result 的记录和外部系统是否已产生副作用。",
+        "若无人提供真实面试回答，要标注自演练，不能宣布用户已掌握。",
+        "引用给定源码文档边界；未运行 Harness 不宣称其生产环境下的重试或 exactly-once 性质。"
+      ]
+    },
+    {
+      "id": 60,
+      "name": "practice-agent-loop-failure-injection",
+      "prompt": "基于 Agent Loop 的已有 Learning，假设写入业务系统已完成但结果超时。不要单纯解释 AgentLoop：请做一轮失败注入、对照测试和恢复策略评审。",
+      "expected_route": [
+        "P"
+      ],
+      "files": [
+        "evals/fixtures/practice-agent-loop-branching.md"
+      ],
+      "expected_output": "比较提交前/提交后超时的不同策略；最小实验展示重复与幂等；建议先 reconcile 再重试。",
+      "assertions": [
+        "最小区分条件是副作用是否提交，单一 timeout 无法区分。",
+        "说明 idempotency key 必须在外部副作用边界生效、原子去重，并说明稳定操作身份。",
+        "如果没有接真实系统，就只能把结果标为示例或模拟测试。",
+        "能够指出 Session 回放不等于业务幂等或 exactly-once。"
+      ]
+    },
+    {
+      "id": 61,
+      "name": "practice-bank-workflow-branch",
+      "prompt": "我理解审批、签约、生效三个状态。面向一笔实际授信，作为系统产品负责人，请在‘审批通过但客户还不能用信’的质询下解释业务决策和可验证操作。",
+      "expected_route": [
+        "P"
+      ],
+      "files": [
+        "evals/fixtures/learning-general-multigoal-design.md"
+      ],
+      "expected_output": "用一个状态实例和变更条件检验授信可用性，不把审批量当最终正确性；回答应包含可核对字段/证据。",
+      "assertions": [
+        "识别状态边界及其改变的可用额度判断，不能只复述名词。",
+        "给出一条可核查的具体业务状态与验证动作，不能捏造行内生产记录。",
+        "区分实际能力缺口与新机制学习缺口。",
+        "不过度铺陈技术框架。"
+      ]
+    },
+    {
+      "id": 62,
+      "name": "practice-no-branch-overengineering",
+      "prompt": "我知道 Agent 的工具结果必须回到下一次模型请求。只问一个很短的问题：假设当前没有工具调用，Agent Loop 是否一定继续执行？回答到能决策即可。",
+      "expected_route": [
+        "P"
+      ],
+      "files": [
+        "evals/fixtures/practice-agent-loop-branching.md"
+      ],
+      "expected_output": "直接指出当前正常情况下无 tool call 则 step completed；不制造大量分支或工程交付物。",
+      "assertions": [
+        "明确主分支：正常无 tool calls 返回 completed，具体结束仍受 inbox/steering 等后续调度影响。",
+        "不强制生成五个追问、九层架构或实际工程模块。",
+        "引用 source only as evidence and avoid declaring an execution probe.",
+        "回答简洁、对用户问题足够。"
+      ]
+    },
+    {
+      "id": 63,
+      "name": "practice-branch-research-routing",
+      "prompt": "面试追问到外部操作不确定性后，我发现我不理解事务原子性与去重的必要机制。请先判断现在该继续面试练习，还是应该把它作为新学习主问题。",
+      "expected_route": [
+        "P"
+      ],
+      "files": [
+        "evals/fixtures/practice-agent-loop-branching.md"
+      ],
+      "expected_output": "以源于现实的超时/副作用歧义确认根本知识缺口，提出可检验的新主问题与 D/R/L 回流，不假装已独立执行 D/R。",
+      "assertions": [
+        "把根本机制未知与缺少执行证据、暂时答不顺区分开。",
+        "解释为何事务/幂等会决定结果，并将新的主研究问题表达为可区别的机制问题。",
+        "标记启动新 Learning 时必须重新完成独立 D/R。",
+        "不要在 P 内随意宣布已完成完整 L。"
+      ]
     }
   ]
 }
