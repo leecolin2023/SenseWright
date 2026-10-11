@@ -1,44 +1,31 @@
-# Practice V0.3 — Agent Loop branch-stress fixture
+# Agent Loop — Raw material for Practice regression
 
-## Known knowledge model (from prior D/R/L)
-Agent can take action only if model tool-call intent is mapped to registered tools, passed through execution, and the observation is made available on a subsequent model request. Distinguish model vs Harness action, step vs turn vs session, and run-state vs durable history.
+## Existing Learning trunk
 
-## Anchored implementation under examination
-Fork: leecolin2023/dsh-intramate at commit 5badb15009ae1756c3afe0ae0cef1faafc290ccc.
-- packages/core/agent-loop/src/agent.ts lines 398–545: prepare, request, model stream, assistant/message commit, extract tool-call, call executeToolCalls.
-- packages/core/agent-loop/src/tool-calls.ts lines 60–103, 134–171, 254–290: parse arguments, schedule, append tool/call and tool/result, preserve ordered results.
-- packages/core/agent-loop/src/agent.ts lines 323–355: failed-step tool-result recovery.
-- docs/architecture.md and packages/core/agent-loop/README.md: session append-only event log, deriveMessages; tool-result recovery code distinction (including TOOL_OUTCOME_UNKNOWN for a recorded call with missing outcome, and TOOL_NOT_STARTED where no call was recorded). Docs are source evidence, not executed probes.
+A model can issue a structured tool call. Harness maps it to registered capabilities, performs guarded execution, records the result, and supplies the result when constructing a subsequent model request. The prior Learning focused on the action/observation loop; it did not separately settle every design choice.
 
-## Scenario
-An enterprise Agent calls a tool to write a bank post-loan inspection report. The external system commits the write, but the response is lost. The Agent or operator sees a timeout and considers retrying the call.
+## Source anchors
 
-This is a deliberately **synthetic scenario**. It does not claim actual banking-system integration, access to production, or an observed DeepSeek Harness failure.
+Implementation: `leecolin2023/dsh-intramate`, commit `5badb15009ae1756c3afe0ae0cef1faafc290ccc`.
 
-## Required competing hypotheses
-H1. Response timed out before dispatch; write did not happen.
-H2. Dispatch happened and external side-effect committed, but acknowledgement was lost.
-H3. Write failed after dispatch, no commit.
+- `packages/core/agent-loop/src/agent.ts`: `preStep` (around 268–289), `step` (398–545), `buildRequest` (around 598–689).
+- `packages/core/tools/README.md`: registering tool schemas, scope-specific available tools, native/PTC tool presentation and policy.
+- `packages/core/system-prompt/README.md`: prompt and permitted tool schemas assembled per step.
+- `packages/core/agent-loop/src/tool-calls.ts`: execution scheduling and durable call/result recording.
+- `packages/core/agent-loop/README.md`: failure recovery and Session history.
 
-A timeout/error alone does not decide among these. A stable operation identity plus authoritative external reconciliation evidence can.
+These are **source reference locations**, not evidence of a live model-selection experiment.
 
-## Prerequisite coverage that must precede failure choice
-- What objective did the user ask for and what counts as task success?
-- Does the task require tool use at all, or should the model answer or clarify?
-- What tool definitions are currently visible to this Agent, and which name / description / parameter schemas does the model receive?
-- What creates a tool-call choice: model inference vs a separately verified router; no unsupported claim of an always-present intent classifier.
-- How are entity identifiers and dates grounded into arguments, and which policy guard admits the execution?
-- How does the Agent choose a next action or conclude the goal is achieved?
+## Independent synthetic situations
 
-Evidence: dsh-intramate fixed commit docs `packages/core/tools/README.md`, `packages/core/system-prompt/README.md`, `packages/core/agent-loop/src/agent.ts` preStep/buildRequest/step. Source shows surfaces, not measured model-selection quality.
+**A — Task with potential tool choices.** A user asks: “核对这个客户最新的授信批复与已签合同是否一致，列出差异。” Fictional available tool definitions:
+- `approval_search(customer_id, as_of)`: locate a currently approved decision/version;
+- `approval_archive(customer_id)`: retrieve historical approval versions;
+- `contract_read(contract_id)`: fetch identified contract content;
+- `business_write(record_id, payload)`: update a business record.
 
-## Branches worth exploring
-1. Execution outcome ambiguous: Harness durable tool history vs actual external effect.
-2. Compaction and resume: reconstruction of model-visible history vs transactional recovery.
-3. Cross-tool overlap: multiple parallel-safe tool calls and exclusive barriers.
+The request gives no customer ID, contract ID or date context. These four functions are illustrative only, not claimed to be registered tools in the fork.
 
-## Low-value distractor
-Ask ten definitions of AgentLoop, tool, AgentSession, and schema without any changed outcome. Pure recall doesn't verify situated transfer.
+**B — External side effect uncertainty.** A different task asks the Agent to save a document. The external save might have committed before the tool response timed out; no actual production incident is supplied.
 
-## Evaluation scope
-Assess whether the answer differentiates source inspection from a real runtime test; does not infer exactly-once from session replay; prioritizes one consequential branch; and routes unresolved new knowledge to L only when genuinely needed.
+The task is to practice reasoning with these inputs, not to assume a particular tool choice, retry strategy or answer in advance.
