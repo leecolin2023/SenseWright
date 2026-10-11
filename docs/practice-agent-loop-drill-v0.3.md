@@ -1,12 +1,14 @@
 # Practice V0.3 — Agent Loop 第一轮演练（已发现结构性缺口，2026-10-11）
 
+> **历史失败案例，非完整现行 Practice 范本。** 本轮只处理一个下游超时重试问题，后来发现其整体知识主干覆盖不足。请结合 [第二轮中文复盘](practice-agent-loop-topology-repair-v0.3.md) 阅读；当前 Practice 的简化方法以 [V0.3 Skill](../skills/practice-v0.3/SKILL.md) 为准。
+
 > **后续审计结论：第一轮不是完整的 Agent Loop Practice；它漏掉最基本的任务理解、是否需要工具、可见工具选择、参数构造等上游因果节点。此前的总体通过判断撤回。修订后的完整决策拓扑见 [第二轮修复报告](practice-agent-loop-topology-repair-v0.3.md)。**
 
 > 类型：**model-self-drill + source inspection + isolated executable probe**。本次没有用户现场作答，不能评估用户的面试能力；没有运行 dsh 真实 API / 应用链，不能宣布真实 Harness E2E 通过。
 >
 > 旧主干：用户此前学习 Agent Loop，关键关系为 Model Request → tool-call → Harness 受控执行 → tool/result 成为下一步 observation → 新 Model Request。现以 DeepSeek Harness Fork 固定 commit `5badb15009ae1756c3afe0ae0cef1faafc290ccc` 的源码为可核实实现证据。
 
-## 1. Anchor — 新任务与成功标准
+## 1. 任务与成功标准
 
 情境：一个企业办公 Agent 经用户授权，调用工具将一份贷后检查结论写回银行内部业务系统。操作请求发出后工具层超时，Agent 收不到成功响应。
 
@@ -14,7 +16,7 @@
 
 约束：业务记录不允许重复创建，工具结果日志与业务系统实际记录可能不一致；写入不是简单只读查询。这里的贷后数据和外部系统均为**合成案例**。
 
-## 2. Probe — 候选分支排序
+## 2. 候选分支排序
 
 | 分支 | 关键问题 | 为什么重要 | 处理 |
 |---|---|---|---|
@@ -23,7 +25,7 @@
 | C. 并行 Tool Calls | 并发完成顺序如何映射到结果 | 影响依赖/副作用排序 | 保留为候选 |
 | D. “AgentLoop” 名词解释十连问 | 大部分不改变场景中的决定 | 低分辨率记忆测试 | **剔除** |
 
-## 3. Perform — 核心质询与示范应答
+## 3. 核心质询与示范应答
 
 ### Q1：模型发出了 Tool Call，是否说明业务操作已经发生？
 
@@ -57,7 +59,7 @@
 
 **源码核查**：[agent.ts#L650-L688](https://github.com/leecolin2023/dsh-intramate/blob/5badb15009ae1756c3afe0ae0cef1faafc290ccc/packages/core/agent-loop/src/agent.ts#L650-L688) 使用 session.deriveMessages() 构造请求；[architecture.md](https://github.com/leecolin2023/dsh-intramate/blob/5badb15009ae1756c3afe0ae0cef1faafc290ccc/docs/architecture.md) 说明事件持久化与模型可见历史的边界。
 
-## 4. Verify — 执行过的最小对照实验
+## 4. 已执行的最小对照实验
 
 以 **Python sqlite3 内存数据库**模拟业务写入，不使用真实银行系统，也**不运行 dsh**。实验输入固定为 `op-17`，先提交写入、再模拟确认响应丢失；尝试第二次相同操作。
 
@@ -80,7 +82,7 @@ python scripts/probes/agent_loop_lost_ack_probe.py
 
 最小实现契约：外部写入工具必须携带跨重试保持不变的 `operation_id`；业务提交和去重记录应处于同一原子边界（或目标系统提供等效保证），并提供按 `operation_id` 查询结果的接口。调用方应先校验授权和同一操作参数一致性，避免不同请求误用相同 id。
 
-## 5. Diagnose — 分支回流
+## 5. 分支诊断与回流
 
 | 发现 | 缺口类型 | 下一动作 |
 |---|---|---|
@@ -90,7 +92,7 @@ python scripts/probes/agent_loop_lost_ack_probe.py
 | 若学习者不理解原子事务/幂等产生机制 | **Knowledge Gap** | 新 L 主问题：“回包丢失后如何在不同故障点确保同一业务操作至多提交一次？”启动新 L 时先独立 D/R |
 | 多工具并行对结果序的影响 | 暂时非阻塞分支 | 进入下轮场景，不抢占当前主问题 |
 
-## 6. Stabilization Gate（修订后判断）
+## 6. 质量检查（修订后判断）
 
 - **Topology Coverage — FAIL**：只深入下游超时重试，漏掉理解目标、行动必要性、工具可见性、工具选择与参数构造；不能声称完成 Agent Loop 全链路练习。
 - Task Fidelity — PARTIAL：单一异常情境的自演练有效，但不满足完整实践范围。
@@ -103,7 +105,7 @@ python scripts/probes/agent_loop_lost_ack_probe.py
 - **DeepSeek Harness end-to-end failure injection — NOT VERIFIED**：当前未运行 dsh 模型与外部 Tool。
 - **Controlled old/new Skill behavioral A/B — NOT RUN**：本次增加了回归用例和真实问题检验，但不能声称 Skill 行为统计改进。
 
-## 7. Next measurable experiment
+## 7. 下一步可验证实验
 
 在独立测试环境准备一个最小 Tool：先对外部 sqlite/服务完成写入，再主动丢弃响应；运行真实 dsh agent 一次，采集 Session 的 `assistant/message`、`tool/call`、`tool/result`、`step/end`、后续模型请求快照和外部表计数。分别测试 **超时前未派发 / 已提交未回包 / 工具正常结果**，比较错误标记、模型推断和外部事实是否一致；随后接入稳定 `operation_id` 的外部幂等实现再测。只有这一步运行并保存记录，才可将 Harness E2E 标记为 verified。
 
