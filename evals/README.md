@@ -188,6 +188,21 @@ Cases **47–50** test the failure where a correctly reasoned Problem Discovery 
 
 `domain_anchor` metadata expresses a conditional theoretical-anchor contract with expected outcome `anchor` or `skip`. Static CI checks metadata and fixtures; real behavior requires matched A/B and human review. Avoid interpreting this addition as “all problems have one scalar value function”; some domains have competing priorities, so specify the theory's scope and constraints.
 
+### Learning core refactor — domain-neutral adaptive reasoning
+
+The 2026-10-11 refactor **replaces the rigid layered runtime prose** with a short common learning contract. It does **not** remove any earlier fixtures: `#1–50` remain historical acceptance and regression cases, including stock valuation `#47–48`, financial reality grounding, bank workflows, source-code tracing, and easy skip cases.
+
+New **#51–58** target out-of-sample non-financial tasks: observational causality, institutional policy exceptions, conflicting historical accounts, mathematical proof conditions, literary ambiguity, multi-goal service design, async code state, and a simple definition. These tasks test:
+- correct goal and relevant domain concepts, without one universal financial or scalar value goal;
+- question discovery **only when useful**, rather than mandatory grander abstraction;
+- source-facing mechanism/condition explanation, with domain-appropriate evidence;
+- revised confidence and boundaries, no invented probes or statistics;
+- proportionate answer length and preservation of simple tasks.
+
+Use `learning_v0_6_2_pre_general_refactor` (main@8aae453) as the frozen adjacent baseline. Matched-runtime comparisons must score **both old and new domain tasks**, not solely the new evals; include source accuracy, explanatory usefulness, transfer, unsupported claims, length and latency. Static scripts only confirm evaluation schema/fixtures and cannot substantiate runtime skill quality.
+
+Read [refactor audit](../docs/learning-core-refactor-20261011.md) for the architectural root cause. Older notes about Domain Anchor, Reality Calibration and Problem Discovery are **historical design cases**, not simultaneous mandatory pipeline stages.
+
 ### Practice Engineering Transfer
 
 Practice V0.2 不再以 capability test 为核心，而是验证 **Knowledge → Executable Engineering Model**：

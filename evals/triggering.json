@@ -197,6 +197,30 @@
     {
       "query": "请列出昨日A股涨幅前三名，不需要基本面或估值讲解。",
       "should_trigger": false
+    },
+    {
+      "query": "我在研究互相矛盾的历史记载，想学会如何由证据重建有边界的解释。",
+      "should_trigger": true
+    },
+    {
+      "query": "学生把a²=b²误推成a=b，帮我理解证明缺少的条件与反例。",
+      "should_trigger": true
+    },
+    {
+      "query": "我想理解性能优化为什么有时会破坏权限正确性，怎样协调两个目标。",
+      "should_trigger": true
+    },
+    {
+      "query": "给我读懂这段诗歌的留白和两种不同解读，不要做统计评分。",
+      "should_trigger": true
+    },
+    {
+      "query": "帮我列出今天涨停股票的名字、代码和涨幅，不需要解释。",
+      "should_trigger": false
+    },
+    {
+      "query": "直接将数据库SQL执行计划另存为txt文件，不必学习原理。",
+      "should_trigger": false
     }
   ]
 }

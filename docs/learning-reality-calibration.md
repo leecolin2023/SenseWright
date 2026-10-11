@@ -1,5 +1,7 @@
 # Learning Reality Calibration — 通用现实校准设计（V0.6.2 细化）
 
+> **历史设计记录 / Historical case study.** 此文档保留当轮真实问题、领域案例与推导脉络，用于审计和回归评测；它**不是当前 Learning 的独立执行阶段或通用指令**。活跃规范以 [`skills/system-learning-v0.6.2/SKILL.md`](../skills/system-learning-v0.6.2/SKILL.md) 为准。参见 [2026-10-11 通用核心重构审计](learning-core-refactor-20261011.md)。
+
 ## 问题从哪里来
 
 Learner 能正确说出“行业需求增长 → 算力租赁有机会”，却无法判断一笔GPU租赁是否能回本；另一些问题（授信生效、程序执行、医疗主张）同样需要落到现实，却不能简单套用现金流模型。

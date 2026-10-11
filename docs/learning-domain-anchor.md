@@ -1,5 +1,7 @@
 # Domain Anchor — 从领域基础理论识别最终研究对象
 
+> **历史设计记录 / Historical case study.** 此文档保留当轮真实问题、领域案例与推导脉络，用于审计和回归评测；它**不是当前 Learning 的独立执行阶段或通用指令**。活跃规范以 [`skills/system-learning-v0.6.2/SKILL.md`](../skills/system-learning-v0.6.2/SKILL.md) 为准。参见 [2026-10-11 通用核心重构审计](learning-core-refactor-20261011.md)。
+
 ## 从真实失败出发
 
 2026-10-11 对12只A股涨幅股票的 SenseWright Learning 对照研究，经过 Problem Discovery 后，仍然把问题收敛到“能否形成利润/现金、谁能够保留经济收益、哪个机制更有说服力”。最后明确写出“主动不做估值，因用户目标是学习经营机制”。

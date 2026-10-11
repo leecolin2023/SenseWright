@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — Learning general-core refactor, 2026-10-11
+- 完整审计 10/09–10/11 的四轮修改：Mechanism-to-Implementation、Reality Calibration、Problem Discovery、Domain Anchor 均回应真实失败，但“由案例追加新步骤”导致全领域指令膨胀、阶段串联和金融知识入侵。
+- 重写活跃 `system-learning-v0.6.2/SKILL.md`，压缩约 56%，只保留 Orient / Frame / Explain / Anchor / Challenge & Rebuild 的**认知责任**，不是强制执行步骤或输出模板。研究先核对证据，讲解先解释机制。
+- 将 FCFF/FCFE/股票、银行、医疗等专业细则从运行 Skill 移回相应领域资料与历史案例；不丢失需要时调用专业理论、源码精确追踪、假设与实测分离及边界修正的能力。
+- 保留 D/R/L/P 既定编排与根路由，不新增一级 Skill 或版本路径；此前所有50项回归不删除，新增非金融/非工程多领域评测 #51–58，防止优化过拟合股票和单一“最终价值”模式。
+- 新增重构审计说明，冻结上版 main 作基线。CI 只验证静态结构和素材，不代表模型行为对照、运行时前置隔离及结果质量已被验证。
+
+
 ## Unreleased — Learning domain anchor and terminal-criterion alignment (V0.6.2 refinement)
 - 修复2026-10-11股票 Learning A/B：虽能提出竞争机制，却停留在收入/利润/回款问题，忽略股票内在价值的现金流折现理论以及当前股价所隐含的预期。
 - 在 Problem Discovery 之前按需增加 Domain Anchor：首先识别领域公认的解释理论与最终评价对象，再筛选哪些问题能影响该对象的金额、时点、风险或质量。学习股票价值时认识 FCFF/FCFE 与折现逻辑，但不强制每次算DCF、不将股价短期波动等同于内在价值变化。

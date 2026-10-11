@@ -1,5 +1,7 @@
 # Learning Problem Discovery — 找到值得研究的问题（V0.6.2 原版内完善）
 
+> **历史设计记录 / Historical case study.** 此文档保留当轮真实问题、领域案例与推导脉络，用于审计和回归评测；它**不是当前 Learning 的独立执行阶段或通用指令**。活跃规范以 [`skills/system-learning-v0.6.2/SKILL.md`](../skills/system-learning-v0.6.2/SKILL.md) 为准。参见 [2026-10-11 通用核心重构审计](learning-core-refactor-20261011.md)。
+
 ## 发生了什么失效
 
 在2026-10-10的 A股12只涨幅股 Learning 中，样本来自三个交易所的涨幅筛选规则。随后收集个股评论和行业研究，输出每家公司“行业需求能否转成利润”“利润为什么下滑”等正确但普遍适用的问题。
