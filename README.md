@@ -1,4 +1,4 @@
-# SenseWright V2.8.2
+# SenseWright V2.9.0
 
 **Four independent cognitive skills, one entrypoint:** [SKILL.md](SKILL.md).
 
@@ -7,7 +7,7 @@
 | [Deep Read V6.4](skills/article-deep-read-v6.4/SKILL.md) | Faithfully reconstruct source reasoning |
 | [Review V0.10](skills/vibe-review-v0.10/SKILL.md) | Independently evaluate sources and claims |
 | [Learning V0.6.2](skills/system-learning-v0.6.2/SKILL.md) | Build transferable, evidence-grounded understanding |
-| [Practice V0.2](skills/practice-v0.2/SKILL.md) | Implement, operate, and verify an engineering result |
+| [Practice V0.3](skills/practice-v0.3/SKILL.md) | Discover and deepen overlooked questions branching from an existing knowledge trunk |
 
 ## Learning: orchestration vs cognitive method
 
@@ -22,8 +22,8 @@
              Learning (L)
        Adaptive understanding loop
                    |
-          Practice (P) only if
-         execution is requested
+          Practice (P) for questions
+           beyond the main trunk
 ```
 
 **Orchestration contract:** Learning still requires fresh D/R from the same input with independent contexts and a completion barrier. Both outputs inform L but are not independent new evidence. For query-only prompts, preflight is brief and source-honest. The runtime, not Skill prose, must prove actual execution isolation with a Trace.
@@ -40,7 +40,9 @@ These are **responsibilities that can recur**. They are not six headings that ev
 
 **Research order differs from teaching order:** check materials and observations before deciding what mechanism they support; teach the problem and mechanism first, then show the evidence. Source code learning should cite exact control/data/state links and line anchors when available; claims of actual execution require an actual run. Subject-specific theories must come from the task context or trustworthy subject sources, **not from hardcoded finance, banking, health or product examples in the generic Learning Skill**.
 
-**Boundaries:** D restores source faithfully; R critiques source independently; L builds understanding; P builds and tests real artifacts. Learning does not automatically authorize market forecasts, clinical decisions or implementing systems.
+**Boundaries:** D restores source faithfully; R critiques source independently; L builds understanding; P explores consequential questions beyond an existing knowledge trunk, by discussion, examples, or real use; engineering execution is optional. Learning does not automatically authorize market forecasts, clinical decisions or implementing systems.
+
+The [first Agent Loop Practice drill](docs/practice-agent-loop-drill-v0.3.md) documents a one-branch failure; the [corrected decision and branch map](docs/practice-agent-loop-topology-repair-v0.3.md) explores the omitted upstream tool-selection mechanism. Neither proves a real Harness E2E.
 
 ## Evaluation and historical context
 
