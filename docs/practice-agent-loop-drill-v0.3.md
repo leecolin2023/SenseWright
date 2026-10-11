@@ -1,4 +1,6 @@
-# Practice V0.3 — Agent Loop 一轮严格情境演练（2026-10-11）
+# Practice V0.3 — Agent Loop 第一轮演练（已发现结构性缺口，2026-10-11）
+
+> **后续审计结论：第一轮不是完整的 Agent Loop Practice；它漏掉最基本的任务理解、是否需要工具、可见工具选择、参数构造等上游因果节点。此前的总体通过判断撤回。修订后的完整决策拓扑见 [第二轮修复报告](practice-agent-loop-topology-repair-v0.3.md)。**
 
 > 类型：**model-self-drill + source inspection + isolated executable probe**。本次没有用户现场作答，不能评估用户的面试能力；没有运行 dsh 真实 API / 应用链，不能宣布真实 Harness E2E 通过。
 >
@@ -88,9 +90,10 @@ python scripts/probes/agent_loop_lost_ack_probe.py
 | 若学习者不理解原子事务/幂等产生机制 | **Knowledge Gap** | 新 L 主问题：“回包丢失后如何在不同故障点确保同一业务操作至多提交一次？”启动新 L 时先独立 D/R |
 | 多工具并行对结果序的影响 | 暂时非阻塞分支 | 进入下轮场景，不抢占当前主问题 |
 
-## 6. Stabilization Gate
+## 6. Stabilization Gate（修订后判断）
 
-- Task Fidelity — PASS：不是术语题库，完成了一次真实约束驱动的模型自演练。
+- **Topology Coverage — FAIL**：只深入下游超时重试，漏掉理解目标、行动必要性、工具可见性、工具选择与参数构造；不能声称完成 Agent Loop 全链路练习。
+- Task Fidelity — PARTIAL：单一异常情境的自演练有效，但不满足完整实践范围。
 - Branch Value — PASS：副作用是否提交直接改变重试策略；剔除了低价值定义题。
 - Challenge Discrimination — PASS：只改变“确认响应是否丢失/有无外部去重”，出现可观察不同结果。
 - Evidence Honesty — PASS：源码证据、SQLite 实测、合成银行场景和未测的 dsh 运行严格分开。
@@ -104,4 +107,4 @@ python scripts/probes/agent_loop_lost_ack_probe.py
 
 在独立测试环境准备一个最小 Tool：先对外部 sqlite/服务完成写入，再主动丢弃响应；运行真实 dsh agent 一次，采集 Session 的 `assistant/message`、`tool/call`、`tool/result`、`step/end`、后续模型请求快照和外部表计数。分别测试 **超时前未派发 / 已提交未回包 / 工具正常结果**，比较错误标记、模型推断和外部事实是否一致；随后接入稳定 `operation_id` 的外部幂等实现再测。只有这一步运行并保存记录，才可将 Harness E2E 标记为 verified。
 
-**结论：** 这次 P 的核心不是补充更多 AgentLoop 术语，而是确认“会话事件一致性 ≠ 外部副作用一致性”的高价值分支，并给出可执行的恢复判据。
+**修正结论：** 本轮仅验证一个下游异常分支，**没有证明 Practice 能系统发现重要分支**；从目标到工具选择的基础机制遗漏必须优先补齐。见 [拓扑覆盖修复](practice-agent-loop-topology-repair-v0.3.md)。
