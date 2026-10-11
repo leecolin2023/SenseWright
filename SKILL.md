@@ -12,7 +12,7 @@ Choose the task by **user goal**, not by the existence of an attachment:
 | **D — Deep Read** | 原材料实际说了什么、怎样推导 | `skills/article-deep-read-v6.4/SKILL.md` |
 | **R — Review** | 原材料的事实、论证和决策依据是否成立 | `skills/vibe-review-v0.10/SKILL.md` |
 | **L — Learning** | 用户怎样从真实问题理解机制，并将机制映射到具体实现与证据 | `skills/system-learning-v0.6.2/SKILL.md` |
-| **P — Practice** | 怎样在真实情境和关键分支中运用已有知识，完成应对、执行、挑战、验证与回流 | `skills/practice-v0.3/SKILL.md` |
+| **P — Practice** | 沿已有知识主干发现并深入尚未解决的关键问题与独立枝干 | `skills/practice-v0.3/SKILL.md` |
 
 ## 执行编排
 
@@ -27,6 +27,6 @@ Choose the task by **user goal**, not by the existence of an attachment:
 - **D** 忠实还原材料的认知拓扑，并按交付目的选择 Coverage-Preserving 或 Cognitive-Synthesis；不插入独立批评。
 - **R** 对原材料完整覆盖后再判断重要性，独立审阅；不消费 D 的总结。
 - **L** 以用户的学习目的和真实对象为中心：按需使用相关领域知识校准问题、解释必要机制、用适合材料的实际证据检验，并在矛盾出现时修正理解。**这是可往返的自适应认知循环，不是 Domain Anchor / Problem Discovery / Reality Calibration 的强制流水线**。技术源码须对应可核验的调用/数据/状态链；非技术主题选相应的原始材料与证据形式。具体行业理论属于学习内容，不写死在通用 Skill 中。L 内部自检不能替代独立 R。
-- **P** 以已有 Knowledge Model 为起点，通过真实任务中的高价值分支、应对与反事实挑战检验迁移；可用于深入模拟面试、方案辩护、架构/业务决策或工程实施。工程落地是 P 的一个专门模式。单纯题库、机械自测或简短概念问答不自动进入 P；新的根本机制缺口回流 L（新一轮 L 仍必须先独立 D/R）。**模型自演练不能评价用户是否掌握**，源码查证与真实执行须区分。
+- **P** 从已有知识主干出发，先检查关键因果前提有没有遗漏，再发现值得研究的独立枝干并按用户目标深入；适用于深入面试追问、真实应用、方案辩护和知识迁移，**不默认要求工程施工、全套挑战流程或固定题数**。P-only 不自动触发 L；发现根本机制缺口时可提出新的 L 问题（真正执行 L 仍须本轮独立 D/R）。模型自演练不能评价用户是否掌握，推演不得冒充实际验证。
 
 默认**只输出满足当前用户目标的结果**。包含 L 的任务默认交付整合后的学习解释；用户明确要求时才展示 D/R 各自完整结果。不要打印内部路由、前置检查表或质量 Gate。
