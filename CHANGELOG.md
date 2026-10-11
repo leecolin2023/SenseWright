@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — Learning domain anchor and terminal-criterion alignment (V0.6.2 refinement)
+- 修复2026-10-11股票 Learning A/B：虽能提出竞争机制，却停留在收入/利润/回款问题，忽略股票内在价值的现金流折现理论以及当前股价所隐含的预期。
+- 在 Problem Discovery 之前按需增加 Domain Anchor：首先识别领域公认的解释理论与最终评价对象，再筛选哪些问题能影响该对象的金额、时点、风险或质量。学习股票价值时认识 FCFF/FCFE 与折现逻辑，但不强制每次算DCF、不将股价短期波动等同于内在价值变化。
+- 通用化到程序可靠性、银行业务控制与健康证据；警惕指标代替目标、模型前提不成立、把财务模型硬套所有领域。
+- 增加股票研究、高增长但高再投资、行情事实查询及非金融系统性能的回归案例；保留已有 D/R 前置职责与稳定的 Skill 版本/目录。静态CI不等于模型实际能力验证。
+
 ## Unreleased — Learning problem discovery and question validity (V0.6.2 refinement)
 - 修复 Learning “默认已有问题是正确问题”的深层缺陷。在 Ground 之后、Problem Chain 之前新增**按需触发的 Problem Discovery / Framing**，把用户任务/选样规则、主研究问题、机制子问题和证据核验问题分开；不新增独立 Skill。
 - 在真实矛盾、异常、竞争机制和关键现实约束中筛选问题；用**解释力、区分力、可验证性及用户价值**替代“抽象得更高就是更深刻”；不得从选出的上涨股票倒推涨价因果。
