@@ -1633,6 +1633,246 @@
         "guardrail": "no_forced_model_or_cross_domain_universality",
         "expected_outcome": "skip"
       }
+    },
+    {
+      "id": 51,
+      "name": "general-learning-observation-vs-causality",
+      "prompt": "我想通过附件这项大学生调查学会“相关性为什么不足以证明因果”。请把问题和证据真正解释清楚，不要让它变成某种商业价值评估问题。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-general-observational-study.md"
+      ],
+      "expected_output": "理解关联、混杂和因果的可检验差异",
+      "assertions": [
+        "区分两组观察均值差异（6h vs 7h）与个人必然少睡一小时的因果结论。",
+        "指出自愿样本、考试压力或作息等至少一个竞争解释以及最有区分力的补充证据。",
+        "不得杜撰真实试验、统计显著性、普遍临床效果或制造无依据建议。",
+        "解释机制而非罗列研究方法术语，答案不需要股权现金流或经济回报模型。"
+      ]
+    },
+    {
+      "id": 52,
+      "name": "general-learning-policy-exception",
+      "prompt": "请从附件虚构制度理解“必须签署后执行”的规则为什么不能只靠第4条解释，帮我把条件、例外与核验位置讲清楚。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-general-policy-exception.md"
+      ],
+      "expected_output": "找到规则与例外的组合条件，以及对具体业务证据的需要",
+      "assertions": [
+        "整合第4、5、6条，不因纸面签名缺失就认定所有业务都不合法。",
+        "区分有效电子签章与满足特批条件且事后补签的例外路径，不能任意推广。",
+        "明确具体合同是否有电子授权或特批记录仍未知，不臆造实际银行/监管规定。",
+        "使用流程/条件证据解释，不套投资、经营或现金流分析。"
+      ]
+    },
+    {
+      "id": 53,
+      "name": "general-learning-conflicting-history",
+      "prompt": "我想从这三份互相不一致的历史记录理解怎样研究事件原因。不要替材料编一个确定的故事，也不要硬凑唯一的核心指标。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-general-history-sources.md"
+      ],
+      "expected_output": "通过冲突来源理解多因解释与证据边界",
+      "assertions": [
+        "准确识别纪要强调安全、报纸强调工资、回忆录提示双因素但记忆有限。",
+        "说明不同来源立场、时点与证据完整度，提出怎样通过更原始的协商记录厘清。",
+        "不能从三份材料判断唯一真实起因或发明当年后续事件。",
+        "不强行把历史解释简化为统一量化收益目标；能形成有边界的解释。"
+      ]
+    },
+    {
+      "id": 54,
+      "name": "general-learning-math-proof-conditions",
+      "prompt": "学生认为a²=b²，所以一定a=b。请从给出的反例解释为什么错误，再解释增加什么条件才成立；不要给我工程流程或行业分析。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-general-math-conditional.md"
+      ],
+      "expected_output": "理解等价变换的逻辑条件与反例",
+      "assertions": [
+        "以a=-2,b=2直接推翻原命题，并区分开平方对应绝对值关系。",
+        "给出a=b或a=-b的适用结论和非负条件下推出a=b的理由。",
+        "不强制经验测量、真实世界数据、财务估值或反复追问更深抽象本质。",
+        "解释可以简洁，并能对应附件的数学材料，不伪造计算工具执行。"
+      ]
+    },
+    {
+      "id": 55,
+      "name": "general-learning-literary-ambiguity",
+      "prompt": "帮我学习这段短篇中窗、路灯和未寄出的信如何支持不同解释。不要把解读变成唯一可证伪的科学假说或人物情绪数值评分。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-general-literary-interpretation.md"
+      ],
+      "expected_output": "解释有根据但可能多义的文本阅读",
+      "assertions": [
+        "指出至少两个解释分别由哪些具体文本细节支持，说明文本留下的空白。",
+        "不把作者意图、人物心理或历史背景冒充已有事实。",
+        "承认文学解释可以有合理多义性，不强制建立唯一的数值终点或科学控制实验。",
+        "避免把讨论推进成泛泛的‘人生根本价值’命题，保留用户阅读目的。"
+      ]
+    },
+    {
+      "id": 56,
+      "name": "general-learning-multigoal-software",
+      "prompt": "文件审批平台从800ms优化到150ms，却出现越权读取附件。请教我为什么速度更快不等于产品做对了，怎样判断不同目标和约束。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-general-multigoal-design.md"
+      ],
+      "expected_output": "区别速度优化与授权边界，保留多目标约束",
+      "assertions": [
+        "准确指出响应速度改善与未授权读取两种可观察结果及其不同性质。",
+        "指出访问控制可能是不可牺牲的约束，不能因为更快就推出整体成功。",
+        "不在没有用户偏好权重的情况下强造一个通用数值效用函数或NPV。",
+        "学习解释应指向哪些权限测试与成功标准，而非直接改写真实平台代码。"
+      ]
+    },
+    {
+      "id": 57,
+      "name": "general-learning-code-error-state",
+      "prompt": "基于附件TypeScript小片段，帮我理解为什么任务可能显示done却实际失败。请沿关键状态与异步执行顺序解释，并指出最小验证动作。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-general-code-state.md"
+      ],
+      "expected_output": "精确对应执行顺序和异常后的错误状态，不假装实际执行",
+      "assertions": [
+        "指出job.status先设置done、write之后才await，write异常时可能已把状态标为done。",
+        "解释为什么成功后更新状态或失败时回滚/标错更符合要求，体现机制而非函数名清单。",
+        "锚定给定代码，不编造实际运行日志、持久化数据库、文件链接或事务保证。",
+        "保持简洁，不强制股票折现等领域知识，也不自动变成完整实施工单。"
+      ]
+    },
+    {
+      "id": 58,
+      "name": "general-learning-short-definition",
+      "prompt": "只用简短语言解释附件里的同步和异步有什么区别。不要深挖其它话题。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-general-trivial-definition.md"
+      ],
+      "expected_output": "保留精准的简单概念题，不因复杂Learning框架造成过度展开",
+      "assertions": [
+        "准确解释同步等待结果、异步可在结果就绪前继续其他工作。",
+        "不把异步直接等同更快或更高吞吐。",
+        "简短直接，不增加根本价值理论、强制反例实验、表格或无关问题。",
+        "不得宣称运行程序，D/R仍以当前输入轻量前置且无Runtime Trace时不声称隔离已验证。"
+      ]
     }
   ]
 }
