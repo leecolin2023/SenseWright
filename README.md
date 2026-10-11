@@ -1,4 +1,4 @@
-# SenseWright V2.8.2
+# SenseWright V2.9.0
 
 **Four independent cognitive skills, one entrypoint:** [SKILL.md](SKILL.md).
 
