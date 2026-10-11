@@ -1,158 +1,36 @@
 ---
 name: practice
-description: Transfer an already established knowledge model into situated capability through realistic tasks, consequential branch discovery, adversarial condition changes, performance, evidence-based evaluation, and feedback to Learning. Trigger for substantive interview follow-ups, case defense, engineering execution, debugging, or decision rehearsal; not for generic quiz generation or simple conceptual explanation.
+description: Explore consequential questions beyond an existing knowledge trunk. Use for deep interview follow-ups, applying or defending an explanation, exploring overlooked mechanisms and branches, or working through a real case; expand the question space before drilling into selected problems. Not a rote quiz or a mandatory engineering implementation workflow.
 ---
 
-# Practice V0.3 — Situated Knowledge Transfer
+# Practice V0.3 — Branch Exploration
 
-## Mission
+## 定位
 
-**Knowledge Model → Situated Capability, with evidence of transfer and a repair path.**
+**Learning 建立问题主干；Practice 发现并深入主干尚未解决的重要问题。**
 
-Learning 建立“真实问题 → 必要机制 → 具体实现/证据 → 边界”的因果知识模型；Practice 把已有模型放入具体情境，在关键分支与变化约束中要求**应对、判断或行动**，然后验证表现。Practice 不再等于工程落地，也不退化为记忆测试。
+主干解释「为什么、怎样运作」；真实提问、应用或反例会暴露未解释的关键决策、隐藏前提和独立枝干。Practice 要把这些问题**找出来、辨别价值、深入推演或验证**，而不是沿主干重复讲解，也不是只选择一个熟悉的异常。
 
-核心问题：**换一个真实条件，我能否使用这个模型做出可辩护的回答、选择或行动；不行的原因是什么？**
+目标：**从一条知识主干，扩展成有重点、能继续研究的问题网络。**
 
-Practice 的四类主要场景：技术面试与交叉质询、工程执行与排障、架构/业务决策、研究假说与反事实检验。它们共用方法，产物随任务不同。保留 V0.2 Engineering Walkthrough 作为工程场景中的可选完整路径。
+## 工作原则
 
-## 0. Routing & Boundary
+1. **先看主干，再找遗漏。** 用已有 Learning、原始材料或当前问题简要还原「目标 → 关键机制/决策 → 结果」，检查每个重要转折的依据。特别留意「为何采取这个动作、为何选它而不是别的、输入从何而来、怎样知道完成」。如果必要前提没讲清，这首先是**主干缺口**，不能被降级成可选边枝。简单问题无须画完整流程图。
+2. **沿主干打开问题空间。** 从各个节点的选择、前提、替代方案、组合方式、适用边界和结果反馈发现不同方向的追问。区分 **主干缺口 / 有独立研究价值的枝干 / 不影响理解的细节**。先看整体覆盖，再决定深挖哪里；不要固定问题数量，不要为每个术语机械生成追问。
+3. **选值得深入的问题。** 一个问题至少应该能够补上关键因果解释，或使答案改变理解、判断、行动或结果。优先必要的上游缺口、能区分不同机制的问题和与用户任务直接相关的枝干；不能只按故障严重性排序。明确哪些问题已讨论、哪些尚待研究。
+4. **真正深入，而非只列题。** 对选中的问题，用具体情境、回答/尝试、反例或条件变化逼出机制；需要证据时回到源码、数据、原始材料或实际操作。不同枝干可各自形成新的问题链；用户要交互练习就逐轮追问，要求完整研究则适当覆盖多个方向。**区分查证、推演、实际运行和未知**，不捏造验证结果。
+5. **收束与回流。** 说明这轮新增了什么理解，哪些枝干值得单独展开。若发现根本机制未理解，提出新的 Learning 问题；真正发起 L 时仍须独立完成本轮 D/R 前置。P-only 不自动重跑 D/R。若是证据缺失则明确下一步查证，而不是把所有缺口都交给 Learning。
 
-- 用户目标是**学懂机制或从零建立知识模型**：L，遵循本轮独立 D + R → L。即使学习中包含一两个最小验证问题，也不因此触发 P。
-- 用户已具备/已提供知识模型，要求**面试深挖、真实案例应对、失败注入、迁移检验、实际方案辩护或工程实施**：P。P-only 可以读取历史 L/D/R 或直接提供的模型，不自动重跑 D/R。
-- **“出 10 道题”** 是一般题库请求，除非用户明确要求按真实知识模型做分支压力测试、观察应对并反馈；一般题库不必触发 SenseWright。
-- 简单问答、背诵、格式变换、纯 artifact 制作不强制 P。纯执行/修 bug 可直接做事，只有用户要求建立可迁移实践能力时才按 P 方法交付。
-- 发现根本机制缺口时，标注并转入 L；若实际发起新的 L，必须重新满足该轮 D/R 前置条件。**不能把 P 内的临时追问冒充已完成独立 D/R/L。**
+## 交付与边界
 
-## 1. Context Contract — Ground the Target
+以用户目标决定篇幅：需要问题地图就给**简短但有区分度的问题结构和优先级**；需要深度练习就展开实际追问与应对；需要操作就把关键分支落实为可核验的动作。无需固定章节、问题数、工程产物或验收表。
 
-优先使用：用户已经建立的 Knowledge Model、原始源码/材料与可查证事实、用户真实项目/目标岗位、现有证据与未知。按优先级选择真实场景，不发明用户经历、运行日志或测量结果。
+面试/自测时，**用户没实际回答就不能评价用户掌握程度**；模型示范必须标明是示范。纯定义解释主要由 L 承担；机械题库、单纯代码修复或文件制作不因出现问题就强制运行 P。工程实施可以是实践对象，但不再是 Practice 的默认形态。
 
-开始前在内部确定：
-- 已知主干：一句话描述原有机制和成立条件，区分知识事实与框架实现；
-- 当前任务：要回答/实施/判断什么，成功与安全底线是什么；
-- 场景约束：人员、系统、数据、时序、权限、规模、可用执行环境；
-- 证据级别：**已实际运行 / 直接查证源码 / 可复现推演 / 假设 / 未知**。
+交付前只问自己三个问题：
 
-缺少数据不影响讨论时，采用明确假设；会实质改变实践路径时询问最少量问题。不要把“原理讲解”包装成场景。
+- **漏没漏？** 是否跳过重要的行动选择、因果前提或其他明显独立研究方向？
+- **深不深？** 每个重点问题是否真的解释或检验了关键差异，而非只有术语和泛泛追问？
+- **真不真？** 哪些有依据、哪些只是假设、哪些还没有验证？
 
-## 2. Topology Audit → Branch Discovery → Prioritization
-
-**Hard order: audit structural coverage before ranking branches.** A serious Practice must not leap to a downstream failure just because its consequence is large. The first question is whether the user has a sufficiently complete explanation of why the main action occurs in the first place.
-
-### 2.1 Minimal Causal Topology / Prerequisite Coverage
-
-Internally reconstruct **the minimum necessary decision-and-action graph**, not merely the already-written main path. Start from goal/input and follow the actual dependency transitions until outcome/terminal criterion. For each **material decision or transition**, ask:
-
-- **WHY / selection**: why take this action at all, rather than answer, abstain, choose another action, or wait? Which mechanism makes the choice?
-- **WHAT / affordance**: what capabilities, data or options are actually available; who supplies or restricts them?
-- **HOW / realization**: how are inputs/arguments constructed, what changes, and where does control go next?
-- **HOW KNOW / outcome**: how is success, failure or the need to continue recognized, and by whom?
-
-Select the questions appropriate to the object; not every step needs all four. Tag each material transition **Grounded / Explained but unverified / Missing**. Identify prerequisites and category confusions such as *intent recognition vs tool choice*, *tool choice vs execution*, and *step completion vs user-goal success*.
-
-**Upstream-first gate:** If a causal prerequisite is missing (e.g., how a tool is selected before discussing tool execution/retry), repair or explicitly route that missing mechanism before claiming the practice has covered the object. A fundamentally missing main-chain decision is **not** an optional low-priority branch merely because the user called it a branch.
-
-**Do not convert this into a mandatory nine-step diagram**. For a one-step simple request the topology can be one transition; for a compound workflow it can include multiple decisions, data and feedback loops. The goal is sufficient coverage of decision dependencies, not an encyclopedia.
-
-### 2.2 Generate Orthogonal Branch Families
-
-Once the causal topology is visible, seek genuinely distinct branches from:
-- **Prerequisite / selection**: which interpretation, goal, capability or next action is chosen, and why; options missing/ambiguous/overlapping?
-- **Construction / composition**: parameters, object references, dependencies, order, state, intermediate evidence and multi-step planning.
-- **Constraints / boundaries**: authorization, trust, data validity, external interfaces, limits and unacceptable operations.
-- **Failure / recovery**: uncertain results, partial effects, cancellation, retry, crash and restoration.
-- **Feedback / stopping / transfer**: whether the evidence meets the user's terminal goal, how to adapt, and what changes in a neighboring scenario.
-
-These are lenses, **not compulsory output headings or a fixed issue count**. Avoid five synonyms for one concern. Source-specific branch questions should be grounded in the actual domain; do not graft Agent examples onto other topics.
-
-For every candidate use the **consequence test**: if this answer or condition changes, what changes in causal explanation, available action, result prediction, decision quality or success classification? Also test whether it distinguishes competing mechanisms and what source/experiment would decide it.
-
-### 2.3 Rank After Coverage, Then Go Deep
-
-Priority considers **prerequisite/dependency centrality → missing causal links → expected decision impact → evidence availability → user task relevance**. A downstream catastrophic edge case need not outrank a basic unresolved action-selection mechanism.
-
-- Produce a **coverage map** of the main decision points (compact when the user doesn't request details), and mark both investigated and remaining consequential branches.
-- **Breadth before depth, not breadth instead of depth**: sweep the essential structure, then fully exercise several representative high-value branches or one full branch with a visible queue, as the user's requested scope warrants.
-- No arbitrary one-to-three-branch ceiling. A user explicitly requesting a rigorous end-to-end Practice must not receive a single cherry-picked exception.
-- Stop when additional branches no longer improve practical discrimination **and** the core dependency graph has no undisclosed critical gaps. Lack of evidence must be disclosed, not called PASS.
-
-### 2.4 Promote or Route Fundamental Missing Links
-
-A missing prerequisite can require re-framing the original Learning main problem rather than merely extending P. Explain the uncovered research question and the evidence it needs. If the task now initiates a separate Learning run, apply fresh independent D/R → L. Do not pretend the Practice itself completed those stages.
-
-
-## 3. Perform — Real Response Before Ideal Answer
-
-根据目标选择 **one of**：
-- 面试/方案辩护：提出一个有边界的真实追问；用户参与时先让用户回答，再诊断与追问；没有用户回答时明确采用 **model-self-drill / 示范应答 + 独立反驳**，绝不评分用户能力。
-- 工程执行：从系统位置、接口/状态到最小完整流程，再实际运行与校验。V0.2 的 System Placement → End-to-End → Verification → Troubleshooting → Artifacts 作为本模式的深度合同，不强加给非工程任务。
-- 研究/业务/决策：写出可检验的备选解释/方案，选择证据或决策动作，保留目标与不可牺牲的约束。
-
-每轮应答要交代：判断、必要机制、具体实例/证据、成立条件、未知和下一步动作；不能只说“应该考虑幂等、监控、审计”。
-
-## 4. Challenge — Change One Important Condition
-
-优先采用**最有区分力**的一次变化：在执行前与执行后发生超时、同一请求重放、模型上下文改变、部分成功、权限改变、数据失真等。指出**哪一步首先变化，原答案哪部分仍成立，哪部分失效**。
-
-避免一次改变多个变量造成混淆；确需多变量时显式分离。不能从“系统记录了错误”推导“外部副作用必定已取消”。
-
-## 5. Verify — What Was Actually Demonstrated?
-
-- 解释类：用反例、源码、事实证据或跨场景预测校验主张；
-- 面试类：检验回答能否承受追问、反事实和必要证据，而非关键词命中数；
-- 工程类：实测输入输出、状态变化、Trace、故障注入、回归断言，说明测试环境；
-- 研究类：对比竞争机制的预测与可获得证据。
-
-严格区分 **source-inspected**, **executed probe**, **illustrative trace**, **unverified**。检验无法执行就提出最小实验和预计区分结果，不得报告 PASS。静态文件检查不证明 Skill 的行为优越性。
-
-## 6. Diagnose & Feedback
-
-针对重要失败分流：
-- **Knowledge Gap → Learning**：不会解释必要机制/关键前提，作为新的主问题登记；只有真的启动 L 才执行新的 D/R。
-- **Evidence Gap → Investigation/Probe**：机制可能正确，但需要运行、阅读更精确源码或核对真实流程；不要自动再讲一遍概念。
-- **Application/Decision Gap → Continue P**：原理充分，但无法在具体条件下做取舍、排序、应对或执行；
-- **Execution Defect → Repair & Reverify**：实现已失败，修复并保留复现证据；
-- **Out of Scope → Park**：不影响当前决定，标记，不扩大主干。
-
-**New Branch → Qualified Research Question**：仅当新枝干的回答足以改变重要结论，并且目前缺少机制理解时，提升为新的 Learning 主问题。原主干不因每个边枝都改写。
-
-## 7. Deliverable — Adaptive, Not a Fixed Worksheet
-
-默认一份简洁但完整的实践记录：
-1. 任务、已知主干、成功条件与证据级别；
-2. 主干关键决策/依赖的覆盖情况，以及从完整扫描中筛出的重要分支；
-3. 一次真实应对/执行的具体过程；
-4. 一个能区分机制的条件变化或反例；
-5. 实际验证证据（若无，明确未验证）；
-6. 诊断、是否回流 L、最小下一步。
-
-无需每次打印 6 个固定标题。多轮模拟面试以**一次一问 → 真实应答 → 必要追问**优先；如果用户要求一次完整示范，可提交完整自演练，但必须标明**这不是对用户的能力评分**。
-
-## 8. Built-in Stabilization Gate
-
-交付前内部完成并修复（不留“待 Review”占位）：
-
-- **Task Fidelity**：实际任务是否是深挖迁移，而非只列题/写教材？
-- **Topology Coverage**：从任务目标到结果，关键决策点及其必要前提是否被发现？有没有跳过“为何选择动作”直接讨论执行失败？
-- **Branch Value**：独立扫描选择、构造、约束、故障、反馈等分支后，每个保留问题能改变哪一个决策/判断？若无，删除。
-- **Challenge Discrimination**：条件变化是否使不同机制给出不同预测？若无，调整。
-- **Evidence Honesty**：是否把模拟、源码文档、假设和实际运行严格分开？
-- **Transfer**：实践结论包含可迁移不变量和场景特有选择吗？
-- **Repair Routing**：缺口应继续 P、做 Probe、回流 L，还是暂停？
-- **Scope**：没有为炫技增加不必要的分支、产物、指标或工程重量。
-
-不能满足就修订；不具备环境和证据就标注范围内的 Not Verified，而不是宣布通过。Practice 可以是“关键限制已定位、下一实验明确”的有效产物，但**不能伪装已具备能力**。
-
-## 9. Anti-patterns
-
-- 把 Practice 收缩成“如何打开 IDE 施工”，从而排除面试、反事实和决策；
-- 未检查目标、能力与动作选择就直接追问工具失败重试；
-- 在完整结构扫描之前任意限定“优先 1–3 个分支”，把不熟悉的基础前提掩盖为可选分支；
-- 为每个术语批量生成追问题库；
-- 模型自己回答后宣称用户“已掌握”；
-- 把 Review 的审稿批评当作对人的实操能力评分；
-- 把演示输出当作生产验证，或把 Harness 的日志保证冒充外部事务 exactly-once；
-- 发现全新核心概念时在 P 内偷偷再造完整 L，却绕过必要 D/R；
-- 因出现一个技术术语就强迫展开全套工程架构。
-
-**Final rule:** Practice is where understood knowledge meets consequential reality, not where we simply recite more knowledge.
+**最终原则：先发现值得问的问题，再把重要问题问透。**
