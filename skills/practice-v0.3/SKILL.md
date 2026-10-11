@@ -35,20 +35,51 @@ Practice 的四类主要场景：技术面试与交叉质询、工程执行与�
 
 缺少数据不影响讨论时，采用明确假设；会实质改变实践路径时询问最少量问题。不要把“原理讲解”包装成场景。
 
-## 2. Branch Discovery — Find Consequential Branches
+## 2. Topology Audit → Branch Discovery → Prioritization
 
-从真实情境的**关键假设、状态转换、异常、竞争方案、信任边界、指标、证据缺口**探索分支，而不是给主干每个术语随意附 5 个“为什么”。
+**Hard order: audit structural coverage before ranking branches.** A serious Practice must not leap to a downstream failure just because its consequence is large. The first question is whether the user has a sufficiently complete explanation of why the main action occurs in the first place.
 
-每个候选分支使用反事实测试：
-> **若该分支答案或条件不同，是否改变机制解释、行动选择、预测结果或成败判断？**
+### 2.1 Minimal Causal Topology / Prerequisite Coverage
 
-仅保留能说明以下至少一项的分支：
-1. 区分两个以上可信解释或设计；
-2. 揭露原主干默认但未证明的关键假设；
-3. 改变风险、权限、成本、结果或恢复策略；
-4. 提供能将未知缩小的观察/最小实验。
+Internally reconstruct **the minimum necessary decision-and-action graph**, not merely the already-written main path. Start from goal/input and follow the actual dependency transitions until outcome/terminal criterion. For each **material decision or transition**, ask:
 
-按**决策影响 × 证据可获得性 × 当前任务相关性**挑选一到三个高价值分支，优先深入其中一个。数量不是目标；简单场景可以零分支。分支深度不是术语密度，也不是“为什么”追问次数。
+- **WHY / selection**: why take this action at all, rather than answer, abstain, choose another action, or wait? Which mechanism makes the choice?
+- **WHAT / affordance**: what capabilities, data or options are actually available; who supplies or restricts them?
+- **HOW / realization**: how are inputs/arguments constructed, what changes, and where does control go next?
+- **HOW KNOW / outcome**: how is success, failure or the need to continue recognized, and by whom?
+
+Select the questions appropriate to the object; not every step needs all four. Tag each material transition **Grounded / Explained but unverified / Missing**. Identify prerequisites and category confusions such as *intent recognition vs tool choice*, *tool choice vs execution*, and *step completion vs user-goal success*.
+
+**Upstream-first gate:** If a causal prerequisite is missing (e.g., how a tool is selected before discussing tool execution/retry), repair or explicitly route that missing mechanism before claiming the practice has covered the object. A fundamentally missing main-chain decision is **not** an optional low-priority branch merely because the user called it a branch.
+
+**Do not convert this into a mandatory nine-step diagram**. For a one-step simple request the topology can be one transition; for a compound workflow it can include multiple decisions, data and feedback loops. The goal is sufficient coverage of decision dependencies, not an encyclopedia.
+
+### 2.2 Generate Orthogonal Branch Families
+
+Once the causal topology is visible, seek genuinely distinct branches from:
+- **Prerequisite / selection**: which interpretation, goal, capability or next action is chosen, and why; options missing/ambiguous/overlapping?
+- **Construction / composition**: parameters, object references, dependencies, order, state, intermediate evidence and multi-step planning.
+- **Constraints / boundaries**: authorization, trust, data validity, external interfaces, limits and unacceptable operations.
+- **Failure / recovery**: uncertain results, partial effects, cancellation, retry, crash and restoration.
+- **Feedback / stopping / transfer**: whether the evidence meets the user's terminal goal, how to adapt, and what changes in a neighboring scenario.
+
+These are lenses, **not compulsory output headings or a fixed issue count**. Avoid five synonyms for one concern. Source-specific branch questions should be grounded in the actual domain; do not graft Agent examples onto other topics.
+
+For every candidate use the **consequence test**: if this answer or condition changes, what changes in causal explanation, available action, result prediction, decision quality or success classification? Also test whether it distinguishes competing mechanisms and what source/experiment would decide it.
+
+### 2.3 Rank After Coverage, Then Go Deep
+
+Priority considers **prerequisite/dependency centrality → missing causal links → expected decision impact → evidence availability → user task relevance**. A downstream catastrophic edge case need not outrank a basic unresolved action-selection mechanism.
+
+- Produce a **coverage map** of the main decision points (compact when the user doesn't request details), and mark both investigated and remaining consequential branches.
+- **Breadth before depth, not breadth instead of depth**: sweep the essential structure, then fully exercise several representative high-value branches or one full branch with a visible queue, as the user's requested scope warrants.
+- No arbitrary one-to-three-branch ceiling. A user explicitly requesting a rigorous end-to-end Practice must not receive a single cherry-picked exception.
+- Stop when additional branches no longer improve practical discrimination **and** the core dependency graph has no undisclosed critical gaps. Lack of evidence must be disclosed, not called PASS.
+
+### 2.4 Promote or Route Fundamental Missing Links
+
+A missing prerequisite can require re-framing the original Learning main problem rather than merely extending P. Explain the uncovered research question and the evidence it needs. If the task now initiates a separate Learning run, apply fresh independent D/R → L. Do not pretend the Practice itself completed those stages.
+
 
 ## 3. Perform — Real Response Before Ideal Answer
 
@@ -89,7 +120,7 @@ Practice 的四类主要场景：技术面试与交叉质询、工程执行与�
 
 默认一份简洁但完整的实践记录：
 1. 任务、已知主干、成功条件与证据级别；
-2. 关键分支与它改变结果的理由；
+2. 主干关键决策/依赖的覆盖情况，以及从完整扫描中筛出的重要分支；
 3. 一次真实应对/执行的具体过程；
 4. 一个能区分机制的条件变化或反例；
 5. 实际验证证据（若无，明确未验证）；
@@ -102,7 +133,8 @@ Practice 的四类主要场景：技术面试与交叉质询、工程执行与�
 交付前内部完成并修复（不留“待 Review”占位）：
 
 - **Task Fidelity**：实际任务是否是深挖迁移，而非只列题/写教材？
-- **Branch Value**：关键分支的答案改变哪一个决策/判断？若无，删除。
+- **Topology Coverage**：从任务目标到结果，关键决策点及其必要前提是否被发现？有没有跳过“为何选择动作”直接讨论执行失败？
+- **Branch Value**：独立扫描选择、构造、约束、故障、反馈等分支后，每个保留问题能改变哪一个决策/判断？若无，删除。
 - **Challenge Discrimination**：条件变化是否使不同机制给出不同预测？若无，调整。
 - **Evidence Honesty**：是否把模拟、源码文档、假设和实际运行严格分开？
 - **Transfer**：实践结论包含可迁移不变量和场景特有选择吗？
@@ -114,6 +146,8 @@ Practice 的四类主要场景：技术面试与交叉质询、工程执行与�
 ## 9. Anti-patterns
 
 - 把 Practice 收缩成“如何打开 IDE 施工”，从而排除面试、反事实和决策；
+- 未检查目标、能力与动作选择就直接追问工具失败重试；
+- 在完整结构扫描之前任意限定“优先 1–3 个分支”，把不熟悉的基础前提掩盖为可选分支；
 - 为每个术语批量生成追问题库；
 - 模型自己回答后宣称用户“已掌握”；
 - 把 Review 的审稿批评当作对人的实操能力评分；
