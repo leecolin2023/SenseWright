@@ -1,45 +1,56 @@
-# Mandatory Deep Read + Review Preflight for Learning V0.6.1
+# Learning 的 D/R 独立前置：V0.6.1 设计记录
 
-## Normative pipeline
+> **历史设计记录（非独立现行规范）**：本文解释为何在 Learning 前引入同轮独立 D/R。相关要求已延续至当前 [根入口](../SKILL.md) 和 [Learning V0.6.2](../skills/system-learning-v0.6.2/SKILL.md)，以它们为最终执行依据。文中早期关于 Practice 的“仅工程实现”定位已由 [Practice V0.3](../skills/practice-v0.3/SKILL.md) 取代。
 
-~~~text
-Current Raw Input
-     ├─ D: independent, faithful source reconstruction
-     └─ R: independent, source-facing Review
-              [both complete]
-                    |
-                    v
-            L: grounded problem chain
-               + mechanism + stabilization
-~~~
+## 当时确定的编排关系
 
-D and R must run on the **same current raw user input/source independently**. D never reads R, R never reads D. Both must complete before L begins, and both artifacts must be made available to L. Previously cached output never substitutes for this run.
+```text
+            本轮同一 Raw Input
+              /          \
+       D：独立忠实还原   R：独立审阅原文
+              \          /
+               均已完成
+                   |
+                   v
+             L：建立理解
+```
 
-## Mandatory execution, selective incorporation
+D 和 R 仅从**相同的本轮原始输入**独立处理，D 不读 R，R 也不读 D；它们均完成后，L 才开始。历史缓存不能替代当前任务的前置。
 
-- D exposes the source's actual claims, cognitive topology, necessary examples, and analogies, with original provenance.
-- R checks the raw material atomically then selectively reports substantive defects, alternative interpretations, unsupported assumptions, and evidence limits.
-- L consumes both, but treats these as **scaffolds, not evidence**: Return to Raw Input, build a fresh object-oriented problem chain, test the smallest necessary mechanism, and mark derived claims and unknowns.
-- R's independent source audit is **not the same** as L's internal Boundary & Evidence Stabilization Gate.
-- Default delivery is one coherent L response; separate D/R reports are for explicit user requests.
+## 必须执行，但选择性吸收
 
-## No-document case
+- **D** 给出原材料的观点、认知结构、关键推理、必要案例与原始出处；不新增事实审查结论。
+- **R** 从原材料直接开展覆盖性审阅，再重点输出实质性缺陷、替代解释、未经支持的前提和证据界限。
+- **L** 读取 D/R 与 Raw Input；将前两者视为认知脚手架，**不是新的事实来源**。回到真实对象和问题解释必要机制，标注推断与未知。
+- R 的独立审阅与 L 自身对证据边界的检查**不能互相替代**。
+- 默认只交付连贯的 L 结果；只有用户明确要求时才额外展示 D/R 的详细产物。
 
-Input may be just a conceptual question, without a source document. D faithfully frames the supplied question and context; R examines material premises and ambiguities, and may find no issue. D/R can be brief but never skipped. Do not fabricate a missing source, author, citation, or criticism.
+## 只有问题、没有独立文档时
 
-## Boundary with P
+输入可能只是一句话或一个概念问题。D 应忠实确认该问题与已提供情境，R 独立审查实质前提和歧义，允许没有需要批评的地方。**可以很简短，但不能假装已读过不存在的资料，也不能以“问题简单”为由跳过强制编排**。
 
-P-only implementation tasks keep their existing direct route; however a task routed to L (including P→L gap repair) must use a **fresh D/R** before L. Optional historical P references do not count as a D/R pass.
+## 与 Practice 的边界（现行修订说明）
 
-## Verification requirements
+这份历史文件写于 Practice 仍以工程实施为中心的阶段。**现行 Practice V0.3 是问题枝干探索**，P-only 可直接使用已有 Learning；P 发现的新主问题只有在真正进入新一轮 L 时，才需要再执行本轮 D/R 前置。
 
-Static Eval metadata uses the prefix ["D","R","L"] for each L task and a mandatory preflight contract. This **does not ensure** independent model invocations, source isolation, or barrier enforcement; such guarantees require the execution host to log separate stage IDs, raw-input identity, context boundaries, completion times, and read dependencies. Without inspectable execution records, label independence/barrier checks **unverified**, not PASS.
+## 怎样证明前置确实执行过？
 
-## Anti-patterns
+元数据里的 `["D","R","L"]` 以及前置字段只能说明**设计合同**。如果要证明真正独立调用，宿主应提供可核对的：
 
-1. Performing only D, or only R, because the other seems unneeded.
-2. Reading R through D's summary instead of directly auditing the source.
-3. Treating D or R statements as evidence rather than source-facing scaffolds.
-4. Concatenating D and R as a final L result.
-5. Calling preflight complete merely because the final answer has three headings.
-6. Fabricating a document or flaws when the user supplied only a short question.
+- 两个独立的阶段或调用标识；
+- 同一原始输入的来源与一致性；
+- 两次调用的上下文读依赖和隔离边界；
+- 完成时间，以及 L 启动后才读取两份结果的顺序证据。
+
+没有这些执行记录时，只能说“已要求独立前置”，不能宣称“运行时隔离已通过验证”。
+
+## 当时总结的失败模式
+
+1. 因一个前置看起来没有必要，便只做 D 或 R。
+2. R 审的是 D 摘要，而不是原材料。
+3. 把 D/R 的解释直接升级为新的事实证据。
+4. 用 D 和 R 的拼接结果代替 L 的独立认识。
+5. 仅凭最终答案出现 D/R/L 标题就宣布三个阶段已经独立执行。
+6. 在只有一个问题时，编造原文、作者、引用或批评。
+
+**历史价值**在于明确编排与宿主保证的边界，而不是给 Learning 再添加一个可重复打印的流程检查表。
