@@ -203,6 +203,18 @@ Use `learning_v0_6_2_pre_general_refactor` (main@8aae453) as the frozen adjacent
 
 Read [refactor audit](../docs/learning-core-refactor-20261011.md) for the architectural root cause. Older notes about Domain Anchor, Reality Calibration and Problem Discovery are **historical design cases**, not simultaneous mandatory pipeline stages.
 
+### Learning V0.6.2 follow-up — Question–Evidence Alignment
+
+Cases **#59–63** test a general failure not covered by merely supplying a correct computation or trace: **an example may prove a neighboring trivial statement rather than the question Learning selected**. This is a small amendment to Anchor / Challenge, not a new generic stage.
+
+- **59 Investment**: proving leverage magnifies losses is not adequate evidence for “high conviction justifies leverage”; choose a price, compounding, or path/financing comparison that can actually change the claim.
+- **60 Agent**: showing successful execution of a tool does not explain **why that tool was selected**; contrast user intent and available tool descriptions without fabricating hidden model reasoning.
+- **61 Banking**: a normal authorized case passes both a correct gate and a faulty gate. The unfulfilled-condition negative example discriminates the two.
+- **62 Observational science**: a group mean difference does not isolate cause; contrast a confounded observation against evidence that can isolate the variable.
+- **63 Low-complexity counterexample**: a clear short definition does not require a discriminating experiment; avoid making the fix a rigid template.
+
+Assess on real model outputs: (a) identifies the main claim, (b) describes what the original case *actually* shows, (c) selects the least additional evidence or varied condition needed to distinguish relevant conclusions, (d) labels thought experiments vs real proof, and (e) **avoids forced testing** where simple illustration suffices. Require matched-runtime evaluation against `learning_v0_6_2_pre_question_case_alignment`; metadata validation alone establishes none of this behavior.
+
 ### Practice Engineering Transfer
 
 Practice V0.2 不再以 capability test 为核心，而是验证 **Knowledge → Executable Engineering Model**：
