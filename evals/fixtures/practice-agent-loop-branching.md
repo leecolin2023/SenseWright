@@ -22,6 +22,16 @@ H3. Write failed after dispatch, no commit.
 
 A timeout/error alone does not decide among these. A stable operation identity plus authoritative external reconciliation evidence can.
 
+## Prerequisite coverage that must precede failure choice
+- What objective did the user ask for and what counts as task success?
+- Does the task require tool use at all, or should the model answer or clarify?
+- What tool definitions are currently visible to this Agent, and which name / description / parameter schemas does the model receive?
+- What creates a tool-call choice: model inference vs a separately verified router; no unsupported claim of an always-present intent classifier.
+- How are entity identifiers and dates grounded into arguments, and which policy guard admits the execution?
+- How does the Agent choose a next action or conclude the goal is achieved?
+
+Evidence: dsh-intramate fixed commit docs `packages/core/tools/README.md`, `packages/core/system-prompt/README.md`, `packages/core/agent-loop/src/agent.ts` preStep/buildRequest/step. Source shows surfaces, not measured model-selection quality.
+
 ## Branches worth exploring
 1. Execution outcome ambiguous: Harness durable tool history vs actual external effect.
 2. Compaction and resume: reconstruction of model-visible history vs transactional recovery.
