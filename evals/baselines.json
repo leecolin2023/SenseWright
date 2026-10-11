@@ -89,6 +89,12 @@
       "type": "git_commit",
       "ref": "8aae453cb5761a1952b089dbcfd5a7b56205c03a",
       "description": "Frozen main before domain-neutral Learning core rewrite; previous Domain Anchor, Problem Discovery, Reality Calibration and implementation examples embedded in runtime skill."
+    },
+    {
+      "name": "learning_v0_6_2_pre_question_case_alignment",
+      "type": "git_commit",
+      "ref": "bf7bfa52840e680b406cee91cf9950e76ba8b60e",
+      "description": "Frozen domain-neutral Learning core before strengthening link between research question and discriminative explanatory/test examples."
     }
   ]
 }
