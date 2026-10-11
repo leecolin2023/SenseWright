@@ -8,7 +8,7 @@ Fork: leecolin2023/dsh-intramate at commit 5badb15009ae1756c3afe0ae0cef1faafc290
 - packages/core/agent-loop/src/agent.ts lines 398–545: prepare, request, model stream, assistant/message commit, extract tool-call, call executeToolCalls.
 - packages/core/agent-loop/src/tool-calls.ts lines 60–103, 134–171, 254–290: parse arguments, schedule, append tool/call and tool/result, preserve ordered results.
 - packages/core/agent-loop/src/agent.ts lines 323–355: failed-step tool-result recovery.
-- docs/architecture.md and packages/core/agent-loop/README.md: session append-only event log, deriveMessages; tool-result recovery code distinction. Docs are source evidence, not executed probes.
+- docs/architecture.md and packages/core/agent-loop/README.md: session append-only event log, deriveMessages; tool-result recovery code distinction (including TOOL_OUTCOME_UNKNOWN for a recorded call with missing outcome, and TOOL_NOT_STARTED where no call was recorded). Docs are source evidence, not executed probes.
 
 ## Scenario
 An enterprise Agent calls a tool to write a bank post-loan inspection report. The external system commits the write, but the response is lost. The Agent or operator sees a timeout and considers retrying the call.
