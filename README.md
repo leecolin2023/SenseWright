@@ -21,8 +21,8 @@
                        |
                        v
                   Learning (L)
-   Ground → Problem Discovery* → Mechanism
-           → Reality Check* → Boundary
+   Ground → Domain Anchor* → Problem Discovery*
+           → Mechanism → Reality Check* → Boundary
                        |
                        v
                 Practice (P)
@@ -37,7 +37,7 @@ The host Runtime must enforce actual isolation and a completion barrier. This re
 
 ## Learning behavior
 
-1. Ground the task in an observable example; check unsupported premises. For exploratory/multi-source problems, **discover and validate the main research question before building a causal chain**. A given topic, list of items or surface-level question is not automatically the best research question.
+1. Ground the task in an observable example; check unsupported premises. For exploratory/multi-source problems, **identify the domain's governing mechanism and terminal criterion before discovering and validating the main research question**. A given topic, list of items or surface-level question is not automatically the best research question.
 2. When necessary, advance through a real failure or evidence-backed tension → minimal required mechanism → next meaningful problem. Revise the starting question if it cannot explain the important difference.
 3. Trace technical mechanisms with a minimal run; use a single high-information condition change when it clarifies boundaries.
 4. When the conclusion depends on magnitude, observed behavior, workflow state or evidence comparability, apply a **minimal, domain-adaptive Reality Check**: an estimate/threshold, one execution trace, one handoff case, or a source/contrast test. *Skip it when it adds no understanding.* Likewise, *Problem Discovery is skipped when the question is already precise and consequential*.
@@ -66,6 +66,8 @@ D and R remain independent and source-facing; the explanation reorder is owned b
 python scripts/validate_skills.py
 python scripts/validate_evals.py
 ~~~
+
+[Domain Anchor design](docs/learning-domain-anchor.md) explains how fundamental domain theories constrain problem selection and prevent intermediate metrics from becoming the goal.
 
 [Problem Discovery design](docs/learning-problem-discovery.md) explains how to find a consequential, answerable question before tracing mechanisms.
 

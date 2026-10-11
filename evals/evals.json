@@ -1485,6 +1485,154 @@
         "anti_pattern": "abstraction_is_not_depth",
         "expected_outcome": "preserve"
       }
+    },
+    {
+      "id": 47,
+      "name": "learning-domain-stock-valuation-anchor",
+      "prompt": "结合附件12家公司行业研报与公司财报材料，重新执行Learning。任务是理解股票价值和经营变化，不要预测短期涨价，也无需给精确买点。请先找到真正统领经营问题的基本理论，再组织最重要的问题，解释行业与业绩信息最终如何影响股权价值。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-domain-stock-research.md"
+      ],
+      "expected_output": "识别对应领域的终点和基础机制，再组织子问题；用证据校准，不把中间指标当最终价值。",
+      "assertions": [
+        "明确区分股票短期涨幅筛选、股票内在价值研究、短期价格预测三者；不能以不预测短期涨价或不给买卖建议为由拒绝建立股票价值的基本理论锚点。",
+        "明确股票内在价值与未来股东可获得的现金流、时间和风险调整折现有关；允许FCFE或FCFF（FCFF先得企业价值再调整净债务等），不把利润、回款或营业收入当终点。",
+        "把至少两种公司经营机制（如内容成本与分账、AI安全付费、化工价差与再投资）具体映射到现金流的金额、时间、再投资或风险，而不是只用‘经济利益保留’替代估值逻辑。",
+        "区分当前市场价格包含的增长/风险预期与实际价值判断；没有完整数据时不编造目标价、收益率或买卖结论。"
+      ],
+      "domain_anchor": {
+        "trigger": "intent_and_domain_conditional",
+        "target": "terminal_criterion_before_problem_discovery",
+        "method": "domain_fundamentals_link_drivers_to_outcomes",
+        "guardrail": "no_forced_model_or_cross_domain_universality",
+        "expected_outcome": "anchor"
+      }
+    },
+    {
+      "id": 48,
+      "name": "learning-domain-stock-profit-cashflow-disconnect",
+      "prompt": "同事说一家企业盈利增长快、税后经营利润高，所以这只股票一定更有投资价值。请用附件两家公司演示这个推断为什么不充分，找出真正决定股权价值的问题，但不必构建精确股票估值。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-domain-profit-vs-cash.md"
+      ],
+      "expected_output": "识别对应领域的终点和基础机制，再组织子问题；用证据校准，不把中间指标当最终价值。",
+      "assertions": [
+        "明确用100+20-150-20=-50和70+10-30-5=45对比利润与FCFF，而不以NOPAT或增长率为估值终点。",
+        "指出高再投资支出可能创造未来价值，单期FCFF较低本身不能证明A的企业/股权价值必低于B；需要未来ROIC、资本成本、持续现金流。",
+        "区分企业价值FCFF与股权价值FCFE或FCFF之后净债务等调整，不能将不匹配的折现率或两种价值混用。",
+        "提出下一步应验证哪些高价值现金流输入和当前价格预期，而非直接给出投资建议。"
+      ],
+      "domain_anchor": {
+        "trigger": "intent_and_domain_conditional",
+        "target": "terminal_criterion_before_problem_discovery",
+        "method": "domain_fundamentals_link_drivers_to_outcomes",
+        "guardrail": "no_forced_model_or_cross_domain_universality",
+        "expected_outcome": "anchor"
+      }
+    },
+    {
+      "id": 49,
+      "name": "learning-domain-software-goal-correctness",
+      "prompt": "一项企业文档助手优化让p95延迟从1200ms降到180ms，但仍从旧合同抽取错误金额。请基于附件学习应先确立什么成功标准，再选择关键技术问题；不要以性能指标替代任务正确性，也不要把股票DCF迁移进来。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-domain-software-slo.md"
+      ],
+      "expected_output": "识别对应领域的终点和基础机制，再组织子问题；用证据校准，不把中间指标当最终价值。",
+      "assertions": [
+        "先识别用户任务正确完成（指定合同版本、授权条款、金额）及可靠性/性能约束，而不以低p95单独定义系统成功。",
+        "比较至少两条可解释错误的技术机制，如版本检索选择、工具实际读取、金额抽取；指出需要的执行/文件证据。",
+        "清楚区分3份样本发现错误与系统总体错误率，不能据此编造规模统计。",
+        "不强行写财务DCF或声称程序实测、也不将‘更快’本身等同于‘更正确’。"
+      ],
+      "domain_anchor": {
+        "trigger": "intent_and_domain_conditional",
+        "target": "terminal_criterion_before_problem_discovery",
+        "method": "domain_fundamentals_link_drivers_to_outcomes",
+        "guardrail": "no_forced_model_or_cross_domain_universality",
+        "expected_outcome": "anchor"
+      }
+    },
+    {
+      "id": 50,
+      "name": "learning-domain-stock-fact-task-no-valuation",
+      "prompt": "根据附件，直接把某交易日北交所、深交所、上交所分别排名前三的股票列出。材料是合成样例，不需要学习股票估值理论，只要照提供的数据回答。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-domain-stock-ticker.md"
+      ],
+      "expected_output": "保持事实任务简明，不因股票关键词强制估值。",
+      "assertions": [
+        "识别用户任务是事实展示不是股票基本面分析，直列三所对应公司、代码与涨幅，明示合成样例。",
+        "即使材料主题是股票，也不强迫贴现现金流、投资决策、跨公司深层问题研究或长篇模型。",
+        "保持用户边界，不冒充实盘行情、不虚构新股上市或涨停信息。",
+        "如果进入Learning路线，仍按原规则对D/R做必要且轻量的前置，不声称独立运行隔离已验证。"
+      ],
+      "domain_anchor": {
+        "trigger": "intent_and_domain_conditional",
+        "target": "terminal_criterion_before_problem_discovery",
+        "method": "domain_fundamentals_link_drivers_to_outcomes",
+        "guardrail": "no_forced_model_or_cross_domain_universality",
+        "expected_outcome": "skip"
+      }
     }
   ]
 }

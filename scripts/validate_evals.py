@@ -88,6 +88,22 @@ def main():
                 errors.append(f"{prefix}: invalid Problem Discovery contract")
             if outcome == "reframe" and not case.get("files"):
                 errors.append(f"{prefix}: reframe eval must have raw evidence fixture")
+        if "domain_anchor" in case:
+            expected_anchor = {
+                "trigger": "intent_and_domain_conditional",
+                "target": "terminal_criterion_before_problem_discovery",
+                "method": "domain_fundamentals_link_drivers_to_outcomes",
+                "guardrail": "no_forced_model_or_cross_domain_universality",
+            }
+            anchor_contract = case.get("domain_anchor", {})
+            outcome = anchor_contract.get("expected_outcome")
+            if "L" not in route or {
+                key: value for key, value in anchor_contract.items()
+                if key != "expected_outcome"
+            } != expected_anchor or outcome not in {"anchor", "skip"}:
+                errors.append(f"{prefix}: invalid Domain Anchor contract")
+            if outcome == "anchor" and not case.get("files"):
+                errors.append(f"{prefix}: Domain Anchor eval requires an original input fixture")
         if not case.get("assertions"):
             errors.append(f"{prefix}: assertions must not be empty")
         for rel in case.get("files", []):

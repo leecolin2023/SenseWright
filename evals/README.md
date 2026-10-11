@@ -177,6 +177,17 @@ Optional `problem_discovery` metadata expresses a **conditional** contract and e
 
 Assess behavior against frozen pre-change main under matched model settings: question groundedness, discrimination between competing mechanisms, next evidence to seek, alignment with the original user objective, and avoidance of high-level rhetoric. Compare before/after content length, as over-framing is a regression. Neither static CI nor the final answer alone proves D/R Runtime isolation.
 
+### Learning V0.6.2 follow-up — Domain Anchor before Problem Discovery
+
+Cases **47–50** test the failure where a correctly reasoned Problem Discovery still misses the **domain's accepted theory and terminal criterion**.
+
+- **47**: Stock-value study over a 12-company sample: business mechanisms (content cost, subscription, AI security budget, commodity margins) must ultimately connect to future owner cash flows, timing and risk, with current market price reflecting expectations. No compulsory per-stock target price or trading forecast.
+- **48**: High accounting profit with huge capex / working-capital demands: FCFF arithmetic and future reinvestment economics, with correct enterprise-value vs equity-value bridge; one negative FCF year does not prove low valuation.
+- **49**: Nonfinancial business system: document assistant with fast p95 but wrong contract version. Its final success criterion is task correctness under reliability/performance constraints, not a financial value model.
+- **50**: Pure A-share ranking request. Do not misroute a factual lookup into a stock valuation problem.
+
+`domain_anchor` metadata expresses a conditional theoretical-anchor contract with expected outcome `anchor` or `skip`. Static CI checks metadata and fixtures; real behavior requires matched A/B and human review. Avoid interpreting this addition as “all problems have one scalar value function”; some domains have competing priorities, so specify the theory's scope and constraints.
+
 ### Practice Engineering Transfer
 
 Practice V0.2 不再以 capability test 为核心，而是验证 **Knowledge → Executable Engineering Model**：
