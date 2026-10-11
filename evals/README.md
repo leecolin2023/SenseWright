@@ -330,3 +330,11 @@ python scripts/init_eval_workspace.py --iteration 2 --baseline old_skill
 ~~~
 
 V0.1 默认保持最初 old-skill baseline 稳定，便于观察累计改进。以后如果需要相邻版本比较，可以新增 baseline，而不是覆盖历史记录。
+
+## Practice V0.3 — Situated Transfer & Consequential Branching
+
+Cases **59–63** 覆盖真实面试追问、Agent Loop 副作用歧义故障、跨域银行状态判断、避免过度分支、以及知识缺口回流 Learning。新 Skill 不再把深度面试模拟整体排除在 Practice 之外；单纯“列出15个问题”仍是题库任务，不自动要求 P。
+
+验收强调：情境影响、分支改变什么判断、一次真实应对与区分性挑战、源码/模拟/实际运行证据分层、能力缺口归因与回流；没有真实用户回答不得给用户评分。Agent Loop 演练见 [Practice V0.3 source-grounded drill](../docs/practice-agent-loop-drill-v0.3.md)。
+
+**静态检查仅验证用例结构**。如果没有同模型、同输入、同配置的旧版/新版运行结果，就不能报告行为 A/B 胜出；若没有真实 dsh 故障注入，就不能报告真实 Harness E2E 通过。
