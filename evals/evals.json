@@ -1873,6 +1873,156 @@
         "简短直接，不增加根本价值理论、强制反例实验、表格或无关问题。",
         "不得宣称运行程序，D/R仍以当前输入轻量前置且无Runtime Trace时不声称隔离已验证。"
       ]
+    },
+    {
+      "id": 59,
+      "name": "learning-test-alignment-conviction-vs-leverage",
+      "prompt": "这段论证在讨论‘经营确定性高是否足以支持集中和加杠杆’，Learning原来只举了跌30%两倍亏60%的算例。请基于附件检验这个例子究竟回答了什么，修正为能真正检验主问题的最少必要分析，不要为表现严谨而硬凑全部模型。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-test-adequacy-investment.md"
+      ],
+      "expected_output": "区分‘算术放大’与‘高主观把握能否支持高杠杆’，选择可区分买入价格/复利或被迫卖出的一项或数项有针对性的情景，避免假装证明真实投资可行。",
+      "assertions": [
+        "点明原例仅验证杠杆放大价格变动，不验证80%主观确定性对仓位决策是否足够；明确主问题和原例结论不一致。",
+        "选择至少一个会使原主张判断变化的条件（如100元与120元买入，或同终点不同回撤触发担保风险），说明为何比简单亏损乘2更有区分力。",
+        "不把假定80%当实证胜率；区分教学推演、企业价值预期与真实融资规则，不从情景给出真实证券买卖结论。",
+        "控制深度：不要求三套模型全写，新增量化必须确实回答主问题，拒绝无目的的更复杂计算。"
+      ]
+    },
+    {
+      "id": 60,
+      "name": "learning-test-alignment-agent-tool-routing",
+      "prompt": "我问的是‘Agent是怎样决定调用哪个工具的’，旧Learning却用已选定read_local_file后工具执行成功的例子当作答案。请根据附件修复这个解释，区分工具选择与执行闭环。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-test-adequacy-tool-routing.md"
+      ],
+      "expected_output": "识别原例为已选工具的执行演示，重构能够比较本地文件、制度搜索、复合请求的工具选择问题与可核验证据。",
+      "assertions": [
+        "明确‘工具已被选中后如何执行’与‘为什么选这个工具’是两个不同研究问题，旧例仅回答了旁支。",
+        "利用至少A与B两种不同意图对工具描述和请求的差异说明路由输入，C可能需要多步而不是总选一种。",
+        "区分模型可见工具声明、输出的结构化tool-call、policy/参数验证、实际执行，不能凭一条执行成功记录臆造模型隐藏决策。",
+        "指出怎样用具体工具可见上下文和选择事件日志核对，而不是只重复Observation闭环。"
+      ]
+    },
+    {
+      "id": 61,
+      "name": "learning-test-alignment-bank-positive-negative",
+      "prompt": "银行系统声称只有合同真正生效才允许用信，但之前只拿一笔已经生效且用信成功的样例证明权限控制有效。请基于附件讲清这个案例为什么不能检验主张，以及最小应换成什么案例。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-test-adequacy-workflow.md"
+      ],
+      "expected_output": "用一笔未满足生效条件的负样本区分只看审批标记与真正生效门禁，不以正常路径通过证明所有控制。",
+      "assertions": [
+        "指出正常单据X两个竞争实现都会放行，因此正常成功案例不能区分实现A与B，不能证明门禁充分。",
+        "以审批和签约完成但有生效条件未满足的Y为最小区分样例，说明A拒绝、B可能放行；明确是待测预期。",
+        "不捏造真实银行生产结果、真实监管要求或已运行日志，说明需查的状态/条件及工具记录。",
+        "证据分析必须沿‘生效条件是否真正阻断用信’这个原问题，不泛化为所有银行数字化问题。"
+      ]
+    },
+    {
+      "id": 62,
+      "name": "learning-test-alignment-correlation-vs-causation",
+      "prompt": "之前的研究只展示‘喝咖啡的人平均睡6小时，不喝的睡7小时’，于是说已经证明咖啡造成少睡1小时。请根据附件检查这个证据究竟能回答什么，再说明怎样的关键对照才真正触及因果问题。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-general-observational-study.md"
+      ],
+      "expected_output": "区别观察均值和因果效应的检验对象，给出能控制混杂因素的更有区分力的设计且不冒充真实结果。",
+      "assertions": [
+        "明确组间1小时均值差只说明关联而非因果，原观察不能排除作息/考试压力等竞争解释。",
+        "解释随机分组或合理控制混杂/个体内对照等至少一种检验思路，以及如何区分咖啡影响与选择偏差。",
+        "不伪造随机试验结果、显著性或临床建议，认可仍存在不可测的混杂和外推限制。",
+        "不强制股票估值、演化成空洞的‘所有相关均非因果’口号。"
+      ]
+    },
+    {
+      "id": 63,
+      "name": "learning-test-alignment-no-forced-counterexample",
+      "prompt": "请按附件简短解释同步与异步的区别，目标只是分清两个定义。不要为了‘例子必须有判别力’强行建反事实实验或一套验证表。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      },
+      "files": [
+        "evals/fixtures/learning-general-trivial-definition.md"
+      ],
+      "expected_output": "能用定义和一句最小例子清楚解释差异，并尊重简单概念题的低成本停止条件。",
+      "assertions": [
+        "准确解释同步调用等待、异步可在结果就绪前继续工作，不把异步自动等同更快。",
+        "不把定义教学强制升级为双假设实验、复杂控制变量方案或宏观认知框架。",
+        "简短表达且明确例子仅用于帮助理解、不是实测性能验证。",
+        "不虚构程序运行或测试结果。"
+      ]
     }
   ]
 }
