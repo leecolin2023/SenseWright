@@ -221,6 +221,22 @@
     {
       "query": "直接将数据库SQL执行计划另存为txt文件，不必学习原理。",
       "should_trigger": false
+    },
+    {
+      "query": "我已经完成 Agent Loop 的 Learning，现在请作为技术面试官围绕真实故障和设计取舍连续追问，并验证已有理解能否应对变化。",
+      "should_trigger": true
+    },
+    {
+      "query": "我了解银行 RAG 的基础机制，请针对高风险权限边界做一次场景挑战和反事实推演，而不是讲定义。",
+      "should_trigger": true
+    },
+    {
+      "query": "只给我列出15个 Agent Loop 的面试题标题，不需要追问、答案和练习。",
+      "should_trigger": false
+    },
+    {
+      "query": "快速告诉我 Agent Loop 是什么，不需要实践或模拟。",
+      "should_trigger": false
     }
   ]
 }

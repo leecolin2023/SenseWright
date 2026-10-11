@@ -1,9 +1,9 @@
 ---
 name: sensewright
-description: Route knowledge work among independent source-faithful Deep Read, source-critical Review, grounded Learning, and executable engineering Practice. Every Learning task must first run fresh Deep Read and Review independently on the same original input and use both as non-authoritative scaffolds.
+description: Route knowledge work among independent source-faithful Deep Read, source-critical Review, grounded Learning, and branch-exploration Practice. Every Learning task must first run fresh Deep Read and Review independently on the same original input and use both as non-authoritative scaffolds.
 ---
 
-# SenseWright V2.8.2
+# SenseWright V2.9.0
 
 Choose the task by **user goal**, not by the existence of an attachment:
 
@@ -12,7 +12,7 @@ Choose the task by **user goal**, not by the existence of an attachment:
 | **D — Deep Read** | 原材料实际说了什么、怎样推导 | `skills/article-deep-read-v6.4/SKILL.md` |
 | **R — Review** | 原材料的事实、论证和决策依据是否成立 | `skills/vibe-review-v0.10/SKILL.md` |
 | **L — Learning** | 用户怎样从真实问题理解机制，并将机制映射到具体实现与证据 | `skills/system-learning-v0.6.2/SKILL.md` |
-| **P — Practice** | 怎样把已理解知识落成可执行、可验证、可排错的真实工程 | `skills/practice-v0.2/SKILL.md` |
+| **P — Practice** | 沿已有知识主干发现并深入尚未解决的关键问题与独立枝干 | `skills/practice-v0.3/SKILL.md` |
 
 ## 执行编排
 
@@ -27,6 +27,6 @@ Choose the task by **user goal**, not by the existence of an attachment:
 - **D** 忠实还原材料的认知拓扑，并按交付目的选择 Coverage-Preserving 或 Cognitive-Synthesis；不插入独立批评。
 - **R** 对原材料完整覆盖后再判断重要性，独立审阅；不消费 D 的总结。
 - **L** 以用户的学习目的和真实对象为中心：按需使用相关领域知识校准问题、解释必要机制、用适合材料的实际证据检验，并在矛盾出现时修正理解。**这是可往返的自适应认知循环，不是 Domain Anchor / Problem Discovery / Reality Calibration 的强制流水线**。技术源码须对应可核验的调用/数据/状态链；非技术主题选相应的原始材料与证据形式。具体行业理论属于学习内容，不写死在通用 Skill 中。L 内部自检不能替代独立 R。
-- **P** 专注设计、端到端实施、运行、验证、排障及工程交付；纯提问、自测或模拟面试不因形式自动路由 P。知识补缺可由 L 使用简短、非诱导的追问完成。
+- **P** 从已有知识主干出发，检查被遗漏的因果前提，探索独立问题线，再深入有判断价值的枝干。可用于技术追问、案例判断与实际应用；不默认要求工程实施、固定题数或验收清单。若确需启动新的 L，仍须遵循本轮独立 D/R 前置；模型自演练不能评价用户掌握程度。
 
 默认**只输出满足当前用户目标的结果**。包含 L 的任务默认交付整合后的学习解释；用户明确要求时才展示 D/R 各自完整结果。不要打印内部路由、前置检查表或质量 Gate。

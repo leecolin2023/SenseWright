@@ -2023,6 +2023,133 @@
         "简短表达且明确例子仅用于帮助理解、不是实测性能验证。",
         "不虚构程序运行或测试结果。"
       ]
+    },
+    {
+      "id": 64,
+      "name": "practice-agent-loop-interview-branch",
+      "prompt": "我已学过 Agent Loop。请基于源码真实机制按高级技术面试的强度做一次追问演练，别给我10道术语题；找最能区分理解的枝干，回答后再通过反事实拷打。",
+      "expected_route": [
+        "P"
+      ],
+      "files": [
+        "evals/fixtures/practice-agent-loop-branching.md"
+      ],
+      "expected_output": "先检查既有执行主干是否跳过关键决策（特别是行动必要性、工具选择、参数根据），然后说明还存在哪些独立问题线；按任务选择值得深挖的问题并给出有依据的示范，不强制某个特定故障。",
+      "assertions": [
+        "能发现仅有 Tool Call → Execution → Observation 的描述未解释为何调用工具、怎样选择和构造参数，不能以一条已知故障代替整体问题发现。",
+        "给出若干机制上不同的重要分支，至少一个能形成独立研究问题；解释优先理由而非罗列术语。",
+        "根据可用证据深入至少一个问题（例如意图理解、工具选择或外部副作用），不强制每次选择超时重试。",
+        "明确区分给定源码、推演和实际模型/工具执行；不能凭演示宣称模型表现已验证。",
+        "没有用户真实回答时标注示范性质，不对用户掌握程度打分。"
+      ]
+    },
+    {
+      "id": 65,
+      "name": "practice-agent-loop-failure-injection",
+      "prompt": "基于 Agent Loop 的已有 Learning，假设写入业务系统已完成但结果超时。不要单纯解释 AgentLoop：请做一轮失败注入、对照测试和恢复策略评审。",
+      "expected_route": [
+        "P"
+      ],
+      "files": [
+        "evals/fixtures/practice-agent-loop-branching.md"
+      ],
+      "expected_output": "比较提交前/提交后超时的不同策略；最小实验展示重复与幂等；建议先 reconcile 再重试。",
+      "assertions": [
+        "最小区分条件是副作用是否提交，单一 timeout 无法区分。",
+        "说明 idempotency key 必须在外部副作用边界生效、原子去重，并说明稳定操作身份。",
+        "如果没有接真实系统，就只能把结果标为示例或模拟测试。",
+        "能够指出 Session 回放不等于业务幂等或 exactly-once。"
+      ]
+    },
+    {
+      "id": 66,
+      "name": "practice-bank-workflow-branch",
+      "prompt": "我理解审批、签约、生效三个状态。面向一笔实际授信，作为系统产品负责人，请在‘审批通过但客户还不能用信’的质询下解释业务决策和可验证操作。",
+      "expected_route": [
+        "P"
+      ],
+      "files": [
+        "evals/fixtures/learning-general-multigoal-design.md"
+      ],
+      "expected_output": "用一个状态实例和变更条件检验授信可用性，不把审批量当最终正确性；回答应包含可核对字段/证据。",
+      "assertions": [
+        "识别状态边界及其改变的可用额度判断，不能只复述名词。",
+        "给出一条可核查的具体业务状态与验证动作，不能捏造行内生产记录。",
+        "区分实际能力缺口与新机制学习缺口。",
+        "不过度铺陈技术框架。"
+      ]
+    },
+    {
+      "id": 67,
+      "name": "practice-no-branch-overengineering",
+      "prompt": "我知道 Agent 的工具结果必须回到下一次模型请求。只问一个很短的问题：假设当前没有工具调用，Agent Loop 是否一定继续执行？回答到能决策即可。",
+      "expected_route": [
+        "P"
+      ],
+      "files": [
+        "evals/fixtures/practice-agent-loop-branching.md"
+      ],
+      "expected_output": "直接指出当前正常情况下无 tool call 则 step completed；不制造大量分支或工程交付物。",
+      "assertions": [
+        "明确主分支：正常无 tool calls 返回 completed，具体结束仍受 inbox/steering 等后续调度影响。",
+        "不强制生成五个追问、九层架构或实际工程模块。",
+        "引用 source only as evidence and avoid declaring an execution probe.",
+        "回答简洁、对用户问题足够。"
+      ]
+    },
+    {
+      "id": 68,
+      "name": "practice-branch-research-routing",
+      "prompt": "面试追问到外部操作不确定性后，我发现我不理解事务原子性与去重的必要机制。请先判断现在该继续面试练习，还是应该把它作为新学习主问题。",
+      "expected_route": [
+        "P"
+      ],
+      "files": [
+        "evals/fixtures/practice-agent-loop-branching.md"
+      ],
+      "expected_output": "以源于现实的超时/副作用歧义确认根本知识缺口，提出可检验的新主问题与 D/R/L 回流，不假装已独立执行 D/R。",
+      "assertions": [
+        "把根本机制未知与缺少执行证据、暂时答不顺区分开。",
+        "解释为何事务/幂等会决定结果，并将新的主研究问题表达为可区别的机制问题。",
+        "标记启动新 Learning 时必须重新完成独立 D/R。",
+        "不要在 P 内随意宣布已完成完整 L。"
+      ]
+    },
+    {
+      "id": 69,
+      "name": "practice-upstream-tool-selection-before-retry",
+      "prompt": "我此前学了AgentLoop，做全链路深挖。上次只问了调用超时和幂等，请首先找出它在源码链路上遗漏了哪些前置决策机制，并以‘为什么选这个工具而不选另一个’为核心演练，允许继续拓展独立问题线。",
+      "expected_route": [
+        "P"
+      ],
+      "files": [
+        "evals/fixtures/practice-agent-loop-branching.md"
+      ],
+      "expected_output": "抓住被省略的行动必要性与工具选择因果前提，说明其可能打开哪些独立问题线；不以固定九节点模板代替真正的研究问题发现。",
+      "assertions": [
+        "将工具选择/行动必要性识别为未解释的关键主干前提，而非仅有下游异常。",
+        "围绕选择工具、构造参数、权限和后续反馈，发现机制上不同的值得深入的追问，并指出至少一个可独立研究的方向。",
+        "先广度检查遗漏，再按价值深入，不一开始只讨论重试，也不强制固定分支数量。",
+        "区分源码能说明的接口/请求构造与尚未经实测的模型选择质量。"
+      ]
+    },
+    {
+      "id": 70,
+      "name": "practice-no-invented-intent-classifier",
+      "prompt": "把 DeepSeek Harness Agent Loop 放在真实面试下：模型看到工具后为什么会选某个 Tool？意图识别是不是必须有独立分类器？另外请说明native和ptc的呈现差异，区分源码事实与模型行为推断。",
+      "expected_route": [
+        "P"
+      ],
+      "files": [
+        "evals/fixtures/practice-agent-loop-branching.md"
+      ],
+      "expected_output": "源码证据说明注册工具name/description/parameters经SystemPrompt进入模型请求，模型输出tool-call，Harness验证执行；不假设额外固定意图分类器，明确PTC的run_code+SDK。",
+      "assertions": [
+        "native路径中说明schema可见性、模型生成tool-call以及后续Harness dispatch的边界。",
+        "不宣称必有独立意图识别服务，也不否认可选上游路由/扩展。",
+        "能够准确区分native工具直呼与PTC run_code+SDK。",
+        "给出验证‘哪种描述让模型更可能选对工具’所需的控制变量与实际模型trace，而不是以文档阅读证明模型准确率。"
+      ]
     }
   ]
 }
