@@ -83,6 +83,12 @@
       "type": "git_commit",
       "ref": "37b7eba2143b5d1f087f865faf801b52b99be9c9",
       "description": "Frozen main after Problem Discovery but before Domain Anchor/valuation-terminal refinement."
+    },
+    {
+      "name": "learning_v0_6_2_pre_general_refactor",
+      "type": "git_commit",
+      "ref": "8aae453cb5761a1952b089dbcfd5a7b56205c03a",
+      "description": "Frozen main before domain-neutral Learning core rewrite; previous Domain Anchor, Problem Discovery, Reality Calibration and implementation examples embedded in runtime skill."
     }
   ]
 }
