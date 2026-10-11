@@ -64,7 +64,7 @@ D/R 的隔离与完成屏障需要宿主环境支持并留下可核查的执行�
 
 > 使用 Learning 研究“为什么相同大模型在不同 Agent Harness 上表现差异很大”，结合真实源码与可核验证据，解释关键机制与适用边界。
 
-此类任务适用 [D/R→L 前置规则](docs/architecture.md#learning-的独立前置)。
+此类任务适用 [D/R→L 前置规则](docs/architecture.md#4-learning-的独立前置)。
 
 **分支探索 P**
 
