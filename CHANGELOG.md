@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — Learning question–evidence alignment (V0.6.2 in-place refinement)
+- 修复“问题有价值、例子也正确，但例子只证实旁支命题”的失败；以投资者确定性与杠杆为起点，提炼适用于Agent工具选择、银行控制、实证因果的通用校验。
+- 在原有 Anchor / Challenge / 质量门禁中补充**案例用途与主问题对齐**：区分帮助理解的例子、执行机制追踪与真正能区分判断的证据；当讨论关键争议时优先选择让竞争解释产生不同结果的最小条件变化，不把演示升级成实证。
+- 不新增阶段、不将金融概率/杠杆公式写进通用 Skill；简单概念不强迫设计试验。
+- 保留既有58项回归，新增 #59–63，冻结修订前 main 基线。静态测试不证明语义正确性或实际隔离模型推理。
+
+
 ## Unreleased — Learning general-core refactor, 2026-10-11
 - 完整审计 10/09–10/11 的四轮修改：Mechanism-to-Implementation、Reality Calibration、Problem Discovery、Domain Anchor 均回应真实失败，但“由案例追加新步骤”导致全领域指令膨胀、阶段串联和金融知识入侵。
 - 重写活跃 `system-learning-v0.6.2/SKILL.md`，压缩约 56%，只保留 Orient / Frame / Explain / Anchor / Challenge & Rebuild 的**认知责任**，不是强制执行步骤或输出模板。研究先核对证据，讲解先解释机制。
