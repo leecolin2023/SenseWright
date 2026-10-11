@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — Practice V0.3 simplify around branch exploration (2026-10-11)
+- 根据新增目标重写活跃 Practice，重点是从已有主干发现被遗漏的关键因果前提与独立研究枝干，再将值得研究的问题深入。删去多场景工作模式、完整工程执行合同、八道内置 Gate、固定交付清单和过量例外。
+- 用五项简明认知责任（主干检查、发现问题、筛选、深入、回流）替代僵硬流水线，保留必要的证据诚实和 D/R→L 边界。未改动历史案例和旧版 Skill 文件。
+- 同步更新根路由、README 和评测定位；已发现的 Agent Loop 源码及失误保留为案例，而非写进通用 Practice 的运行规则。
+
+
 ## Unreleased — Practice V0.3 topology-first repair (2026-10-11)
 - 回应 Agent Loop 演练漏掉“模型为何选择工具”这一核心机制：新增最小因果决策拓扑审计、先覆盖再排序、上游必要条件优先、独立问题条线与多分支遍历。删除强制 1–3 分支上限。
 - 固定码点核查 DeepSeek Harness 的工具注册/可见性、原生 Function Calling 和 PTC run_code 路径；不得发明强制意图分类器，也不得凭源码判断模型选工具准确率。
