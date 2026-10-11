@@ -1884,8 +1884,9 @@
       "files": [
         "evals/fixtures/practice-agent-loop-branching.md"
       ],
-      "expected_output": "锚定主干，优先挑选外部工具结果不确定性的高价值分支，展示可辩护回答、条件变化和证据缺口；不对用户能力打分。",
+      "expected_output": "先审查 Agent Loop 从意图/行动判断/工具可见性/选择/参数到执行/反馈的拓扑覆盖，再按高价值分支深入；不要直接挑下游失败。提供示范应答但不评分用户。",
       "assertions": [
+        "检查主干全部关键决策与依赖（至少包括为何需要工具、如何从可见工具中选择及参数怎样落地），不能以严重性为由先跳到超时重试。",
         "追问必须能改变成功/失败判断或执行决策，不能仅罗列术语。",
         "区分 Harness 对 tool/call 与 tool/result 的记录和外部系统是否已产生副作用。",
         "若无人提供真实面试回答，要标注自演练，不能宣布用户已掌握。",
@@ -1962,6 +1963,42 @@
         "解释为何事务/幂等会决定结果，并将新的主研究问题表达为可区别的机制问题。",
         "标记启动新 Learning 时必须重新完成独立 D/R。",
         "不要在 P 内随意宣布已完成完整 L。"
+      ]
+    },
+    {
+      "id": 64,
+      "name": "practice-upstream-tool-selection-before-retry",
+      "prompt": "我此前学了AgentLoop，做全链路深挖。上次只问了调用超时和幂等，请首先找出它在源码链路上遗漏了哪些前置决策机制，并以‘为什么选这个工具而不选另一个’为核心演练，允许继续拓展独立问题线。",
+      "expected_route": [
+        "P"
+      ],
+      "files": [
+        "evals/fixtures/practice-agent-loop-branching.md"
+      ],
+      "expected_output": "完整扫过任务意图、工具必要性、可见能力、工具选择、参数、策略、执行、反馈和终止；区别缺少的核心因果桥梁与已知异常分支。",
+      "assertions": [
+        "准确指出工具选择/行动必要性是执行发生前必须解释的主干缺口，不只是低优先级枝干。",
+        "给出 Agent 何时不调用工具、选哪个、参数如何接地到源数据的独立追问。",
+        "不能一上来直接深入超时重试或任意强制只保留1–3个分支。",
+        "标记源码可证实的可见工具机制与未实测的模型选择质量。"
+      ]
+    },
+    {
+      "id": 65,
+      "name": "practice-no-invented-intent-classifier",
+      "prompt": "把 DeepSeek Harness Agent Loop 放在真实面试下：模型看到工具后为什么会选某个 Tool？意图识别是不是必须有独立分类器？另外请说明native和ptc的呈现差异，区分源码事实与模型行为推断。",
+      "expected_route": [
+        "P"
+      ],
+      "files": [
+        "evals/fixtures/practice-agent-loop-branching.md"
+      ],
+      "expected_output": "源码证据说明注册工具name/description/parameters经SystemPrompt进入模型请求，模型输出tool-call，Harness验证执行；不假设额外固定意图分类器，明确PTC的run_code+SDK。",
+      "assertions": [
+        "native路径中说明schema可见性、模型生成tool-call以及后续Harness dispatch的边界。",
+        "不宣称必有独立意图识别服务，也不否认可选上游路由/扩展。",
+        "能够准确区分native工具直呼与PTC run_code+SDK。",
+        "给出验证‘哪种描述让模型更可能选对工具’所需的控制变量与实际模型trace，而不是以文档阅读证明模型准确率。"
       ]
     }
   ]
