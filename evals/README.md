@@ -342,3 +342,21 @@ python scripts/init_eval_workspace.py --iteration 2 --baseline old_skill
 ~~~
 
 V0.1 默认保持最初 old-skill baseline 稳定，便于观察累计改进。以后如果需要相邻版本比较，可以新增 baseline，而不是覆盖历史记录。
+
+## Practice V0.3 — Situated Transfer & Consequential Branching
+
+Cases **64–68** 覆盖真实面试追问、Agent Loop 副作用歧义故障、跨域银行状态判断、避免过度分支、以及知识缺口回流 Learning。新 Skill 不再把深度面试模拟整体排除在 Practice 之外；单纯“列出15个问题”仍是题库任务，不自动要求 P。
+
+验收强调：情境影响、分支改变什么判断、一次真实应对与区分性挑战、源码/模拟/实际运行证据分层、能力缺口归因与回流；没有真实用户回答不得给用户评分。Agent Loop 演练见 [Practice V0.3 source-grounded drill](../docs/practice-agent-loop-drill-v0.3.md)。
+
+**静态检查仅验证用例结构**。如果没有同模型、同输入、同配置的旧版/新版运行结果，就不能报告行为 A/B 胜出；若没有真实 dsh 故障注入，就不能报告真实 Harness E2E 通过。
+
+### Practice V0.3 topology coverage repair
+
+Cases **69–70** are adversarial regressions based on a real missed issue: a one-branch lost-ack drill was presented as comprehensive despite overlooking the upstream choice mechanism. They require a **causal topology audit BEFORE severity ranking**, include intent/tool-need/visible-capability/selection/arguments, and prevent inventing a fixed intent classifier. The original drill's overall acceptance has been withdrawn; see [corrected Agent Loop audit](../docs/practice-agent-loop-topology-repair-v0.3.md). These fixtures specify expectations, not observed model A/B performance.
+
+### Practice V0.3 — Simplified branch-exploration core
+
+当前运行 Skill 已整体收缩：**主干检查 → 发现问题空间 → 选重要问题 → 深入/验证 → 回流** 是认知责任，不是固定五阶段模板。默认目标是发现并研究知识主干遗漏的关键问题，不再将工程实施、情境测评或固定分支数量写成通用硬要求。先识别主干缺口（如 Agent 为什么选某个 Tool），再筛选独立枝干。保留旧版工程实践类用例用于回归验证，不能让它们反过来决定通用 Skill 的结构。
+
+回归必须特别防止：只挑一个高严重性异常、忽略基础行动选择；把一段简单概念答复做成复杂工程清单；把纯问题地图伪装成已深入验证；模型自演练替用户评分。静态 validator 不能证明这些行为已通过。
