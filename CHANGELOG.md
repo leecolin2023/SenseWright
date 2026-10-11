@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — Practice V0.3 topology-first repair (2026-10-11)
+- 回应 Agent Loop 演练漏掉“模型为何选择工具”这一核心机制：新增最小因果决策拓扑审计、先覆盖再排序、上游必要条件优先、独立问题条线与多分支遍历。删除强制 1–3 分支上限。
+- 固定码点核查 DeepSeek Harness 的工具注册/可见性、原生 Function Calling 和 PTC run_code 路径；不得发明强制意图分类器，也不得凭源码判断模型选工具准确率。
+- 撤回第一轮仅覆盖超时重试的总体 PASS，另写完整拓扑修复演练；新增回归 #64–65，修改 #59 抑制再次遗漏。
+
+
 ## Unreleased — Practice V0.3 situated transfer and consequential branching (2026-10-11)
 - 新增 `skills/practice-v0.3/SKILL.md`；Practice 从单一工程落地扩展到技术面试深追、架构/业务决策、工程实现和研究情境中的知识迁移；保留 V0.2 工程深入路径作为模式。
 - 使用条件变化是否改变解释/行动/预测/成败，筛掉低价值术语题；强制区分源代码、推演、实际 probe，禁止自演练给用户打分；重大知识缺口返回新一轮 D/R/L。
