@@ -1,117 +1,133 @@
-# Agent Loop Practice V0.3 — Decision Topology Audit & Branch Drill, corrected pass (2026-10-11)
+# Practice V0.3 历史复盘：Agent Loop 主干缺口与工具选择问题（2026-10-11）
 
-> **Method:** source inspection + model-self-drill (not user interview) + illustrative case variations. No actual DeepSeek Harness model/tool-choice test was run. The prior [round-one write-up](practice-agent-loop-drill-v0.3.md) captured one real downstream issue but **FAILED topology coverage**; its former overall PASS is withdrawn. This second pass corrects the discovery method rather than adding another random interview question.
+> **历史案例，非当前 Skill 的固定执行流程。** 本文记录当时如何纠正“只选一个严重异常，却漏掉上游工具选择机制”的失败。现行 [Practice V0.3](../skills/practice-v0.3/SKILL.md) 已重构为精简的**知识主干 → 发现重要问题 → 深入枝干**方法，不要求每轮画固定拓扑图、检查固定节点数或执行同样的面试流程。
+>
+> **证据范围**：固定源码阅读 + 模型自示范 + 假设案例。没有实际运行 DeepSeek Harness 模型选择实验，没有用户现场回答，也没有同模型新旧 Skill 行为 A/B。第一轮 [超时重试研究](practice-agent-loop-drill-v0.3.md) 对一个具体下游故障有价值，但它被当成全链路实践时**未通过主干覆盖检查**。
 
-## 1. The true failure was upstream of the selected branch
+## 一、当时发现的根本遗漏
 
-The old main chain, `Model Request → Tool Call → Execution → Observation → Next Request`, describes the **execution transport**, not the entire causal decision process. Its first arrow hides *why* a tool call is warranted and *which* tool is chosen. That omission invalidates a "comprehensive Agent Loop drill" even if a retry failure investigation is useful.
+旧的理解链为：
 
-**Distinction:** a missing reason for an essential action is an unfinished **main-chain mechanism**, not a low-ranked optional side branch. First map those gaps, then select branches for deeper rehearsal.
+```text
+Model Request → Tool Call → Execution → Observation → Next Request
+```
 
-## 2. Causal topology — main decisions and current evidence
+这能描述**调用发生以后**怎样执行、返回结果，却没有回答调用前的必要决策：
 
-| Decision / transition | Essential question and possible branch | Evidence / status |
-|---|---|---|
-| User goal → operational task | What does the user want, what counts as success, and are object/time/scope resolved? | General model reasoning; **not previously investigated** |
-| Task → need for action | Can I answer from context or must I read/write/ask? What counts as justified tool use? | Model behavior, **behavior not tested** |
-| Need → available capabilities | Where do discoverable tools come from? Which names/descriptions/schemas are visible? | **Source-inspected** ToolRuntime and SystemPrompt |
-| Available capabilities → tool choice | Why pick tool A rather than similar B or none? Is there an explicit classifier? | **Source-inspected interface; actual model choice not tested** |
-| Selected tool → grounded arguments | Where do IDs, paths, date range and object references come from? What if missing? | Tool Schema and argument validation **source-inspected**; model grounding not tested |
-| Single action → multi-step plan | Which call precedes the next? Can parallel calls alter business outcomes? | AgentLoop and tool-calls scheduling **source-inspected** |
-| Intent → permission / approval | Visible does not equal authorized; what blocks a forbidden action? | **Source-inspected** registry restriction and policy pipeline |
-| Dispatch → external effect | When is a call logged, and when is actual external state changed? | Source-inspected; real external integration **unverified** |
-| Tool result → next decision | Which result is model-visible, how does it influence the next action? | **Source-inspected** session/deriveMessages and event flow |
-| Continue / terminate → task success | No tool-call means step completed, but does that mean user goal achieved? | **Source-inspected** loop condition; task-quality result untested |
-| Crash / retry / continuation | Can logs reconstruct model history yet lack external effect evidence? | Source-inspected; isolated lost-ack probe is separate, **not DSH E2E** |
+- 用户的真正目标是什么，是否需要外部行动？
+- 当前 Agent 能使用哪些能力？
+- 模型为什么选择工具 A，而不是 B 或直接回答？
+- 参数中的客户、合同和时间范围从何而来？
+- 调用被允许执行，与业务目标最终完成，是不是同一回事？
 
-**Structural review result:** the previous Practice started with dispatch and failure; it omitted the first *five* decisions, including the essential "why this tool?" bridge. A single downstream retry probe cannot compensate.
+**遗漏必要的行动选择机制，是主干缺口，而不是因为没有影响“重复写入”这项下游故障就可以不研究的小分支。**
 
-## 3. Deep branch A — intent understanding vs tool selection
+在完整的 Agent Loop 研究中，应当先发现这些关键依赖，再判断哪些值得优先深挖。然而，今天的 Practice 仅要求**根据具体知识主干适度检查**，并不强制任何主题都走下面这张完整表。
 
-### Interview challenge 1: Who recognizes intent and selects a tool?
+## 二、当时整理的决策主干
 
-**Model demonstration (not a measured model answer):** Do not presuppose a separate classifier. In DSH **native** mode, tool plugins register `name`, `description` and `parameters` in ToolRuntime. SystemPrompt assembles the permitted ToolSchemas for the current agent step; AgentLoop constructs a model request with history and those schemas. The model can emit a structured `tool-call`; the Harness **interprets, validates and dispatches** it. The last part is deterministic execution of the emitted intention, not independent proof that it was the right choice.
+| 决策或转折 | 必须回答的问题 | 当时具备的证据 |
+| --- | --- | --- |
+| 目标 → 任务 | 用户究竟要什么；完成判据是什么；对象是否明确？ | 基础问题，尚未专门实测 |
+| 任务 → 是否行动 | 可以直接回答，还是需要工具、澄清或拒绝？ | 模型选择行为未测 |
+| 行动 → 可见能力 | 工具如何注册、按 Scope 限制、呈现给模型？ | 工具与 System Prompt 源码已查 |
+| 可见能力 → 具体选择 | 为什么选这个工具；是否有独立分类器？ | 请求接口已查，模型实际选择未测 |
+| 工具 → 参数 | 客户 ID、路径、日期来自什么证据？ | Schema 和验证机制可见，参数准确率未测 |
+| 单步 → 多步 | 依赖怎么安排，哪些能并行？ | AgentLoop 调度源码已查 |
+| 意图 → 权限 | 模型希望调用是否等于系统允许？ | Registry 限制与策略管线可查 |
+| 调用 → 外部结果 | 会话日志和业务系统真实副作用是否一致？ | 源码已查，真实集成未测 |
+| 工具结果 → 新决定 | 哪些结果进入下次模型请求？ | Session 与 `deriveMessages()` 实现已查 |
+| 无调用 → 完成 | 当前步骤结束是否代表任务目标实现？ | 循环退出条件可查，业务成功率未测 |
+| 崩溃、续跑与重试 | 恢复会话是否等于恢复外部事务？ | 历史代码与独立模拟实验，非 DSH 端到端 |
 
-**Verified implementation anchors:**
-- [tools/README.md#register-a-tool](https://github.com/leecolin2023/dsh-intramate/blob/5badb15009ae1756c3afe0ae0cef1faafc290ccc/packages/core/tools/README.md): model-facing name/description/parameters; registration, masks and validation.
-- [system-prompt/README.md](https://github.com/leecolin2023/dsh-intramate/blob/5badb15009ae1756c3afe0ae0cef1faafc290ccc/packages/core/system-prompt/README.md): schemas assembled with prompt, scoped contributors.
-- [agent.ts#L266-L289](https://github.com/leecolin2023/dsh-intramate/blob/5badb15009ae1756c3afe0ae0cef1faafc290ccc/packages/core/agent-loop/src/agent.ts#L266-L289): `preStep` assembles the context.
-- [agent.ts#L650-L688](https://github.com/leecolin2023/dsh-intramate/blob/5badb15009ae1756c3afe0ae0cef1faafc290ccc/packages/core/agent-loop/src/agent.ts#L650-L688): `buildRequest` passes `messages`, `tools` and tool history into the model request.
-- [agent.ts#L530-L544](https://github.com/leecolin2023/dsh-intramate/blob/5badb15009ae1756c3afe0ae0cef1faafc290ccc/packages/core/agent-loop/src/agent.ts#L530-L544): extract `tool-call` from model output; invoke `executeToolCalls`; without a tool call normal step ends.
-- [tools/README.md#configure-the-presentation-mode](https://github.com/leecolin2023/dsh-intramate/blob/5badb15009ae1756c3afe0ae0cef1faafc290ccc/packages/core/tools/README.md): `native`, `ptc`, `both` choices; in `ptc` model sees `run_code` and generated SDK rather than every end-tool as direct callable schema.
+**复盘结论：** 第一轮跳过了目标、行动必要性、工具发现、工具选择和参数形成，便直接研究超时重试，因此当时的“整体通过”应撤回。
 
-**Important qualification:** this shows the model-facing surface and observed code path, **not** the internal features or classification process in model weights; neither does it prove there are no plugins or upstream routers in arbitrary compositions.
+## 三、重点研究：意图理解与工具选择不是同一件事
 
-### Interview challenge 2: Same user request, different available tools — what changes?
+### 1. 究竟是谁判断要调用哪个工具？
 
-**Synthetic case:** User says “请核对某客户最新授信批复是否与已签合同一致，给出差异报告。” Hypothetical permitted tool set:
+不能预先假设 Harness 必然带有独立“意图识别分类器”。
 
-- `search_approval(customer_id, as_of)` — find signed-off approval/version.
-- `read_contract(contract_id)` — retrieve contract content.
-- `compare_documents(approval, contract)` — produce differences.
-- `write_business_result(...)` — mutates production business record, **not implied by this request**.
+对固定提交 `5badb15009ae1756c3afe0ae0cef1faafc290ccc` 的 DeepSeek Harness Fork，当时核对的**原生 Function Calling 路径**为：
 
-**Reasoned action chain:** resolve customer and contract identifiers / date context (or request missing disambiguation); search authoritative latest approval; retrieve appropriate contract; compare conditions with traceable clauses; present differences with uncertainty and references. Do **not** write production records without an authorized user goal. Selection must be explained by task goal, visible affordance, argument requirements and permission, not simply matching the verb “核对” to a named tool.
+1. 插件向 ToolRuntime 注册工具的 `name`、`description` 和 `parameters`，Registry 按 Agent Scope 确定可见集合。
+2. System Prompt 组装时把允许模型看到的工具 Schema 与提示信息整理到请求表面。
+3. AgentLoop 通过 `preStep` / `buildRequest` 构造请求，把历史消息、可见工具以及工具历史发给模型。
+4. 模型可能输出结构化 `tool-call`；Harness 解析、检查权限并派发执行，再将观察结果写回会话。
 
-This scenario is a **thought experiment**. No model selection trace, model scores or real bank record is claimed.
+这证明的是**模型请求与 Harness 执行的接口机制**，并不能靠阅读源码得知模型权重内部如何表征用户意图，更不能证明该模型实际选择工具的正确率；有额外上游插件/路由时，也不能因此断言它们必然不存在。
 
-### Interview challenge 3: What if the tools overlap or the best tool is absent?
+源码锚点（固定提交）：
 
-Change **one** condition at a time:
-1. `compare_documents` absent but two read tools remain. The model may be able to perform bounded comparison from retrieved inputs, ask for specialized execution, or refuse a reliable comparison depending on context and constraints. Do not fabricate nonexistent tool calls.
-2. A second `search_approval_archive` advertises only historical versions. "最新" and approval status must disambiguate selection; not just similar name matching.
-3. `search_approval` registered but masked from this agent. It is not a permitted tool to choose. A prompt cannot override an actual registry/policy gate.
-4. Request is "你知道授信批复是什么吗？" There need not be any tool call; overusing tools is also a selection failure.
-5. `ptc` mode active: direct tool-name call changes to `run_code` plus generated SDK; the user's goal is unchanged but tool presentation and dispatch path change.
+- [ToolRuntime 注册、可见性及调用策略](https://github.com/leecolin2023/dsh-intramate/blob/5badb15009ae1756c3afe0ae0cef1faafc290ccc/packages/core/tools/README.md)
+- [System Prompt 组装](https://github.com/leecolin2023/dsh-intramate/blob/5badb15009ae1756c3afe0ae0cef1faafc290ccc/packages/core/system-prompt/README.md)
+- [`agent.ts` 的 `preStep`](https://github.com/leecolin2023/dsh-intramate/blob/5badb15009ae1756c3afe0ae0cef1faafc290ccc/packages/core/agent-loop/src/agent.ts#L266-L289)
+- [`agent.ts` 的 `buildRequest`](https://github.com/leecolin2023/dsh-intramate/blob/5badb15009ae1756c3afe0ae0cef1faafc290ccc/packages/core/agent-loop/src/agent.ts#L650-L688)
+- [`agent.ts` 提取与处理工具调用](https://github.com/leecolin2023/dsh-intramate/blob/5badb15009ae1756c3afe0ae0cef1faafc290ccc/packages/core/agent-loop/src/agent.ts#L530-L544)
 
-**What is NOT yet known:** which prompt/schema choices actually raise tool-selection accuracy or reduce hallucination in this specific model/Harness combination. That requires controlled model runs; source inspection alone cannot answer.
+### 2. 同一句用户请求，可能对应哪些行动选择？
 
-## 4. Remaining high-value branch research queue (not synonyms)
+**假设案例**：用户说“请核对某客户最新授信批复与已签合同是否一致，给出差异报告”。
 
-| Branch line | Fundamental question | What could change | Current disposition |
-|---|---|---|---|
-| Goal/task disambiguation | When should the Agent clarify rather than assume an entity, date, or permission? | Wrong task entirely | **High** |
-| Tool-need decision | Why call any tool instead of answering directly? | Unnecessary cost vs unverifiable output | **High** |
-| Tool selection & discovery | How do descriptions, visible set, semantic overlap, tool-count and PTC change selection? | Wrong or missing action | **High; illustrated above** |
-| Argument grounding | How to bind exact ID, file, scope and date without inventing them? | Correct tool, wrong customer | **High** |
-| Planning and dependencies | How to know which tool is needed first, and whether results support the next step? | Incomplete/incorrect chain | **High** |
-| Permission & trust | Is a visible tool actually authorized; can retrieved text instruct the Agent to misuse it? | Security boundary breach | **High** |
-| Model/tool interface | What does the model emit, what does the adapter parse, what does Harness validate? | Invalid-call diagnosis | **Source-inspected, more tests possible** |
-| Feedback & stopping | Is `completed` a model step status or proof the user's goal was met? | False-success report | **High** |
-| State and compaction | What survives a turn/session/restart, and what is model-visible? | Lost context/repeated work | **Medium** |
-| Parallel scheduling | When are parallel calls safe and what order are results committed? | Dependence/race effects | **Medium** |
-| External uncertain side effect | What if a write succeeded but response vanished? | Duplicate action, incorrect retry | **Already rehearsed as one downstream branch** |
+假设 Agent 具有以下工具（仅为教学场景，不声称真实注册）：
 
-**No global 1–3 topic limit:** that shortcut in Practice V0.3 was wrong for a requested full drill. Breadth-first discovery and prerequisite coverage precede deep dives.
+- `search_approval(customer_id, as_of)`：找到指定时间有效的授信批复；
+- `read_contract(contract_id)`：读取指定合同；
+- `compare_documents(approval, contract)`：比较两份材料；
+- `write_business_result(...)`：修改生产业务记录。
 
-## 5. Evidence-oriented practice / acceptance
+一个有依据的行动链需要先明确客户、合同和时间范围，不明确则应请求消歧；之后获取权威批复与相关合同，比较有出处的差异，再给出受证据约束的结论。
 
-We can inspect the **source** to establish tool projection, model request construction, emission extraction, schema validation and execution hooks. To verify **selection quality**, run a matched suite using the actual DSH model adapter:
+**关键不是看到“核对”两个字就匹配到工具名**。工具选择至少受目标、可见能力、参数要求、数据质量和授权约束。用户要求“列出差异”并**不等于**授权修改业务系统。
 
-- Construct a small controlled set of tasks: answer-only, single-tool, overlapping tools, multi-step, missing tool, unauthorized tool, ambiguous customer/date.
-- Freeze model, temperature, system instruction, task inputs; vary **only one** of description, schema detail, candidate count, permission mask, or `native` vs `ptc` per comparison (mode change may affect more than one dimension; report that confounding explicitly).
-- Save tool schema list **actually visible** at each step, model output `tool-call` names and arguments, guard decisions, result sequence, and final correctness as judged against an independently authored reference.
-- Grade **need-to-call decision**, **tool choice**, **argument accuracy**, **permission compliance**, **plan completeness**, **final task correctness**, plus unnecessary-call rate and cost. Do not use apparent success or self-reported confidence as the only metric.
-- Report evidence and failures before changing prompts/rules. Tool choice cannot be proven by a standalone SQLite retry test.
+这个案例是推理示范，不是模型真实生成的调用轨迹。
 
-This model-selection suite is **specified but not executed**. The earlier lost-ack SQLite study validates only the separate retry side-effect mechanism, not any tool decision quality.
+### 3. 只改变一个条件，会发生什么？
 
-## 6. Practice → Learning diagnosis
+- **比较工具不存在**：可能从读取工具获取原文后进行有边界的比较；条件不充分时应说明无法可靠完成，不能编造工具调用。
+- **出现历史批复检索工具**：工具名看起来相似，但“最新”和生效状态影响真正应选的版本。
+- **工具被 Agent Scope 屏蔽**：即使注册表里存在，它也未必可由当前 Agent 调用。提示词不能越过执行策略门禁。
+- **用户仅询问“什么是授信批复”**：可能直接回答，不必要的工具调用本身也是选择错误。
+- **PTC 模式启用**：模型直接可见的接口变为 `run_code` 与生成 SDK，不等同于 Native 模式下逐个工具 Schema 直呼；底层任务目标仍相同。
 
-1. **Primary mechanism gap / Learning candidate:** "Absent a dedicated intent classifier, by what mechanism does an LLM translate user goals and a changing schema-defined capability set into a tool-call or no-call decision, and how can we discriminate alternative explanations with controlled evidence?"
-2. **Evidence gap / run experiment:** On DSH with a specified model, measure tool-choice changes under controlled schema descriptions, visible-set restrictions, and ambiguous tasks.
-3. **Application gap / continue Practice:** Given actual results, design tool descriptions, candidate disclosure, permission routing and clarifying behavior for the bank workflow.
-4. **Previously selected failure branch:** Lost response after external write is still valuable, but **downstream**, not a sufficient first or sole branch.
+这里仍未得到的答案是：**对特定模型，修改工具描述、增加候选工具、切换模式，究竟会怎样影响正确调用率？** 只有真实模型对照实验才能回答。
 
-A new formal Learning on the primary gap requires new independent D/R on the chosen raw input; this Practice does not claim to have performed that new L.
+## 四、沿主干发现的其他独立问题
 
-## 7. Honest stabilization verdict
+| 问题线 | 为什么有独立研究价值 |
+| --- | --- |
+| 用户目标消歧 | 客户、日期与权限缺失时，应该追问还是假设？ |
+| 是否需要工具 | 如何区分可直接回答的知识任务与必须查询/写入的任务？ |
+| 工具发现与选择 | 描述质量、工具重叠、数量与展示方式怎样改变结果？ |
+| 参数落地 | 模型选对工具，却填写错误客户 ID，为什么仍可能造成严重业务风险？ |
+| 多步规划 | 如何排列工具依赖；并行是否改变副作用或结果顺序？ |
+| 权限与可信性 | 工具可见是否意味着可执行；外部文本能否诱导越权？ |
+| 模型/工具接口 | 参数如何编码，Adapter 如何解释，Harness 怎么验证？ |
+| 反馈与终止 | 模型没有继续调用工具，是任务完成还是误以为已完成？ |
+| Session / Compaction | 模型可见历史、持久化状态与实际事务怎样区别？ |
+| 外部副作用恢复 | 如果写入成功但响应丢失，怎样避免盲目重试？ |
 
-- **Round 1 (original write-up): FAIL — Topology Coverage**: omitted tool-need/choice/argument formation before dispatch.
-- **Round 2 (this corrected source-grounded drill): PASS — structural discovery and explicit evidence boundaries**, with detailed exemplary branch and a non-duplicative queue.
-- **Real tool-selection model evaluation: NOT TESTED.**
-- **User interview capability: NOT TESTED.**
-- **Controlled prior/new Practice behavioral A/B: NOT TESTED.**
-- **True dsh E2E: NOT TESTED.**
+此表证明了**不应该把 Practice 任意限定为一个事故问题**。但它也不是要求未来每个主题必须找到十条枝干。
 
-**Takeaway:** the root correction is **causal topology audit before branch prioritization**, not “add another intent-recognition interview question.”
+## 五、怎样真正评测工具选择能力？
+
+当时提出的实验方案，至今只能称为**待执行设计**：
+
+1. 准备有正确答案的对照任务：无需工具、单工具、工具名称重叠、多步、缺少工具、权限不足、客户/日期歧义。
+2. 固定模型、采样配置、系统说明和任务输入；一次尽量只改变工具描述、参数 Schema、可见候选集合等单一条件。若切换 Native/PTC 同时改变多个条件，应明确其混杂性。
+3. 记录当步**实际可见工具集**、模型输出的工具名和参数、策略门禁决策、工具结果、最终答复，并用事前建立的标准判断。
+4. 区分**是否应该调用、调用了哪个、参数是否正确、是否守权限、多步计划是否完整、目标是否最终完成**，另记无谓调用与成本。
+5. 保存真实失败样例后再决定是否改变提示词或路由。
+
+单独的 SQLite “响应丢失导致重复写入”模拟，即使真实运行，也**只能说明副作用重试问题**，不能证明任何模型的工具选择能力。
+
+## 六、当时的回流与验收结论
+
+- **新的 Learning 候选问题**：没有独立意图分类器时，模型如何依据用户目标与动态可见的工具 Schema 生成调用或不调用的决定？用什么实验区分竞争解释？
+- **待做证据实验**：在真实 DSH 模型链中比较工具描述、Scope 屏蔽和歧义请求引起的选择差异。
+- **可继续 Practice 的问题**：结合实际运行数据，如何为企业场景设计工具描述、可用能力披露、权限与澄清策略。
+- **已知下游问题**：成功写入却丢失应答仍值得单独研究，但不能代表全链路。
+
+第一轮作为全链路实践的覆盖性判断 **FAIL**；第二轮的**结构发现、证据分层与问题网络建立**有明显改善，但它不是用户面试考核，也不是模型工具选择成功率测评。
+
+**历史方法教训：** 先发现知识主干真实缺少什么，再谈枝干价值；不要把“选到一个很严重的故障”当作“已经找到了全部关键问题”。现行 Practice 将这一原则保留下来，但不保留繁琐的强制审计表。
