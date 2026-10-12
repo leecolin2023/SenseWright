@@ -1,6 +1,6 @@
 # Learning Problem Discovery — 找到值得研究的问题（V0.6.2 原版内完善）
 
-> **历史设计记录 / Historical case study.** 此文档保留当轮真实问题、领域案例与推导脉络，用于审计和回归评测；它**不是当前 Learning 的独立执行阶段或通用指令**。活跃规范以 [`skills/system-learning-v0.6.2/SKILL.md`](../skills/system-learning-v0.6.2/SKILL.md) 为准。参见 [2026-10-11 通用核心重构审计](learning-core-refactor-20261011.md)。
+> **历史设计记录（非现行规范）。** 此文档保留当轮真实问题、领域案例与推导脉络，用于审计和回归评测；它**不是当前 Learning 的独立执行阶段或通用指令**。活跃规范以 [`skills/system-learning-v0.6.2/SKILL.md`](../skills/system-learning-v0.6.2/SKILL.md) 为准。参见 [2026-10-11 通用核心重构审计](learning-core-refactor-20261011.md)。
 
 ## 发生了什么失效
 

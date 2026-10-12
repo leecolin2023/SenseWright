@@ -1,58 +1,104 @@
-# SenseWright V2.9.0
+# SenseWright
 
-**Four independent cognitive skills, one entrypoint:** [SKILL.md](SKILL.md).
+> **读懂材料、独立审阅、建立理解、发现新问题。**
 
-| Skill | Primary job |
-|---|---|
-| [Deep Read V6.4](skills/article-deep-read-v6.4/SKILL.md) | Faithfully reconstruct source reasoning |
-| [Review V0.10](skills/vibe-review-v0.10/SKILL.md) | Independently evaluate sources and claims |
-| [Learning V0.6.2](skills/system-learning-v0.6.2/SKILL.md) | Build transferable, evidence-grounded understanding |
-| [Practice V0.3](skills/practice-v0.3/SKILL.md) | Discover and deepen overlooked questions branching from an existing knowledge trunk |
+SenseWright 是一套面向知识工作的 **四条独立 Skill**，并非大模型、Agent 运行框架或自动执行平台。它希望解决的不是“生成更多文字”，而是让阅读、判断、学习与问题探索各有清晰职责，在需要时协同，又不互相取代。
 
-## Learning: orchestration vs cognitive method
+当前项目入口版本为 **V2.9.0**。以下以 `main` 分支中的活跃 Skill 为准，历史设计记录不构成当前执行要求。
+
+## 四条 Skill
+
+| Skill | 当前版本 | 核心问题 | 主要职责 |
+| --- | --- | --- | --- |
+| **D · Deep Read（深度阅读）** | [V6.4](skills/article-deep-read-v6.4/SKILL.md) | **原材料说了什么，是怎样推导出来的？** | 忠实恢复原材料的认知结构、推理与必要解释；再按交付意图选择压缩方式 |
+| **R · Review（独立审阅）** | [V0.10](skills/vibe-review-v0.10/SKILL.md) | **材料的事实、论证、方案与依据是否站得住？** | 先覆盖所有有意义的审阅单元，再判断重要性，重点报告真正影响结论的发现 |
+| **L · Learning（系统学习）** | [V0.6.2](skills/system-learning-v0.6.2/SKILL.md) | **如何从真实问题理解机制，并形成可迁移的认识？** | 调用适用知识、校准问题、解释机制、对应证据，并在挑战后修正理解 |
+| **P · Practice（分支探索）** | [V0.3](skills/practice-v0.3/SKILL.md) | **沿已有知识主干，还有哪些值得继续追问？** | 查找被遗漏的关键前提，发现独立问题线，选取有价值的枝干深入 |
+
+**一条重要边界：** D 不负责独立批评原文；R 不以 D 的摘要代替原文；L 不等于把 D、R 两份结果拼起来；P 不再默认意味着写代码、做工程实施或出面试题库。
+
+## 怎样协同？
+
+根据**用户想得到什么**决定走哪条 Skill，而不是根据输入有没有附件、有没有代码或属于哪个行业来判断。
 
 ```text
-             Current Raw Input
-              /           \
-      Deep Read (D)     Review (R)
-       [isolated]        [isolated]
-              \           /
-             both complete
-                   |
-             Learning (L)
-       Adaptive understanding loop
-                   |
-          Practice (P) for questions
-           beyond the main trunk
+              本轮原始输入
+               /       \
+      D：忠实理解       R：独立审阅
+        （隔离）         （隔离）
+               \       /
+               两者均完成
+                   ↓
+           L：建立与修正理解
+                   │
+        需要探索新问题时
+                   ↓
+           P：发现并深入枝干
 ```
 
-**Orchestration contract:** Learning still requires fresh D/R from the same input with independent contexts and a completion barrier. Both outputs inform L but are not independent new evidence. For query-only prompts, preflight is brief and source-honest. The runtime, not Skill prose, must prove actual execution isolation with a Trace.
+这个示意图**不是每个任务都必须完整执行的流水线**：
 
-**General cognitive loop (not a mandatory sequence):**
+- **只要求 D**：直接做深度阅读，不附带独立批评。
+- **只要求 R**：直接面对原始材料审阅，不要求先生成 D。
+- **要求 L**：本轮必须让 D 与 R **分别从同一原始输入独立执行**；二者完成后才启动 L。L 结合原文选择性使用前置结果，不能把它们当作新的事实证据。
+- **只要求 P**：从已有知识主干出发发现新问题，可以直接使用历史知识；**不因 P 本身自动重新执行 D/R/L**。如果真正另起一轮 Learning，仍须遵守该轮 D/R 前置。
+- **只想得到简短事实答案或执行无关任务**：不强制启动四条 Skill。
 
-- **Orient** — understand the user's learning intent and the real object. Distinguish a selected sample, a convenient metric and the actual purpose.
-- **Frame** — activate *relevant and appropriately scoped* prior knowledge, then keep, revise or discover the research question. Neither the deepest-sounding question nor a single universal terminal criterion is automatically right.
-- **Explain** — derive the smallest necessary causal, procedural, conceptual or formal mechanism, using a real example where useful.
-- **Anchor** — connect the mechanism to original source, code, observed behavior, comparable evidence or proportionate quantitative reasoning. **Distinguish an example that illustrates a concept from evidence that actually tests the main claim**; when a key claim needs testing, choose comparisons where rival explanations could yield different observations. Distinguish verified facts, inferences, assumptions and unknowns.
-- **Challenge & rebuild** — check whether the selected example answers the **original question** or only an easier neighboring one; try a discriminating competing explanation or consequential changed condition when needed, revise as needed, and give a coherent explanation at the user's requested depth. Stop when more work adds no real understanding.
+D/R 的隔离与完成屏障需要宿主环境支持并留下可核查的执行记录。**仅仅在提示词里写了“独立运行”，或者最终输出了三个章节，并不能证明已发生三个独立模型调用。**
 
-These are **responsibilities that can recur**. They are not six headings that every answer must print; simple definitions may need only a short answer, while complex source analysis may require multiple evidence loops.
+## 使用示例
 
-**Research order differs from teaching order:** check materials and observations before deciding what mechanism they support; teach the problem and mechanism first, then show the evidence. Source code learning should cite exact control/data/state links and line anchors when available; claims of actual execution require an actual run. Subject-specific theories must come from the task context or trustworthy subject sources, **not from hardcoded finance, banking, health or product examples in the generic Learning Skill**.
+以下是用户可以直接提出的任务目标，而非必须填写的固定提示词模板。
 
-**Boundaries:** D restores source faithfully; R critiques source independently; L builds understanding; P explores consequential questions beyond an existing knowledge trunk, by discussion, examples, or real use; engineering execution is optional. Learning does not automatically authorize market forecasts, clinical decisions or implementing systems.
+**深度阅读 D**
 
-The [first Agent Loop Practice drill](docs/practice-agent-loop-drill-v0.3.md) documents a one-branch failure; the [corrected decision and branch map](docs/practice-agent-loop-topology-repair-v0.3.md) explores the omitted upstream tool-selection mechanism. Neither proves a real Harness E2E.
+> 使用 Deep Read 完整理解这份授信系统建设蓝图，保留各业务条线的独立需求、关键关系和结论，不自行评价正确性。
 
-## Evaluation and historical context
+若关注完整覆盖，使用 *Coverage-Preserving*；若只关注材料的核心认知模型，使用 *Cognitive-Synthesis*。两者都不能牺牲理解所需的推理和解释。
+
+**独立审阅 R**
+
+> 使用 Review 审阅这份设计文档：逐项检查正文、表格、前提、例外和跨章节关系，最后只汇报影响方案成立的重要问题。
+
+**系统学习 L**
+
+> 使用 Learning 研究“为什么相同大模型在不同 Agent Harness 上表现差异很大”，结合真实源码与可核验证据，解释关键机制与适用边界。
+
+此类任务适用 [D/R→L 前置规则](docs/architecture.md#4-learning-的独立前置)。
+
+**分支探索 P**
+
+> 我已学过 Agent Loop。使用 Practice 找出已有执行链未解释的关键决策，例如模型为什么需要工具、如何选择工具、怎样构造参数；先展开问题空间，再深入最重要的几个问题。
+
+P 可以用于面试深追、研究追问、方案辩护和真实应用；工程实施只是可能的实践对象，不是必经阶段。
+
+## 文档导航
+
+| 你想了解 | 建议阅读 |
+| --- | --- |
+| 四条 Skill 的职责、路由和协同边界 | [整体架构与边界](docs/architecture.md) |
+| 怎样提供输入、选择模式、理解结果 | [使用指南](docs/usage.md) |
+| 如何找到历史方法与案例，哪些不是现行规范 | [文档索引](docs/README.md) |
+| 如何配置评测、理解不同证据等级 | [评测指南](evals/README.md) |
+| 如何维护说明文档并避免过时描述 | [文档维护约定](docs/documentation-guide.md) |
+| 历次方法修订与版本变化 | [更新记录](CHANGELOG.md) |
+| 直接读取完整路由说明 | [总入口 SKILL.md](SKILL.md) |
+
+仓库中 `skills/` 是现行能力规范（其中 [Practice V0.2](skills/practice-v0.2/SKILL.md) 为保留的历史版本）；`docs/` 中除明确列为现行指南的文件外，多数为设计演变、案例复盘与审计记录；`evals/fixtures/` 是测试素材，**不是跨领域必须遵守的规则**。
+
+## 验证与限制
+
+仓库提供静态检查：
 
 ```bash
 python scripts/validate_skills.py
 python scripts/validate_evals.py
 ```
 
-The [learning refactor review](docs/learning-core-refactor-20261011.md) and [question–evidence alignment review](docs/learning-question-evidence-alignment.md) audits the October 9–11 iteration history, identifies which capabilities to retain or externalize, and defines regression goals. [Evaluation guidelines](evals/README.md) retain old and new domain-specific cases as **test data**, not runtime instructions.
+仓库还提供评测样例和分析脚本。当前包含 **70 个任务评测案例**及 **59 个触发样例**，数量以实际数据文件为准；静态检查通过只表示基础结构与引用正确，**不能证明四条 Skill 的回答质量提升，也不能证明 D/R 已在运行时隔离执行**。
 
-Historical design notes: [Mechanism / Problem Chain](docs/learning-problem-chain-migration.md), [Reality Calibration](docs/learning-reality-calibration.md), [Problem Discovery](docs/learning-problem-discovery.md), [Domain Anchor](docs/learning-domain-anchor.md), and [D/R orchestration](docs/learning-mandatory-dr-preflight.md). They document earlier reasoning and concrete examples, **not separate mandatory Learning stages**.
+要讨论效果，需比较相同模型和条件下的实际输出，保存必要的调用记录、独立评审和失败样例。详见 [评测指南](evals/README.md)。
 
-Passing static CI verifies assets and metadata, **not** teaching quality, domain generalization or independent D/R runtime execution. Behavioral claims require paired model runs under matched inputs and settings plus human review.
+---
+
+**SenseWright 的核心是职责分明，而非步骤越多越好：D 还原，R 判断，L 理解，P 追问。**

@@ -1,32 +1,41 @@
-# Changelog
+# 更新记录（Changelog）
 
-## Unreleased — Practice V0.3 simplify around branch exploration (2026-10-11)
+## 2026-10-11 · 中文项目文档与四条 Skill 一致性重构
+
+- 基于现行 D V6.4、R V0.10、L V0.6.2、P V0.3 重写中文首页，提供清晰的项目定位、职责矩阵、用户任务示例和使用入口；保持根 Skill 的执行路由不变。
+- 新增中文现行说明：整体架构、使用指南、文档索引与维护约定。明确 Learning 的本轮独立 D/R 前置是宿主执行约束，静态文字与回答标题不能证明隔离。
+- 将评测说明改为当前四条 Skill 的简明中文指南，保留原 70 案例 / 59 触发样例和冻结基线；旧版累计评测笔记归档到 `evals/HISTORY.md`，不再把历史评测策略当成执行规则。
+- 将两篇早期英文 Learning 设计说明及 Agent Loop 第二轮英文复盘改为中文；对其他历史设计文章补充“非现行执行规范”的状态说明，不抹去错误案例与研究证据。
+- 本轮以说明文档为主，不改变四条活跃 Skill 的核心方法、不改评测 JSON 与实验脚本。文档与模型行为是不同的验证对象。
+
+
+## 历史修订记录 · Practice V0.3：收敛为知识主干的枝干探索 (2026-10-11)
 - 根据新增目标重写活跃 Practice，重点是从已有主干发现被遗漏的关键因果前提与独立研究枝干，再将值得研究的问题深入。删去多场景工作模式、完整工程执行合同、八道内置 Gate、固定交付清单和过量例外。
 - 用五项简明认知责任（主干检查、发现问题、筛选、深入、回流）替代僵硬流水线，保留必要的证据诚实和 D/R→L 边界。未改动历史案例和旧版 Skill 文件。
 - 同步更新根路由、README 和评测定位；已发现的 Agent Loop 源码及失误保留为案例，而非写进通用 Practice 的运行规则。
 
 
-## Unreleased — Practice V0.3 topology-first repair (2026-10-11)
+## 历史修订记录 · Practice V0.3：主干覆盖优先的修复 (2026-10-11)
 - 回应 Agent Loop 演练漏掉“模型为何选择工具”这一核心机制：新增最小因果决策拓扑审计、先覆盖再排序、上游必要条件优先、独立问题条线与多分支遍历。删除强制 1–3 分支上限。
 - 固定码点核查 DeepSeek Harness 的工具注册/可见性、原生 Function Calling 和 PTC run_code 路径；不得发明强制意图分类器，也不得凭源码判断模型选工具准确率。
 - 撤回第一轮仅覆盖超时重试的总体 PASS，另写完整拓扑修复演练；新增回归 #69–70，修改 #64 抑制再次遗漏。
 
 
-## Unreleased — Practice V0.3 situated transfer and consequential branching (2026-10-11)
+## 历史修订记录 · Practice V0.3：情境迁移与重要分支 (2026-10-11)
 - 新增 `skills/practice-v0.3/SKILL.md`；Practice 从单一工程落地扩展到技术面试深追、架构/业务决策、工程实现和研究情境中的知识迁移；保留 V0.2 工程深入路径作为模式。
 - 使用条件变化是否改变解释/行动/预测/成败，筛掉低价值术语题；强制区分源代码、推演、实际 probe，禁止自演练给用户打分；重大知识缺口返回新一轮 D/R/L。
 - 更新根路由、README、触发集和回归案例 #64–68；补 Agent Loop 情境演练、DeepSeek Harness 固定代码锚点与单独 sqlite 重复写入最小 probe，明确未进行 DSH 端到端和真实用户考核。
 
 
 
-## Unreleased — Learning question–evidence alignment (V0.6.2 in-place refinement)
+## 历史修订记录 · Learning：问题与证据对齐 (V0.6.2 in-place refinement)
 - 修复“问题有价值、例子也正确，但例子只证实旁支命题”的失败；以投资者确定性与杠杆为起点，提炼适用于Agent工具选择、银行控制、实证因果的通用校验。
 - 在原有 Anchor / Challenge / 质量门禁中补充**案例用途与主问题对齐**：区分帮助理解的例子、执行机制追踪与真正能区分判断的证据；当讨论关键争议时优先选择让竞争解释产生不同结果的最小条件变化，不把演示升级成实证。
 - 不新增阶段、不将金融概率/杠杆公式写进通用 Skill；简单概念不强迫设计试验。
 - 保留既有58项回归，新增 #59–63，冻结修订前 main 基线。静态测试不证明语义正确性或实际隔离模型推理。
 
 
-## Unreleased — Learning general-core refactor, 2026-10-11
+## 历史修订记录 · Learning：通用核心重构, 2026-10-11
 - 完整审计 10/09–10/11 的四轮修改：Mechanism-to-Implementation、Reality Calibration、Problem Discovery、Domain Anchor 均回应真实失败，但“由案例追加新步骤”导致全领域指令膨胀、阶段串联和金融知识入侵。
 - 重写活跃 `system-learning-v0.6.2/SKILL.md`，压缩约 56%，只保留 Orient / Frame / Explain / Anchor / Challenge & Rebuild 的**认知责任**，不是强制执行步骤或输出模板。研究先核对证据，讲解先解释机制。
 - 将 FCFF/FCFE/股票、银行、医疗等专业细则从运行 Skill 移回相应领域资料与历史案例；不丢失需要时调用专业理论、源码精确追踪、假设与实测分离及边界修正的能力。
@@ -34,19 +43,19 @@
 - 新增重构审计说明，冻结上版 main 作基线。CI 只验证静态结构和素材，不代表模型行为对照、运行时前置隔离及结果质量已被验证。
 
 
-## Unreleased — Learning domain anchor and terminal-criterion alignment (V0.6.2 refinement)
+## 历史修订记录 · Learning：领域理论与研究目标对齐 (V0.6.2 refinement)
 - 修复2026-10-11股票 Learning A/B：虽能提出竞争机制，却停留在收入/利润/回款问题，忽略股票内在价值的现金流折现理论以及当前股价所隐含的预期。
 - 在 Problem Discovery 之前按需增加 Domain Anchor：首先识别领域公认的解释理论与最终评价对象，再筛选哪些问题能影响该对象的金额、时点、风险或质量。学习股票价值时认识 FCFF/FCFE 与折现逻辑，但不强制每次算DCF、不将股价短期波动等同于内在价值变化。
 - 通用化到程序可靠性、银行业务控制与健康证据；警惕指标代替目标、模型前提不成立、把财务模型硬套所有领域。
 - 增加股票研究、高增长但高再投资、行情事实查询及非金融系统性能的回归案例；保留已有 D/R 前置职责与稳定的 Skill 版本/目录。静态CI不等于模型实际能力验证。
 
-## Unreleased — Learning problem discovery and question validity (V0.6.2 refinement)
+## 历史修订记录 · Learning：研究问题发现与有效性 (V0.6.2 refinement)
 - 修复 Learning “默认已有问题是正确问题”的深层缺陷。在 Ground 之后、Problem Chain 之前新增**按需触发的 Problem Discovery / Framing**，把用户任务/选样规则、主研究问题、机制子问题和证据核验问题分开；不新增独立 Skill。
 - 在真实矛盾、异常、竞争机制和关键现实约束中筛选问题；用**解释力、区分力、可验证性及用户价值**替代“抽象得更高就是更深刻”；不得从选出的上涨股票倒推涨价因果。
 - 加入修题回路与停止条件：后续证据推翻起点时先改问题；单纯定义/精确问题不强制升级成宏观研究；不自行改写用户使命，不预写结论。
 - 补充股价强势样本、两家业务逆差、代码执行、银行流程、明确短问题等跨领域回归；更新 README/Router 和设计说明。静态检查不能证明输出行为与 D/R 隔离真实有效。
 
-## Unreleased — Learning reality calibration (V0.6.2 in-place refinement)
+## 历史修订记录 · Learning：现实证据校准 (V0.6.2 in-place refinement)
 - 不新增第五条 Skill，不更改 D/R/L/P 编排；在 Learning V0.6.2 中新增按需触发的 **Reality Calibration / 现实校准**，延续既有 Mechanism-to-Implementation Mapping 与 Contrast & Vary。
 - 不将“财务量化”升格为通用硬门槛：数量敏感用最小临界值/数量级；流程用状态与交接；程序用执行证据；医学/历史/社会观察用证据层级、可比性和反例；简单概念允许跳过。
 - 明确同口径比较、事实/假设/推导/未知、单变量变化、结论修正和停止条件。真实证据缺失时只说明最小需核验的证据，不捏造测量数据。
