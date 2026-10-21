@@ -253,6 +253,22 @@
     {
       "query": "请做一份模型服务生产故障应急联系人 Excel 表格，只要表格，不需要技术实践。",
       "should_trigger": false
+    },
+    {
+      "query": "以模型服务平台为研究主题，用 Practice 主动找到一个最有价值的下一研究问题，并推导为什么这个问题值得先研究。",
+      "should_trigger": true
+    },
+    {
+      "query": "我只给主题“统一授信平台”，请 Practice 自主发现真实业务中最值得进一步研究的问题和原因。",
+      "should_trigger": true
+    },
+    {
+      "query": "模型服务平台是什么？用两句话解释定义就好，不用寻找问题。",
+      "should_trigger": false
+    },
+    {
+      "query": "帮我列出模型服务平台常见的30个事故标题，不用研究发生机制、选择优先级或回答问题。",
+      "should_trigger": false
     }
   ]
 }
