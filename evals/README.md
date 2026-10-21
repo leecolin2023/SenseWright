@@ -24,7 +24,7 @@
 | [HISTORY.md](HISTORY.md) | 旧版方法、案例来源和评测方案演变 |
 | [../scripts/](../scripts/) | 基础验证、初始化工作区、汇总统计 |
 
-当前 `main` 数据含 **70 个任务案例和 59 个触发样例**。其中 **#59–63** 对应 Learning 问题—证据对齐回归，**#64–70** 对应 Practice 的分支发现等回归。精确数量以 JSON 和脚本结果为准，避免手工维护多个数字来源。
+当前 `main` 数据含 **75 个任务案例和 63 个触发样例**。其中 **#59–63** 对应 Learning 问题—证据对齐回归，**#64–70** 对应 Practice 的分支发现等回归，**#71–75** 对应故障问题定义、诊断分流与非故障场景的防回归。精确数量以 JSON 和脚本结果为准，避免手工维护多个数字来源。
 
 ### 评价时不要混淆输入与答案
 
@@ -112,7 +112,7 @@ python scripts/aggregate_benchmark.py .eval-workspace/iteration-1
 | D · Deep Read V6.4 | 将 Coverage-Preserving 做成逐字复述；或 Cognitive-Synthesis 压掉必要解释；混入 R 的独立评判 |
 | R · Vibe Review V0.10 | 在原子覆盖前先筛重要性；遗漏表格、例外、数字、责任转换；把所有小问题都堆成最终报告 |
 | L · System Learning V0.6.2 | 没有本轮 D/R 前置；把解释例子当作主问题的因果验证；不必要地固化领域模型或阶段 |
-| P · Practice V0.3 | 只挑一个下游异常，漏掉上游必需机制；机械罗列追问；默认要求工程施工或给未答题用户评分 |
+| P · Practice V0.3 | 只挑一个下游异常，漏掉上游必需机制；将含糊反馈直接认定为某个根因；只有排查清单而没有可区分的证据；默认工程施工或给未答题用户评分 |
 
 Learning 的回归还需要核实 `expected_route` 使用 **D、R、L** 顺序和 `learning_preflight` 的合同；但这只验证元数据，不能代替宿主调用 Trace。
 

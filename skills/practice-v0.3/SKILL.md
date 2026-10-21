@@ -1,6 +1,6 @@
 ---
 name: practice
-description: Explore consequential questions beyond an existing knowledge trunk. Use for deep interview follow-ups, applying or defending an explanation, exploring overlooked mechanisms and branches, or working through a real case; expand the question space before drilling into selected problems. Not a rote quiz or a mandatory engineering implementation workflow.
+description: Explore consequential questions beyond an existing knowledge trunk, including evidence-driven production incident diagnosis. Use for deep interview follow-ups, real case troubleshooting, applying or defending an explanation, and exploring overlooked mechanisms and branches. Diagnose vague symptoms as specific questions before testing competing causes; do not impose rote quizzes or a mandatory engineering implementation workflow.
 ---
 
 # Practice V0.3 — Branch Exploration
@@ -15,10 +15,11 @@ description: Explore consequential questions beyond an existing knowledge trunk.
 
 ## 工作原则
 
-1. **先看主干，再找遗漏。** 用已有 Learning、原始材料或当前问题简要还原「目标 → 关键机制/决策 → 结果」，检查每个重要转折的依据。特别留意「为何采取这个动作、为何选它而不是别的、输入从何而来、怎样知道完成」。如果必要前提没讲清，这首先是**主干缺口**，不能被降级成可选边枝。简单问题无须画完整流程图。
+1. **先看主干，再找遗漏。** 用已有 Learning、原始材料或当前问题简要还原「目标 → 关键机制/决策 → 结果」，检查每个重要转折的依据。特别留意「为何采取这个动作、为何选它而不是别的、输入从何而来、怎样知道完成」。如果必要前提没讲清，这首先是**主干缺口**，不能被降级成可选边枝。简单问题无须画完整流程图。**面对含糊的生产故障反馈时，首先定义可诊断的主问题**：区分报告的现象、已确认事实与原因猜测，按需明确失败表现、影响对象和范围、时间/条件边界及预期结果；优先确定能改变下一步排查方向的第一项核查。已有事实不要重复追问，更不能把“GPU 故障”等未经验证的原因直接当问题。此要求按任务触发，不是所有 Practice 的固定前置表。
 2. **沿主干打开问题空间。** 从各个节点的选择、前提、替代方案、组合方式、适用边界和结果反馈发现不同方向的追问。区分 **主干缺口 / 有独立研究价值的枝干 / 不影响理解的细节**。先看整体覆盖，再决定深挖哪里；不要固定问题数量，不要为每个术语机械生成追问。
 3. **选值得深入的问题。** 一个问题至少应该能够补上关键因果解释，或使答案改变理解、判断、行动或结果。优先必要的上游缺口、能区分不同机制的问题和与用户任务直接相关的枝干；不能只按故障严重性排序。明确哪些问题已讨论、哪些尚待研究。
 4. **真正深入，而非只列题。** 对选中的问题，用具体情境、回答/尝试、反例或条件变化逼出机制；需要证据时回到源码、数据、原始材料或实际操作。不同枝干可各自形成新的问题链；用户要交互练习就逐轮追问，要求完整研究则适当覆盖多个方向。**区分查证、推演、实际运行和未知**，不捏造验证结果。
+   - **生产故障排查驱动（按需）。** 从已经界定的故障现象和实际请求、状态或依赖链出发，提出不同原因假设；选择能区分假设的日志、指标、状态、配置或受控对照，解释为何优先检查、不同观察将把下一步导向何处，以及背后的机制。缺乏现场证据时只给条件式诊断路径，不宣称找到根因或修复成功。**单一故障任务聚焦该故障；全面技术实践仍要发现其他重要的主干缺口与独立枝干**。不把组件清单、固定检查顺序或重启建议当成诊断。
 5. **收束与回流。** 说明这轮新增了什么理解，哪些枝干值得单独展开。若发现根本机制未理解，提出新的 Learning 问题；真正发起 L 时仍须独立完成本轮 D/R 前置。P-only 不自动重跑 D/R。若是证据缺失则明确下一步查证，而不是把所有缺口都交给 Learning。
 
 ## 交付与边界

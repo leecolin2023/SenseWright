@@ -237,6 +237,22 @@
     {
       "query": "快速告诉我 Agent Loop 是什么，不需要实践或模拟。",
       "should_trigger": false
+    },
+    {
+      "query": "我了解模型服务的调用链，Qwen 昨天正常今天业务调用失败。请用 Practice 从这个症状先找到最应查清的主问题，再练习根据证据排查。",
+      "should_trigger": true
+    },
+    {
+      "query": "我学过 Agent 的状态和工具执行机制，请用 Practice 以一次不确定是否写入成功的超时事故练习根因诊断。",
+      "should_trigger": true
+    },
+    {
+      "query": "直接帮我把生产上 Qwen 的接口恢复，不需要解释为什么，也不用学习实践方法。",
+      "should_trigger": false
+    },
+    {
+      "query": "请做一份模型服务生产故障应急联系人 Excel 表格，只要表格，不需要技术实践。",
+      "should_trigger": false
     }
   ]
 }
