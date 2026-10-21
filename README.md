@@ -84,7 +84,7 @@ P 可以用于面试深追、研究追问、方案辩护和真实应用；工程
 | 历次方法修订与版本变化 | [更新记录](CHANGELOG.md) |
 | 直接读取完整路由说明 | [总入口 SKILL.md](SKILL.md) |
 
-仓库中 `skills/` 是现行能力规范（其中 [Practice V0.2](skills/practice-v0.2/SKILL.md) 为保留的历史版本）；`docs/` 中除明确列为现行指南的文件外，多数为设计演变、案例复盘与审计记录；`evals/fixtures/` 是测试素材，**不是跨领域必须遵守的规则**。
+仓库中 `skills/` 仅保留现行能力规范；旧版 [Practice V0.2](archive/skills/practice-v0.2/SKILL.md) 已移至[历史 Skill 归档](archive/README.md)，不参与现行路由与 Skill 扫描；`docs/` 中除明确列为现行指南的文件外，多数为设计演变、案例复盘与审计记录；`evals/fixtures/` 是测试素材，**不是跨领域必须遵守的规则**。
 
 ## 验证与限制
 

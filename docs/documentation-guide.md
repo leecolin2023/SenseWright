@@ -9,7 +9,7 @@
 | 现行执行规范 | 根 `SKILL.md`、`skills/*/SKILL.md` | 任务如何路由、每条 Skill 的职责和底线 |
 | 项目首页 | `README.md` | SenseWright 是什么、适合谁、怎样开始 |
 | 现行解释文档 | `docs/architecture.md`、`docs/usage.md`、`docs/README.md`、`evals/README.md` | 当前机制、边界、使用、评测 |
-| 历史审计和设计 | 历史 `docs/learning-*`、`docs/practice-*`、`evals/HISTORY.md`、`CHANGELOG.md` | 当时为何这样改、留下了什么教训 |
+| 历史 Skill 与审计设计 | `archive/skills/`、历史 `docs/learning-*`、`docs/practice-*`、`evals/HISTORY.md`、`CHANGELOG.md` | 旧 Skill 的完整定义、当时为何这样改、留下了什么教训 |
 | 评测事实与材料 | `evals/*.json`、`evals/fixtures/`、`scripts/` | 可运行或可人工审阅的样例、基线与工具 |
 
 文档中出现旧版本的 Gate、阶段、产物清单或具体行业算法，不等于它们在当前版本仍是必经步骤。
@@ -28,7 +28,7 @@
 
 一次文档 PR 至少检查：
 
-- 四条链接均指向当前活跃版本，旧 Practice V0.2 没被写成默认；
+- 四条链接均指向当前活跃版本，历史 Practice V0.2 只存在于 `archive/skills/`，不应被识别为现行 Skill；
 - D/R 独立、同源、完成屏障与宿主 Trace 的限制没有被遗漏；
 - Deep Read 的双压缩契约、Review 的先覆盖后重点、Learning 的自适应与证据对齐、Practice 的枝干探索均描述准确；
 - 项目首页、架构与使用指南彼此不矛盾；

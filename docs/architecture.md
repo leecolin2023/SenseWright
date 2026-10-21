@@ -93,6 +93,6 @@ P-only 可以使用既有知识模型；若发现根本知识缺口，可以提�
 
 - **活跃规范**：[根入口](../SKILL.md) + [D](../skills/article-deep-read-v6.4/SKILL.md) / [R](../skills/vibe-review-v0.10/SKILL.md) / [L](../skills/system-learning-v0.6.2/SKILL.md) / [P](../skills/practice-v0.3/SKILL.md)。
 - **当前说明**：本文、[使用指南](usage.md)、[文档索引](README.md)、[评测指南](../evals/README.md)，用于辅助理解，不增加新的硬约束。
-- **历史研究**：其他带版本号的 `docs/learning-*` 和 `docs/practice-*` 记录改进过程与回归经验，不应直接被当作现行规则。旧 [Practice V0.2](../skills/practice-v0.2/SKILL.md) 同样如此。
+- **历史研究**：其他带版本号的 `docs/learning-*` 和 `docs/practice-*` 记录改进过程与回归经验，不应直接被当作现行规则。旧 [Practice V0.2](../archive/skills/practice-v0.2/SKILL.md) 同样如此。
 
 需要改变认知方法时先修改对应的活跃 Skill；只调整解释、示例和导航时更新说明文档。不要让文档中的固定图例反过来成为新的强制工作流。

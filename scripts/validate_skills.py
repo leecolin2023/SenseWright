@@ -28,11 +28,21 @@ def parse_frontmatter(path):
 def main():
     paths = [ROOT / "SKILL.md", *sorted((ROOT / "skills").glob("*/SKILL.md"))]
     errors = []
+    active_names = {}
     for path in paths:
         try:
             meta = parse_frontmatter(path)
             if path == ROOT / "SKILL.md" and meta.get("name") != "sensewright":
                 errors.append(f"{path.relative_to(ROOT)}: root skill name must be sensewright")
+            if path != ROOT / "SKILL.md":
+                name = meta.get("name", "")
+                if name in active_names:
+                    errors.append(
+                        f"{path.relative_to(ROOT)}: duplicate active skill name {name!r} "
+                        f"(already defined in {active_names[name]})"
+                    )
+                else:
+                    active_names[name] = path.relative_to(ROOT)
             if set(meta) != {"name", "description"}:
                 errors.append(f"{path.relative_to(ROOT)}: frontmatter must contain only name + description")
             if not NAME_RE.fullmatch(meta.get("name", "")):

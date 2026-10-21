@@ -1,5 +1,11 @@
 # 更新记录（Changelog）
 
+## 2026-10-21 · Practice V0.2 退出活跃 Skill 目录
+
+- 将旧版 `skills/practice-v0.2/SKILL.md` 原样迁移至 `archive/skills/practice-v0.2/SKILL.md`；保留设计原文和 Git 历史，不再参与现行执行。
+- `skills/` 中仅保留 Practice V0.3；根 `SKILL.md` 继续路由至 `skills/practice-v0.3/SKILL.md`，不修改其方法内容。
+- 更新首页、架构、文档索引和维护约定中的历史链接；增设归档导航，并在 Skill 静态校验中增加同名 Skill 冲突检查。
+
 ## 2026-10-11 · 中文项目文档与四条 Skill 一致性重构
 
 - 基于现行 D V6.4、R V0.10、L V0.6.2、P V0.3 重写中文首页，提供清晰的项目定位、职责矩阵、用户任务示例和使用入口；保持根 Skill 的执行路由不变。

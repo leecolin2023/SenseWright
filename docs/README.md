@@ -20,7 +20,7 @@
 - [L — System Learning V0.6.2](../skills/system-learning-v0.6.2/SKILL.md)
 - [P — Practice V0.3](../skills/practice-v0.3/SKILL.md)
 
-[Practice V0.2](../skills/practice-v0.2/SKILL.md) 保留作为旧版工程实践设计，不是现行默认。
+旧版 [Practice V0.2](../archive/skills/practice-v0.2/SKILL.md) 已移入[历史归档](../archive/README.md)，只供演变研究，不属于现行 Skill。
 
 ## 历史设计与审计记录
 
