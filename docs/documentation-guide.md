@@ -28,9 +28,9 @@
 
 一次文档 PR 至少检查：
 
-- 四条链接均指向当前活跃版本，历史 Practice V0.2 只存在于 `archive/skills/`，不应被识别为现行 Skill；
+- 四条链接均指向当前活跃版本，历史 Learning V0.6.2 和 Practice V0.2 只存在于 `archive/skills/`，不应被识别为现行 Skill；
 - D/R 独立、同源、完成屏障与宿主 Trace 的限制没有被遗漏；
-- Deep Read 的双压缩契约、Review 的先覆盖后重点、Learning 的自适应与证据对齐、Practice 的枝干探索均描述准确；
+- Deep Read 的双压缩契约、Review 的先覆盖后重点、Learning V0.7.0 的逐规则理由、行动、示例、验收和定向修复、Practice 的枝干探索均描述准确；
 - 项目首页、架构与使用指南彼此不矛盾；
 - 相对链接确实存在，章节锚点尽量采用稳定标题；
 - 评测数量从实际数据统计，不凭过去文档中的数字；
