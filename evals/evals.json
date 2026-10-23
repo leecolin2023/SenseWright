@@ -2284,6 +2284,66 @@
         "给出选择首个问题的理由，体现它如何影响业务判断、控制或平台设计。",
         "适用的事实与示例假设分离，避免捏造生产事故与实施细节。"
       ]
+    },
+    {
+      "id": 79,
+      "name": "learning-v07-vllm-concept-necessity-and-transfer",
+      "prompt": "用 SenseWright Learning 解释：为什么 vLLM 能让同一张 GPU 在满足延迟要求时处理更多请求？参考所附材料。目标是让我从显存和调度的实际约束理解必要机制，不要按原视频术语表逐条科普；请保证能用所得理解判断新条件下哪种优化更有用。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "files": [
+        "evals/fixtures/vllm-learning-term-dump.md"
+      ],
+      "expected_output": "围绕显存容量与计算调度两条约束，以机制需要为依据组织 PagedAttention、Continuous Batching 等概念；适度说明前缀缓存与长输入情况，能支持有关显存充足但串行执行、共享前缀不存在、吞吐和延迟变化的迁移判断。D/R 必须有独立前置；未执行时不宣称已完成。",
+      "assertions": [
+        "建立明确的学习目标，将显存缓存容量与 GPU 计算调度两类约束区分开，而不是沿原素材八个术语的顺序写目录。",
+        "每个重要新概念都有明确的问题背景和机制解释；只保留支持核心问题或必要边界的知识，其他内容适度压缩或放到后续。",
+        "能从解释推导‘显存充足但逐条执行’时单靠改进 KV Cache 管理未必有效，且推导不依赖文章没有介绍的前提。",
+        "能解释共享前缀不存在时前缀缓存收益减弱、以及更高并发不必然意味着用户延迟更短。",
+        "教学例子与真实吞吐实验严格区分；不能把所附合成素材或假设推演当成实际 vLLM 测量。",
+        "若有运行 Trace，验证本轮 D/R 从同一原始输入独立执行并先于 L 完成；没有 Trace 时标注不可验证，不以三段式文本充当独立执行。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
+    },
+    {
+      "id": 80,
+      "name": "learning-v07-short-concept-no-forced-16-step-output",
+      "prompt": "请用 Learning 简短讲清楚：什么是数据库事务里的原子性？我只需要理解概念及一个简单例子，不需要完整的工程方案或面试练习。",
+      "expected_route": [
+        "D",
+        "R",
+        "L"
+      ],
+      "files": [],
+      "expected_output": "用通俗、简明的转账或两步修改例子说明事务原子性是全部提交或全部回滚；不把 R00–R15 打印成必经16步、不强制无关理论、对照、量化或长篇案例；D/R 前置按现行执行约束处理。",
+      "assertions": [
+        "准确解释数据库事务原子性，并用足以说明全部成功或全部不生效的简短例子帮助理解。",
+        "不机械打印 R00–R15，未为了满足每条规则编造独立实验、复杂机制或长篇对照。",
+        "不声称一个简单的事务例子已验证某数据库产品的具体运行行为。",
+        "若有 Trace 则检查 D/R 前置；无 Trace 不宣称实际独立隔离已得到验证。"
+      ],
+      "learning_preflight": {
+        "required_before_L": [
+          "D",
+          "R"
+        ],
+        "source_policy": "same_raw_input_independent_contexts",
+        "completion_barrier": "both_complete_before_L",
+        "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+        "output_policy": "integrated_learning_unless_explicit"
+      }
     }
   ]
 }
