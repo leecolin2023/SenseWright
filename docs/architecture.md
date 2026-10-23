@@ -77,7 +77,7 @@ P-only 可以使用既有知识模型；若发现根本知识缺口，可以提�
 
 **Vibe Review V0.10**：将原文拆成有意义的审阅单元 → 确认全文有语义内容均被覆盖 → 按单元性质选择合适审查方式 → 独立审阅 → 按重要性重点输出。重点报告不等于只审重点。
 
-**System Learning V0.6.2**：理解用户的真实学习目的；按需调用领域基础理论；在证据、机制和反例之间往返；区分说明例子、机制演示与真正裁决主问题的证据；产生有边界的可迁移认识。历史 Domain Anchor、Problem Discovery、Reality Calibration 是历史设计线索，**不是三道永久新增的必经阶段**。
+**System Learning V0.7.0**：使用 R00–R15 完整规则体系。每条规则都有「为什么、怎么做、例子、怎么检查」：先界定要理解的问题，逐步引入必要概念，解释机制与证据，比较重要差异，检验新条件下是否能合理判断；失败则修复具体认知缺口。规则按需要触发，不是文章的固定十五步模板。
 
 **Practice V0.3**：从指定主题或已有主干确认真实目标及必要机制 → 主动发现重要问题/遗漏 → 说明为什么选择该问题 → 借真实案例、推演或查证深入 → 将新认识回流。这里是灵活的**认知责任**，不是固定五段结构。工程实践、方案对抗和面试追问只是不同应用。
 
@@ -91,7 +91,7 @@ P-only 可以使用既有知识模型；若发现根本知识缺口，可以提�
 
 ## 7. 版本和规范优先级
 
-- **活跃规范**：[根入口](../SKILL.md) + [D](../skills/article-deep-read-v6.4/SKILL.md) / [R](../skills/vibe-review-v0.10/SKILL.md) / [L](../skills/system-learning-v0.6.2/SKILL.md) / [P](../skills/practice-v0.3/SKILL.md)。
+- **活跃规范**：[根入口](../SKILL.md) + [D](../skills/article-deep-read-v6.4/SKILL.md) / [R](../skills/vibe-review-v0.10/SKILL.md) / [L](../skills/system-learning-v0.7.0/SKILL.md) / [P](../skills/practice-v0.3/SKILL.md)。
 - **当前说明**：本文、[使用指南](usage.md)、[文档索引](README.md)、[评测指南](../evals/README.md)，用于辅助理解，不增加新的硬约束。
 - **历史研究**：其他带版本号的 `docs/learning-*` 和 `docs/practice-*` 记录改进过程与回归经验，不应直接被当作现行规则。旧 [Practice V0.2](../archive/skills/practice-v0.2/SKILL.md) 同样如此。
 
