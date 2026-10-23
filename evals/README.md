@@ -111,7 +111,7 @@ python scripts/aggregate_benchmark.py .eval-workspace/iteration-1
 | --- | --- |
 | D · Deep Read V6.4 | 将 Coverage-Preserving 做成逐字复述；或 Cognitive-Synthesis 压掉必要解释；混入 R 的独立评判 |
 | R · Vibe Review V0.10 | 在原子覆盖前先筛重要性；遗漏表格、例外、数字、责任转换；把所有小问题都堆成最终报告 |
-| L · System Learning V0.6.2 | 没有本轮 D/R 前置；把解释例子当作主问题的因果验证；不必要地固化领域模型或阶段 |
+| L · System Learning V0.7.0 | 没有本轮 D/R 前置；把解释例子当作主问题的因果验证；不必要地固化领域模型或阶段 |
 | P · Practice V0.3 | 只给主题却无法主动发现下一个问题或解释选题依据；只挑下游异常而漏掉必需机制；把假设事故当真实事实；将含糊反馈直接认定为根因；只有排查清单没有区分证据；默认工程施工或给未答题用户评分 |
 
 Learning 的回归还需要核实 `expected_route` 使用 **D、R、L** 顺序和 `learning_preflight` 的合同；但这只验证元数据，不能代替宿主调用 Trace。
