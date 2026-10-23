@@ -3,7 +3,7 @@ name: sensewright
 description: Route knowledge work among independent source-faithful Deep Read, source-critical Review, grounded Learning, and branch-exploration Practice. Every Learning task must first run fresh Deep Read and Review independently on the same original input and use both as non-authoritative scaffolds.
 ---
 
-# SenseWright V2.9.0
+# SenseWright V2.9.1
 
 按**用户希望得到的认知成果**选择路由，而不是按附件类型或有无附件选择：
 
@@ -11,7 +11,7 @@ description: Route knowledge work among independent source-faithful Deep Read, s
 |---|---|---|
 | **D — Deep Read** | 原材料实际说了什么、怎样推导 | `skills/article-deep-read-v6.4/SKILL.md` |
 | **R — Review** | 原材料的事实、论证和决策依据是否成立 | `skills/vibe-review-v0.10/SKILL.md` |
-| **L — Learning** | 用户怎样从真实问题理解机制，并将机制映射到具体实现与证据 | `skills/system-learning-v0.6.2/SKILL.md` |
+| **L — Learning** | 用户怎样从真实问题理解机制，并将机制映射到具体实现与证据 | `skills/system-learning-v0.7.0/SKILL.md` |
 | **P — Practice** | 从指定主题或已有知识主干发现值得研究的关键问题，说明选择依据，再深入重要枝干 | `skills/practice-v0.3/SKILL.md` |
 
 ## 执行编排
@@ -26,7 +26,7 @@ description: Route knowledge work among independent source-faithful Deep Read, s
 
 - **D** 忠实还原材料的认知拓扑，并按交付目的选择 Coverage-Preserving 或 Cognitive-Synthesis；不插入独立批评。
 - **R** 对原材料完整覆盖后再判断重要性，独立审阅；不消费 D 的总结。
-- **L** 以用户的学习目的和真实对象为中心：按需使用相关领域知识校准问题、解释必要机制、用适合材料的实际证据检验，并在矛盾出现时修正理解。**这是可往返的自适应认知循环，不是 Domain Anchor / Problem Discovery / Reality Calibration 的强制流水线**。技术源码须对应可核验的调用/数据/状态链；非技术主题选相应的原始材料与证据形式。具体行业理论属于学习内容，不写死在通用 Skill 中。L 内部自检不能替代独立 R。
+- **L** 依照 **R00–R15 完整规则体系**建立理解：每条规则说明为什么、怎么做、例子及怎么检查；从用户的学习目标出发，选择必要概念，解释关键机制与证据，检查能否支持相关条件变化下的判断。规则的验收和失败修复内嵌在 L Skill 中；不强制把规则编号打印到文章，也不把领域案例变成固定模板。技术源码须有可核验的调用/数据/状态证据，L 内部自检不能替代独立 R。
 - **P** 从用户指定主题或已有知识主干出发，结合真实目标、必要机制和条件变化主动发现有价值的问题，说明为什么选择，再深入有判断价值的枝干。可用于技术追问、案例判断与实际应用；不默认要求工程实施、固定题数或验收清单。若确需启动新的 L，仍须遵循本轮独立 D/R 前置；模型自演练不能评价用户掌握程度。
 
 默认**只输出满足当前用户目标的结果**。包含 L 的任务默认交付整合后的学习解释；用户明确要求时才展示 D/R 各自完整结果。不要打印内部路由、前置检查表或质量 Gate。
