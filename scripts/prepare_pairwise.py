@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Copy generated Learning answers into blind A/B files. Never expose assignment to judges."""
+"""Export blind A/B answers and grading templates. Do not expose assignment.json to judges."""
 import argparse
 import json
 from pathlib import Path
@@ -21,22 +21,36 @@ def main():
         metadata = read_json(case / "eval_metadata.json")
         if "L" not in metadata["expected_route"]:
             continue
-        assignment = read_json(case / "pairwise" / "assignment.json")
+        pair_dir = case / "pairwise"
+        assignment = read_json(pair_dir / "assignment.json")
         if set(assignment) != {"A", "B"} or set(assignment.values()) != {"with_skill", manifest["baseline"]}:
             raise SystemExit(f"{name}: invalid blind assignment")
-        paths = {
-            side: case / variant / "outputs" / "response.md"
-            for side, variant in assignment.items()
-        }
+        paths = {side: case / variant / "outputs" / "response.md" for side, variant in assignment.items()}
         if not all(path.is_file() for path in paths.values()):
             missing += 1
             continue
+        # Both answers are assessed against the exact same Rubric, unseen by the generator.
+        template = read_json(case / "with_skill" / "grading.template.json")
         for side, source in paths.items():
-            # Blind judge receives only A.md, B.md, prompt/fixtures and rubric; never assignment.json.
-            (case / "pairwise" / f"{side}.md").write_bytes(source.read_bytes())
+            (pair_dir / f"{side}.md").write_bytes(source.read_bytes())
+            (pair_dir / f"{side}.grading.template.json").write_text(
+                json.dumps(template, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+            )
+        judge_packet = {
+            "prompt": metadata["prompt"],
+            "files": metadata["files"],
+            "failure_mode": metadata["learning_eval"]["failure_mode"],
+            "rubric": metadata["learning_eval"]["rubric"],
+            "critical_failures": metadata["learning_eval"]["critical_failures"],
+            "not_required": metadata["learning_eval"]["not_required"],
+        }
+        (pair_dir / "judge_packet.json").write_text(
+            json.dumps(judge_packet, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
         prepared += 1
     print(f"Prepared {prepared} blind Learning pairs; {missing} pairs missing a response")
-    print("Give judges only pairwise/A.md, pairwise/B.md and the task rubric; hide assignment.json")
+    print("Disclose only A.md, B.md, judge_packet.json, required fixtures and grading templates.")
+    print("DO NOT disclose assignment.json, model identity, filenames indicating variants, or prior scores.")
 
 
 if __name__ == "__main__":
