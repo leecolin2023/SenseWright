@@ -45,15 +45,9 @@
         "R",
         "L"
       ],
-      "expected_output": "从材料重建 State/Feedback 的系统关系和事件链，形成可迁移知识模型，并识别少量关键 gap。",
+      "expected_output": "解释 State 与 Feedback 如何形成可追踪的工作过程；用一段任务事件体现观察、动作、状态变化与反馈的因果衔接。",
       "files": [
         "evals/fixtures/state-feedback-note.md"
-      ],
-      "assertions": [
-        "输出形成 State 与 Feedback 的关系模型，而不是按原文顺序复述。",
-        "输出使用至少一个事件链说明观察、动作、状态变化和反馈如何连接。",
-        "输出只提出会阻塞进一步使用的少量 Knowledge Gap，并说明为什么值得继续补。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
       ],
       "learning_preflight": {
         "required_before_L": [
@@ -64,6 +58,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R07",
+        "related_rules": [
+          "R00",
+          "R05"
+        ],
+        "failure_mode": "把 State/Feedback 写成术语汇总而没有事件关系",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "解释 State 与 Feedback 如何形成可追踪的工作过程"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "用一段任务事件体现观察、动作、状态变化与反馈的因果衔接"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "必要知识缺口应与继续理解有关；不必强制列出固定数量"
+          }
+        ],
+        "critical_failures": [
+          "把反馈直接等同任务状态，或把阅读总结当成机制解释"
+        ],
+        "not_required": [
+          "不强制用某种图、代码或叙事形式；关键是因果过程可复述"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -93,15 +120,9 @@
         "R",
         "L"
       ],
-      "expected_output": "先忠实恢复材料，再重组成用户可迁移的知识模型，两者角色清楚。",
+      "expected_output": "既交代原文说了什么，也回答用户如何理解 Agent 状态管理；区分原材料论述与重新组织的机制关系，而不只是改标题。",
       "files": [
         "evals/fixtures/state-feedback-note.md"
-      ],
-      "assertions": [
-        "输出同时完成忠实深读与知识模型重构，且两部分目的可区分。",
-        "Learning 部分不是简单复制 Deep Read 的结构。",
-        "材料未支持的扩展如果出现，会被明确标成推断或外部补充，而不是伪装成原文结论。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
       ],
       "learning_preflight": {
         "required_before_L": [
@@ -112,6 +133,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R01",
+        "related_rules": [
+          "R00",
+          "R15"
+        ],
+        "failure_mode": "把忠实复述当作用户自己的理解",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "既交代原文说了什么，也回答用户如何理解 Agent 状态管理"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "区分原材料论述与重新组织的机制关系，而不只是改标题"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "外部补充不能写成作者原话；无需沿袭原文章节"
+          }
+        ],
+        "critical_failures": [
+          "把 Review 观点或模型推断冒充原文事实"
+        ],
+        "not_required": [
+          "不强制固定文章结构；以是否回答实际用户任务为准"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -123,15 +177,9 @@
         "R",
         "L"
       ],
-      "expected_output": "形成可迁移的 Workflow vs Agent 判断框架，同时独立评价原论证的证据与边界。",
+      "expected_output": "建立 Agent Workflow 与 Agent 的关键区别，同时回应用户的质疑；指出示例可说明哪些差异、不能直接推出什么普遍性。",
       "files": [
         "evals/fixtures/agent-workflow-argument.md"
-      ],
-      "assertions": [
-        "Learning 形成可迁移的判断模型，不只是复述观点。",
-        "Review 能区分材料中的论证、例子与尚未被证明的普遍结论。",
-        "两个任务的输出不会互相吞并为单一摘要或单一批评。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
       ],
       "learning_preflight": {
         "required_before_L": [
@@ -142,6 +190,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R09",
+        "related_rules": [
+          "R00",
+          "R12"
+        ],
+        "failure_mode": "把材料的观点和已被证明的机制混为一谈",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "建立 Agent Workflow 与 Agent 的关键区别，同时回应用户的质疑"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "指出示例可说明哪些差异、不能直接推出什么普遍性"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "独立审阅保留可检验的主要疑点，不必逐字反驳全文"
+          }
+        ],
+        "critical_failures": [
+          "未经证据将单一示例推广为所有 Agent 的必然结论"
+        ],
+        "not_required": [
+          "成熟原理不要求真实生产压测，具体强事实才需要相称的证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -153,15 +234,9 @@
         "R",
         "L"
       ],
-      "expected_output": "D/L/R 三路组合并最终自然合并，保持 source-centered / learner-centered / judgment-centered 的边界。",
+      "expected_output": "分别满足忠实理解、机制学习与独立审阅的用户目标；用权限、评测、反馈在企业助手中的作用串联理解。",
       "files": [
         "evals/fixtures/enterprise-assistant-proposal.md"
-      ],
-      "assertions": [
-        "输出覆盖忠实理解、知识模型和独立审阅三种不同目标。",
-        "三种目标之间边界清楚，不把审阅意见伪装成原文，也不把学习模型误写成作者原意。",
-        "最终合并后的内容对用户形成理解与行动有帮助，而不是机械打印内部路由标签。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
       ],
       "learning_preflight": {
         "required_before_L": [
@@ -172,6 +247,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R01",
+        "related_rules": [
+          "R00",
+          "R15"
+        ],
+        "failure_mode": "三个任务互相替代，最终只剩摘要或审阅意见",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "分别满足忠实理解、机制学习与独立审阅的用户目标"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "用权限、评测、反馈在企业助手中的作用串联理解"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "审阅结论要与原文说法分开；不要求打印三种内部路由标签"
+          }
+        ],
+        "critical_failures": [
+          "把审阅疑点写成原文已证实事实"
+        ],
+        "not_required": [
+          "不强制固定文章结构；以是否回答实际用户任务为准"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -183,16 +291,9 @@
         "R",
         "L"
       ],
-      "expected_output": "Learning 先识别当前 Context Gap，必要时用一个中性、高信息价值的 probe 澄清“不愿意用”的具体含义或真实案例，再据此更新知识模型，而不是直接凭常识列原因。",
+      "expected_output": "先明确‘不愿意用’代表什么可观察行为；信息不足时追问一个能区分问题的中性问题，或在明确假设下解释。",
       "files": [
         "evals/fixtures/learning-bank-agent-context.md"
-      ],
-      "assertions": [
-        "Learning 能识别“不愿意用”仍是未定义清楚的观察，而不是直接把它当成已经解释完成的事实。",
-        "如果需要用户信息，默认只推进一个最有信息价值的问题，而不是一次生成问题清单。",
-        "Probe 保持中性，不把安全、权限、成本、能力等候选原因提前塞进诱导性问句。",
-        "提问的目的明确服务于 Knowledge Model 更新，而不是为了测试用户会不会。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
       ],
       "learning_preflight": {
         "required_before_L": [
@@ -203,6 +304,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R03",
+        "related_rules": [
+          "R00",
+          "R01"
+        ],
+        "failure_mode": "把模糊使用感受直接诊断成确定根因",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "先明确‘不愿意用’代表什么可观察行为"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "信息不足时追问一个能区分问题的中性问题，或在明确假设下解释"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "不能预设隐私、能力、成本是既定原因；无须罗列原因大全"
+          }
+        ],
+        "critical_failures": [
+          "把未提供的员工访谈或使用数据当成事实"
+        ],
+        "not_required": [
+          "问题已明确时无须重新抽象或设计研究问题"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -214,7 +348,7 @@
         "R",
         "L"
       ],
-      "expected_output": "Learning 仍以原始材料建立可迁移模型，同时选择性利用 Review 暴露的关键边界来改善知识结构，并保持 source 与 sibling judgment 的来源边界。",
+      "expected_output": "原材料仍是学习解释的基础，历史 Review 只提供值得核实的线索；对‘案例不足以证明普遍结论’说明适用条件，确实相关才吸收。",
       "files": [
         "evals/fixtures/agent-workflow-argument.md"
       ],
@@ -225,13 +359,6 @@
           "purpose": "optional_reference"
         }
       ],
-      "assertions": [
-        "Learning 的主体知识模型仍能从原始材料独立成立，而不是把 Review 当作主要材料。",
-        "如果 Review 中关于“示例不足以证明普遍结论”的提醒有助于学习，输出会把它转化为对结构性原则与适用边界的理解，而不是原样复制。",
-        "输出不会把 Review 的判断写成作者原话或原材料已经证明的事实。",
-        "存在 reference context 不意味着必须逐条使用；输出只吸收真正有助于当前知识模型的部分。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
-      ],
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -241,6 +368,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R09",
+        "related_rules": [
+          "R00",
+          "R12"
+        ],
+        "failure_mode": "把历史 Review 当成原文或新的外部证据",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "原材料仍是学习解释的基础，历史 Review 只提供值得核实的线索"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "对‘案例不足以证明普遍结论’说明适用条件，确实相关才吸收"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "无需逐条复述 reference context 或引入全部旁支"
+          }
+        ],
+        "critical_failures": [
+          "将 Review 判断冒充原文陈述或已核实事实"
+        ],
+        "not_required": [
+          "成熟原理不要求真实生产压测，具体强事实才需要相称的证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -252,7 +412,7 @@
         "R",
         "L"
       ],
-      "expected_output": "Learning 把已有 Review finding 与 Knowledge Gap 转成一个高信息价值的专家确认问题，服务于知识模型更新，同时不把 prior finding 当成已经证实的事实。",
+      "expected_output": "选择一个最影响权限设计理解的研发访谈问题；解释该问题如何区分权限身份、执行约束或责任边界。",
       "files": [
         "evals/fixtures/enterprise-assistant-proposal.md"
       ],
@@ -268,13 +428,6 @@
           "purpose": "knowledge_gap"
         }
       ],
-      "assertions": [
-        "Learning 能把专家访谈视为补齐 Knowledge Gap 的 Project to Use，而不是独立 Questioning 任务。",
-        "第一轮只选择一个最影响当前知识模型的问题，例如执行动作时继承谁的身份与权限。",
-        "问题保持中性，不把“权限设计一定有问题”等 prior judgment 当成事实。",
-        "Prior findings 被重新解释为需要求证的不确定性，而不是原样复制。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
-      ],
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -284,6 +437,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R03",
+        "related_rules": [
+          "R00",
+          "R01"
+        ],
+        "failure_mode": "把历史疑点机械转成面试问题清单",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "选择一个最影响权限设计理解的研发访谈问题"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "解释该问题如何区分权限身份、执行约束或责任边界"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "提问应中性；无需生成完整面试提纲或先假定安全事故"
+          }
+        ],
+        "critical_failures": [
+          "以未经核实的旧 Review 结论诱导受访者"
+        ],
+        "not_required": [
+          "问题已明确时无须重新抽象或设计研究问题"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -426,16 +612,8 @@
         "R",
         "L"
       ],
-      "expected_output": "Learning 先回到具体知识工作任务，用一个几乎没有差异的任务和一个长期、多文件、反复修改的任务做对照，指出用户当前额外承担的协调工作以及哪些工作可被系统接走，最后才把观察压缩成抽象。",
+      "expected_output": "让读者看见普通 Chat 与 Workspace Agent 在实际任务中的差别；对照一次性任务和持续多文件任务，解释工作步骤和责任变化。",
       "files": [],
-      "assertions": [
-        "输出不会一开始继续增加 Runtime、Ownership、State Transition 等新的上位术语来解释原术语。",
-        "输出至少使用一个 Workspace Agent 几乎没有额外价值的低差异场景，例如一次性改写或单文件问答，以明确边界。",
-        "输出至少使用一个持续性知识工作场景，逐步说明现有 Chat 使用中人仍在承担哪些材料选择、进度恢复、成果维护或影响判断工作。",
-        "抽象结论出现在具体任务差异之后，并能被还原为“原来怎么做、引入后哪一步变化、谁少承担了什么”。",
-        "输出允许并明确指出某些任务里 Chat 与 Workspace Agent 没有实质差异，而不是为了维护概念强行制造优势。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
-      ],
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -445,6 +623,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R05",
+        "related_rules": [
+          "R00",
+          "R07"
+        ],
+        "failure_mode": "术语越来越多而现实工作差异仍不可理解",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "让读者看见普通 Chat 与 Workspace Agent 在实际任务中的差别"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "对照一次性任务和持续多文件任务，解释工作步骤和责任变化"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "有些场景差异很小也应承认；不是一定要禁用所有术语"
+          }
+        ],
+        "critical_failures": [
+          "为了维护概念而杜撰所有任务都需要 Workspace"
+        ],
+        "not_required": [
+          "不以文章更短、术语更少本身判定质量更高"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -456,15 +667,8 @@
         "R",
         "L"
       ],
-      "expected_output": "Learning 将“还是太抽象”识别为 grounding failure，停止继续上提概念，回到用户熟悉的一个具体任务逐步跑过程，直到能指出实际变化，再决定是否需要重新抽象。",
+      "expected_output": "回到一个真实工作任务解释原来与现在有什么变化；具体说明原来谁负责、变化发生在步骤何处、没有能力会怎样。",
       "files": [],
-      "assertions": [
-        "输出明确降低抽象层级，不再用新的 taxonomy 或更高层框架作为主要解释。",
-        "输出选择一个具体任务并按真实步骤展开，而不是只换一个比喻或重新定义已有术语。",
-        "输出把重点放在“哪一步变了、原来谁负责、现在谁负责、没有这个能力会怎样”。",
-        "只有在具体变化已经清楚之后才允许再次命名或抽象；即使不重新抽象也应能够完成解释。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
-      ],
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -474,6 +678,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R05",
+        "related_rules": [
+          "R00",
+          "R07"
+        ],
+        "failure_mode": "面对‘太抽象’的反馈仍继续添加抽象框架",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "回到一个真实工作任务解释原来与现在有什么变化"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "具体说明原来谁负责、变化发生在步骤何处、没有能力会怎样"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "举例之后可以命名概念，不必强制额外框架"
+          }
+        ],
+        "critical_failures": [
+          "仍只靠新 taxonomy 代替实际过程"
+        ],
+        "not_required": [
+          "不以文章更短、术语更少本身判定质量更高"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -485,16 +722,8 @@
         "R",
         "L"
       ],
-      "expected_output": "Learning 通过一个具体的多步写入失败场景让事务需求自然出现，例如转账中扣款成功但入账失败；先比较无事务与有事务的行为差异，再用 atomicity/rollback 等概念压缩已经看见的机制。",
+      "expected_output": "说明多步更新中途失败会出现什么不一致；用无事务与有事务的状态结果解释原子提交或回滚的机制。",
       "files": [],
-      "assertions": [
-        "输出不会以 ACID 定义或事务术语清单开场。",
-        "输出使用一个具体的多步数据库操作，并展示中途失败时没有事务会留下什么现实错误状态。",
-        "输出对比引入事务后哪一步行为改变以及系统接走了什么一致性恢复负担。",
-        "atomicity、rollback 或其他抽象概念若出现，应位于具体失败场景之后，作为对已理解现象的命名和压缩。",
-        "该案例证明 grounding 规则可迁移到非 Agent 主题，而不是只针对 Workspace Agent 特判。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
-      ],
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -504,6 +733,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R07",
+        "related_rules": [
+          "R00",
+          "R05"
+        ],
+        "failure_mode": "只背 ACID 而不知道事务解决的状态问题",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "说明多步更新中途失败会出现什么不一致"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "用无事务与有事务的状态结果解释原子提交或回滚的机制"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "例子可以先行也可自然穿插，但不必讲所有 ACID 属性"
+          }
+        ],
+        "critical_failures": [
+          "声称事务保证一切并发正确或单独 SQL 就天然原子组合"
+        ],
+        "not_required": [
+          "不强制用某种图、代码或叙事形式；关键是因果过程可复述"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -515,16 +777,8 @@
         "R",
         "L"
       ],
-      "expected_output": "Learning 选择一个小规模 query + 若干 chunk 的具体例子，让初始召回排序和 rerank 后排序真实变化，再解释 query-document 联合打分为何更精细、为何成本更高，并通过“候选集合扩大到全库”这个条件变化推出两阶段检索结构的必要性。",
+      "expected_output": "具体展示一次 query 与候选文档的排序判断变化；解释精排对 query-document 的处理及为何全库逐条打分成本高。",
       "files": [],
-      "assertions": [
-        "输出不会以 Retriever / Reranker 组件定义清单开场，而是尽快进入一个具体 query 和少量候选文档的最小运行案例。",
-        "输出展示至少一次排序或相关性判断的实际变化，使用户能看见 rerank 在流程中的具体作用。",
-        "输出进一步解释为什么重新打分能比初始粗召回更精细，而不是停在“rerank 更准”的结论。",
-        "输出改变一个关键条件，例如让候选数量从少量扩大到全库，并解释计算成本或延迟为什么变化。",
-        "两阶段 recall → rerank 架构若被抽象出来，应由前面的机制和约束自然推出，而不是要求用户背诵。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
-      ],
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -534,6 +788,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R07",
+        "related_rules": [
+          "R00",
+          "R05"
+        ],
+        "failure_mode": "说 reranker 更准却没有解释重新排序及其成本",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "具体展示一次 query 与候选文档的排序判断变化"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "解释精排对 query-document 的处理及为何全库逐条打分成本高"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "模型分数可为教学示意，不必伪称真实模型输出"
+          }
+        ],
+        "critical_failures": [
+          "把重新排序写成提高召回覆盖率的自动保证"
+        ],
+        "not_required": [
+          "不强制用某种图、代码或叙事形式；关键是因果过程可复述"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -545,16 +832,8 @@
         "R",
         "L"
       ],
-      "expected_output": "Learning 用一个最小多步骤 Agent 任务追踪执行前后 State 字段或事实如何变化，展示崩溃/重启后读取 State 如何避免重复动作，再对比自然语言聊天记录与可机器判定的结构化状态在可靠恢复上的差异。",
+      "expected_output": "展示一个多步骤任务中的 State 前后变化和重启后选择；解释结构化状态如何支持幂等、避免重复执行和恢复决策。",
       "files": [],
-      "assertions": [
-        "输出使用一个具体的多步骤任务并显式展示至少一次状态前后变化，而不是只解释 State 的分类。",
-        "输出展示系统崩溃或重启后，已有 State 如何直接影响下一步动作选择。",
-        "输出解释为什么某些自然语言历史虽然包含信息，却不适合可靠地作为后续程序决策条件。",
-        "输出把状态表示方式与幂等、重复执行或恢复可靠性建立因果联系，而不是新增更多抽象术语。",
-        "最终抽象应压缩已经跑过的任务，而不是替代任务本身。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
-      ],
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -564,6 +843,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R07",
+        "related_rules": [
+          "R00",
+          "R05"
+        ],
+        "failure_mode": "State 被解释成抽象名词而无恢复机制",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "展示一个多步骤任务中的 State 前后变化和重启后选择"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "解释结构化状态如何支持幂等、避免重复执行和恢复决策"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "聊天记录仍可携带线索，不必声称对所有系统毫无用处"
+          }
+        ],
+        "critical_failures": [
+          "没有持久化仍承诺崩溃恢复无重复副作用"
+        ],
+        "not_required": [
+          "不强制用某种图、代码或叙事形式；关键是因果过程可复述"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -575,16 +887,8 @@
         "R",
         "L"
       ],
-      "expected_output": "Learning 保留比喻作为认知脚手架，明确其与 query/key/value、相关性打分和加权聚合之间的对应关系，再用一个极小 token 示例回到真实 Attention 计算逻辑，并指出图书馆比喻无法准确表达的连续权重、表示学习或并行交互等边界。",
+      "expected_output": "让图书馆类比帮助进入 Q/K/V 的基本作用；用一个简化的 token 注意力计算或权重聚合示意连接真实机制。",
       "files": [],
-      "assertions": [
-        "输出不会丢掉用户已有的图书馆比喻，而是先明确其中哪些角色或关系帮助理解。",
-        "输出随后把比喻逐项映射回 Attention 的真实对象或操作，而不是一直停留在类比层。",
-        "输出至少让一个简化 Attention 过程真实跑一遍，使用户看到 query 与其他 token 的相关性如何影响信息聚合。",
-        "输出明确指出至少一个比喻失真的地方，避免把类比误认为真实机制。",
-        "最终理解不依赖比喻也能成立，体现“脚手架逐渐拆除”。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
-      ],
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -594,6 +898,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R10",
+        "related_rules": [
+          "R00",
+          "R09"
+        ],
+        "failure_mode": "比喻遮住 Attention 的真实计算过程",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "让图书馆类比帮助进入 Q/K/V 的基本作用"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "用一个简化的 token 注意力计算或权重聚合示意连接真实机制"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "指出类比失真之处，教学数字不必冒充模型实测"
+          }
+        ],
+        "critical_failures": [
+          "将硬检索一本书视为 Attention 唯一选择"
+        ],
+        "not_required": [
+          "教学例子无需证明真实效果，但不能被描述成真实测量"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -643,16 +980,8 @@
         "R",
         "L"
       ],
-      "expected_output": "从真实行动失败出发推导受控执行、结果反馈、持续行动循环，再后置术语命名并明确边界。",
+      "expected_output": "说明模型产生调用意图为什么不等于完成外部动作；连起工具执行、结果反馈与后续决策，并说明必要状态。",
       "files": [],
-      "assertions": [
-        "先讲可观察的任务失败，再讲 Runtime/Tool 等术语。",
-        "每引入一个必要行为都说明旧机制在哪一步仍然不够。",
-        "Tool Execution、Observation 和 Loop 的术语出现在其必要性已经被说明之后。",
-        "不会把某一具体开源框架或 API 当成实现该机制的唯一方式。",
-        "问题链在形成完整的行动闭环知识后停止，不自动展开产品开发清单。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
-      ],
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -662,6 +991,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R07",
+        "related_rules": [
+          "R00",
+          "R05"
+        ],
+        "failure_mode": "记住 Tool/Loop 名词，却无法解释行动为何闭环",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "说明模型产生调用意图为什么不等于完成外部动作"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "连起工具执行、结果反馈与后续决策，并说明必要状态"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "尊重用户希望从问题出发；不要求唯一框架或完整工程规划"
+          }
+        ],
+        "critical_failures": [
+          "把工具调用请求等同于执行成功"
+        ],
+        "not_required": [
+          "不强制用某种图、代码或叙事形式；关键是因果过程可复述"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -673,16 +1035,8 @@
         "R",
         "L"
       ],
-      "expected_output": "区分 Session persistence、Work continuity、尚未核实的框架能力和独立的自研决策。",
+      "expected_output": "解释 Session 恢复与 Work continuity 的关键差别；区分文档缺失、实际能力未知与是否值得自研的决策。",
       "files": [],
-      "assertions": [
-        "用真实任务或恢复案例解释恢复交互不自动等于恢复工作。",
-        "没有把‘文档未发现’直接写成‘能力已证实不存在’。",
-        "明确区分问题知识、原生框架能力证据和工程决策。",
-        "不声称实际运行过未执行的框架 Probe。",
-        "不把 UNKNOWN 自动变成 ABSENT，也不从 ABSENT 直接导出 BUILD。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
-      ],
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -692,6 +1046,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R09",
+        "related_rules": [
+          "R00",
+          "R12"
+        ],
+        "failure_mode": "把文档未提及误读为能力不存在且立即决定自研",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "解释 Session 恢复与 Work continuity 的关键差别"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "区分文档缺失、实际能力未知与是否值得自研的决策"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "需要更进一步的接口或运行证据；不必立即交付架构施工图"
+          }
+        ],
+        "critical_failures": [
+          "从 UNKNOWN 直接推断 ABSENT 或必须 BUILD"
+        ],
+        "not_required": [
+          "成熟原理不要求真实生产压测，具体强事实才需要相称的证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -703,15 +1090,8 @@
         "R",
         "L"
       ],
-      "expected_output": "以具体失败和最小保证推导原子性等概念，术语后置，避免为讲完整知识谱系添加无关机制。",
+      "expected_output": "按用户要求以两步更新失败说明事务的意义；解释整体成功或失败如何解决局部写入问题，术语对应得当。",
       "files": [],
-      "assertions": [
-        "先展示具体失败造成的错误状态，而不是事务名词表。",
-        "每个重要术语在首次出现前已有真实需要它的机制缺口。",
-        "不会把数据库某种具体的事务实现说成所有事务都必须采用的方式。",
-        "不强制展开 MVCC、隔离级别等与当前问题无关的知识。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
-      ],
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -721,6 +1101,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R06",
+        "related_rules": [
+          "R00",
+          "R13"
+        ],
+        "failure_mode": "术语堆砌替代了事务原子性的必要解释",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "按用户要求以两步更新失败说明事务的意义"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "解释整体成功或失败如何解决局部写入问题，术语对应得当"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "不必覆盖 MVCC、隔离级别等其它事务性质"
+          }
+        ],
+        "critical_failures": [
+          "把单一隔离/日志实现说成所有数据库必须采用"
+        ],
+        "not_required": [
+          "不因采用定义→原理→步骤的自然顺序扣分，除非用户明确要求先展示案例"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -732,15 +1145,8 @@
         "R",
         "L"
       ],
-      "expected_output": "根据观察和尚未解释的差异推导统计口径、使用机会与证据边界，形成可迁移的业务判断方法。",
+      "expected_output": "区分使用率这一指标和‘员工不需要’这一结论；解释使用机会、触达、流程阻碍等条件怎样改变判断。",
       "files": [],
-      "assertions": [
-        "明确低使用率是观察，‘不需要产品’是尚未验证的解释。",
-        "引入必要的比较口径或使用机会区分，解释这些区分解决什么疑问。",
-        "通过一个高信息量条件变化，说明结论可能变化。",
-        "没有虚构使用数据，也不强迫业务问题套技术框架 Probe。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
-      ],
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -750,6 +1156,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R02",
+        "related_rules": [
+          "R00",
+          "R09"
+        ],
+        "failure_mode": "把低使用率直接当成没有需求的证据",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "区分使用率这一指标和‘员工不需要’这一结论"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "解释使用机会、触达、流程阻碍等条件怎样改变判断"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "缺数据可以保持未知，不需要套用技术实验清单"
+          }
+        ],
+        "critical_failures": [
+          "凭低使用率直接下结论员工没有需求"
+        ],
+        "not_required": [
+          "不强制每个任务进行数量建模或指标设计，只检查对结论有影响的口径"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -761,15 +1200,8 @@
         "R",
         "L"
       ],
-      "expected_output": "直接解释对比时间基准及相应示例，不用为普通概念强行制造长问题链。",
+      "expected_output": "准确区别同比与环比的时间基准；用一个数字例子帮助读者对照两种计算。",
       "files": [],
-      "assertions": [
-        "准确解释同比和环比的比较基准。",
-        "至少有一个便于人理解的具体数值或时间例子。",
-        "没有为了执行方法模板而构造多轮虚假失败。",
-        "不打印 Problem-chain/Concept-first/Boundary 三道 Gate 检查表。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
-      ],
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -779,6 +1211,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R15",
+        "related_rules": [
+          "R00",
+          "R01"
+        ],
+        "failure_mode": "简单报表问题被扩写成完整研究项目",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "准确区别同比与环比的时间基准"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "用一个数字例子帮助读者对照两种计算"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "保持短而足够，不要求问题链、理论纲领或审阅清单"
+          }
+        ],
+        "critical_failures": [
+          "混淆同比与环比的分母或比较期间"
+        ],
+        "not_required": [
+          "完成问题后应停止；不必新增额外研究、实施或自测"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -790,17 +1255,9 @@
         "R",
         "L"
       ],
-      "expected_output": "修复概念和因果链，去除未经证实的产品结论与自研必然性，直接交付稳定或明确不稳定的知识结果。",
+      "expected_output": "把提纲修复为能读懂 Runtime 与 Work continuity 差异的文章；解释持久化交互与恢复工作状态的机制区别及关键前提。",
       "files": [
         "evals/fixtures/learning-premature-framework-outline.md"
-      ],
-      "assertions": [
-        "不把 Session / Thread 持久化直接当成 Work 状态持久化。",
-        "先解释观察到的恢复失败，再引入 Work State 等术语。",
-        "纠正提纲中‘文档没提就没有能力’的未经验证判断。",
-        "不会直接得出必须自研通用 Enterprise Layer、Task Store 或 Workflow Engine。",
-        "输出经过修复的可阅读知识解释，而不是‘Stable Gate — 待执行’。",
-        "若有执行记录，必须验证本轮 D/R 独立读取 Raw Input、互不消费、两者先于 L 完成且 L 接收二者；无 Trace 时标记隔离未验证，不能凭最终文本判定前置执行已发生。"
       ],
       "learning_preflight": {
         "required_before_L": [
@@ -811,6 +1268,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R13",
+        "related_rules": [
+          "R00",
+          "R06"
+        ],
+        "failure_mode": "知识提纲只有步骤名或纠偏列表，缺少连贯解释",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "把提纲修复为能读懂 Runtime 与 Work continuity 差异的文章"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "解释持久化交互与恢复工作状态的机制区别及关键前提"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "没有证据的原生能力判断应收缩；无需显示内部 Gate"
+          }
+        ],
+        "critical_failures": [
+          "把 Session 自动等同完整任务恢复或宣布必须自研"
+        ],
+        "not_required": [
+          "顺序说明或章节独立不等于术语堆砌；无需强制问答重排"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -835,14 +1325,37 @@
       "files": [
         "evals/fixtures/agent-workflow-argument.md"
       ],
-      "expected_output": "D 忠实重建原文，R 不依赖 D 独立审阅，双方先于 L，L 返回真实对象和机制而非拼贴两篇报告。",
-      "assertions": [
-        "D 忠实恢复原材料论证，不预先吸纳 R 的判断。",
-        "R 独立从 Raw Input 审查论证，不能读取 D 的分析。",
-        "本轮 D/R 都完成后 L 才开始，若运行 Trace 不可见则隔离判定为未验证。",
-        "L 利用双方发现，但重新构建机制与知识模型，非 D+R 简单拼接。",
-        "R 的批评不能被写作原材料已证实的事实。"
-      ]
+      "expected_output": "Learning 应由同一原始输入的独立 D、R 完成后展开；核查 D/R 的输入隔离、完成顺序和交接 Trace，而非看章节标题。",
+      "learning_eval": {
+        "primary_rule": "R00",
+        "related_rules": [],
+        "failure_mode": "用最终文章假装 D/R/L 已独立运行",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "Learning 应由同一原始输入的独立 D、R 完成后展开"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "核查 D/R 的输入隔离、完成顺序和交接 Trace，而非看章节标题"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "Trace 不可见时标未验证，不等同已确认失败；知识文章另评质量"
+          }
+        ],
+        "critical_failures": [
+          "无执行证据却声称真实完成独立 D/R"
+        ],
+        "not_required": [
+          "正文中出现 D/R/L 标题不能作为 Trace；没有 Trace 的执行状态应为 unverified，不按文风替代执行证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 29,
@@ -864,13 +1377,37 @@
         "output_policy": "integrated_learning_unless_explicit"
       },
       "files": [],
-      "expected_output": "无文件时 D/R 基于用户真实问题分别完成简洁问题复原和前提审阅，L 简要解释同比环比且不打印三篇报告。",
-      "assertions": [
-        "D/R 两阶段都必经；真实执行未被 Trace 证实时不可宣称隔离已验证。",
-        "D 不凭空假设存在原始文章或作者观点。",
-        "R 可以无重要发现，不为了审阅硬找错误。",
-        "L 用准确简短的例子说明概念，不机械输出三份结果。"
-      ]
+      "expected_output": "对用户的同比/环比问题仍给出正确简短解释；真实轻量 D/R 若执行需各自读取同一问题并留记录。",
+      "learning_eval": {
+        "primary_rule": "R00",
+        "related_rules": [],
+        "failure_mode": "没有附件时凭空创造原材料或伪造前置调用",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "对用户的同比/环比问题仍给出正确简短解释"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "真实轻量 D/R 若执行需各自读取同一问题并留记录"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "允许 R 没有可报告问题，不必制造作者观点或长篇审查"
+          }
+        ],
+        "critical_failures": [
+          "虚构附件、作者论点或独立运行成功日志"
+        ],
+        "not_required": [
+          "正文中出现 D/R/L 标题不能作为 Trace；没有 Trace 的执行状态应为 unverified，不按文风替代执行证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 30,
@@ -894,14 +1431,37 @@
       "files": [
         "evals/fixtures/learning-premature-framework-outline.md"
       ],
-      "expected_output": "D 保留原文错误论点，R 独立发现其前提问题，L 利用双方结果但重新建立真实问题链且不把评论当证据。",
-      "assertions": [
-        "D 保留材料本来写出的 Session=Work 观点，不静默修改作者意见。",
-        "R 在不读取 D 的情况下检查 Session/Work 混同问题。",
-        "L 读取本轮两个脚手架后回到真实对象和必要机制。",
-        "L 不将审阅意见当证据，不从未知原生能力自动推出必须自研。",
-        "仅最终文本出现 D/R/L 三个标题不等于真的执行了三阶段，需运行记录核实。"
-      ]
+      "expected_output": "既复述材料原有观点又形成经校准的机制学习；运行记录支持 D/R 原文独立处理；Learning 使用其线索而非照搬。",
+      "learning_eval": {
+        "primary_rule": "R00",
+        "related_rules": [],
+        "failure_mode": "把前置审阅意见变成事实权威或伪造隔离",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "既复述材料原有观点又形成经校准的机制学习"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "运行记录支持 D/R 原文独立处理；Learning 使用其线索而非照搬"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "原生框架能力未知时收缩推断，不要求立刻施工"
+          }
+        ],
+        "critical_failures": [
+          "只凭 D/R/L 三标题认定隔离，或从缺证据推出自研"
+        ],
+        "not_required": [
+          "正文中出现 D/R/L 标题不能作为 Trace；没有 Trace 的执行状态应为 unverified，不按文风替代执行证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 31,
@@ -925,18 +1485,39 @@
       "files": [
         "evals/fixtures/learning-code-action-loop.md"
       ],
-      "expected_output": "先解释问题与必要机制，然后用 fixture 实现链和精确行号验证；明确局限。",
-      "assertions": [
-        "先解释模型输出 Tool Call 不等于实际执行成功及需要受控执行与结果反馈的原因，再首次引用 toy/agent.ts 或 step()。",
-        "代码链正确：step() 提取调用→executeToolCalls() 分派并追加 Tool Result→后续 step() 通过 deriveMessages() 读取派生历史；不声称后续 step 自动发生。",
-        "只用 toy 文件与行号作源码证据，不输出无关函数/目录清单，不将合成 fixture 当成真实产品。",
-        "不声称真实外部调用成功、真实 Probe 或 Durable Execution；完整 D/R 前置，交付整合 Learning。"
-      ],
-      "mechanism_mapping": {
-        "research_order": "verify_original_material_and_behavior_before_modeling",
-        "presentation_order": "problem_mechanism_realization_evidence_next_problem",
-        "evidence": "minimal_verifiable_anchors_appropriate_to_medium",
-        "contradictions": "revise_model_not_invent_implementation"
+      "expected_output": "准确说明 Tool Call 意图与真实执行闭环的区别；定位 step、executeToolCalls、deriveMessages 的行为及必要源码位置。",
+      "learning_eval": {
+        "primary_rule": "R09",
+        "related_rules": [
+          "R00",
+          "R12"
+        ],
+        "failure_mode": "解释了预想中的 Agent Loop，却不对应真实源码",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "准确说明 Tool Call 意图与真实执行闭环的区别"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "定位 step、executeToolCalls、deriveMessages 的行为及必要源码位置"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "只用附件能证明的代码路径，不要声称外部真实探测"
+          }
+        ],
+        "critical_failures": [
+          "虚构自动下一轮模型调用或已完成持久执行"
+        ],
+        "not_required": [
+          "成熟原理不要求真实生产压测，具体强事实才需要相称的证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -961,18 +1542,39 @@
       "files": [
         "evals/fixtures/learning-code-source-mismatch.md"
       ],
-      "expected_output": "只证明单次模型生成和保存文本，不能推出受控执行或结果回流；收缩结论。",
-      "assertions": [
-        "先说明模型回答与真实执行动作的差异，而非函数名分类。",
-        "明确指出源码没有 Tool Schema/分派/Observation，history.push 文本不等于工具 Observation。",
-        "源码反驳预期机制时必须纠正结论，不能猜测缺失函数或声称运行了 Probe。",
-        "只引用给定的合成片段，不伪造真实 GitHub 链接。"
-      ],
-      "mechanism_mapping": {
-        "research_order": "verify_original_material_and_behavior_before_modeling",
-        "presentation_order": "problem_mechanism_realization_evidence_next_problem",
-        "evidence": "minimal_verifiable_anchors_appropriate_to_medium",
-        "contradictions": "revise_model_not_invent_implementation"
+      "expected_output": "识别附件只保存文本，不能证明有完整 Action Loop；解释真正闭环需要的执行与 Observation 环节以及源码缺口。",
+      "learning_eval": {
+        "primary_rule": "R12",
+        "related_rules": [
+          "R00",
+          "R09"
+        ],
+        "failure_mode": "维护漂亮的机制图而忽略源码反证",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "识别附件只保存文本，不能证明有完整 Action Loop"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "解释真正闭环需要的执行与 Observation 环节以及源码缺口"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "区分未见实现与证据范围；无需编造隐藏组件"
+          }
+        ],
+        "critical_failures": [
+          "把 history.push 文本当 Tool Result 或声称运行了 Probe"
+        ],
+        "not_required": [
+          "非关键四舍五入或措辞问题可局部修正，不能压过正确的主线"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -997,18 +1599,39 @@
       "files": [
         "evals/fixtures/learning-code-incomplete.md"
       ],
-      "expected_output": "用最小场景解释决策与行动闭环，明确接口声明不能证明实际 Tool 执行、取消、副作用或持久恢复。",
-      "assertions": [
-        "删除框架和类型名以后仍能理解机制为什么存在、怎么工作。",
-        "区分类型声明证据与未知实现；不把工具类型视为执行能力已存在。",
-        "不编造 Tool Executor、Session Store、后续模型循环，也不伪造源码锚点。",
-        "输入不足时保持简明且不把教学推演写作实际 Probe。"
-      ],
-      "mechanism_mapping": {
-        "research_order": "verify_original_material_and_behavior_before_modeling",
-        "presentation_order": "problem_mechanism_realization_evidence_next_problem",
-        "evidence": "minimal_verifiable_anchors_appropriate_to_medium",
-        "contradictions": "revise_model_not_invent_implementation"
+      "expected_output": "解释声明可以支持哪些 Runtime 概念理解；指出 ToolExecutor、SessionStore、执行循环等行为哪些仍无法判定。",
+      "learning_eval": {
+        "primary_rule": "R09",
+        "related_rules": [
+          "R00",
+          "R12"
+        ],
+        "failure_mode": "拿类型声明冒充已阅读实现源码",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "解释声明可以支持哪些 Runtime 概念理解"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "指出 ToolExecutor、SessionStore、执行循环等行为哪些仍无法判定"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "示意机制不是实测实现；答案应贴合用户要求的简短深度"
+          }
+        ],
+        "critical_failures": [
+          "虚构实现函数、持久恢复或不存在的代码行号"
+        ],
+        "not_required": [
+          "成熟原理不要求真实生产压测，具体强事实才需要相称的证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -1030,22 +1653,43 @@
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
       },
-      "mechanism_mapping": {
-        "research_order": "verify_original_material_and_behavior_before_modeling",
-        "presentation_order": "problem_mechanism_realization_evidence_next_problem",
-        "evidence": "minimal_verifiable_anchors_appropriate_to_medium",
-        "contradictions": "revise_model_not_invent_implementation"
-      },
       "files": [
         "evals/fixtures/learning-transaction-textbook.md"
       ],
-      "expected_output": "通过分开提交后余额不一致推导整体原子提交/回滚的必要性，再解释示例 SQL 的操作对应关系；不虚构真实数据库运行或超出片段的隔离/持久性保证。",
-      "assertions": [
-        "先解释 A/B 余额不一致与整体操作要求，再在必要时介绍事务原子性、BEGIN/COMMIT/ROLLBACK 语义，不从命令或 ACID 目录起步。",
-        "具体映射到教材原始余额 A=100、B=100、转账30，说明独立提交为何可能只发生第一步，以及事务成功/失败的结果边界。",
-        "清楚指出教材为合成的假设结果，不声称真实执行过数据库 Probe，不延伸出教材未提供的并发隔离或磁盘持久化测试结论。",
-        "移除 SQL 语法后，读者仍能说清为什么需要原子地完成两个相关更新；提供对教材代码片段的精准对应。"
-      ]
+      "expected_output": "说明 A/B 余额各100、转30时部分提交为什么错误；结合教材 BEGIN/COMMIT/ROLLBACK 对应全部提交或回滚。",
+      "learning_eval": {
+        "primary_rule": "R06",
+        "related_rules": [
+          "R00",
+          "R13"
+        ],
+        "failure_mode": "被 SQL 命令表遮住事务原子性",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "说明 A/B 余额各100、转30时部分提交为什么错误"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "结合教材 BEGIN/COMMIT/ROLLBACK 对应全部提交或回滚"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "教材示例不代表实测隔离、持久性或所有数据库实现"
+          }
+        ],
+        "critical_failures": [
+          "把演示输出声称为已真实执行的数据库结果"
+        ],
+        "not_required": [
+          "不因采用定义→原理→步骤的自然顺序扣分，除非用户明确要求先展示案例"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 35,
@@ -1066,22 +1710,43 @@
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
       },
-      "mechanism_mapping": {
-        "research_order": "verify_original_material_and_behavior_before_modeling",
-        "presentation_order": "problem_mechanism_realization_evidence_next_problem",
-        "evidence": "minimal_verifiable_anchors_appropriate_to_medium",
-        "contradictions": "revise_model_not_invent_implementation"
-      },
       "files": [
         "evals/fixtures/learning-linux-process-textbook.md"
       ],
-      "expected_output": "先从运行中进程难以控制的问题推导信号请求和状态观察，再映射到模拟示例的 ps/kill/sleep；区分 TERM 与 KILL，强调演示不是实测。",
-      "assertions": [
-        "先解释外部进程停止的真实问题、信号机制和状态观察为何必要，再给出 sleep/ps/kill 的操作链；不从命令清单展开。",
-        "对教材中的 PID=4210、TERM 前后示意 ps 输出进行合理映射，强调 TERM 是请求，不等价于任意进程必然即刻退出。",
-        "明确示例是合成终端记录而非真实命令执行，不能宣称实际运行了 KILL 或得到系统现场证据。",
-        "删除命令名称后仍可理解进程控制与效果验证的机制，同时返回案例具体输入、操作和观察位置。"
-      ]
+      "expected_output": "解释外部请求、进程响应与退出观察的关系；用 PID 4210 和示意 ps/TERM 帮助理解停止请求的行为。",
+      "learning_eval": {
+        "primary_rule": "R07",
+        "related_rules": [
+          "R00",
+          "R05"
+        ],
+        "failure_mode": "只记 sleep/ps/kill 而不懂进程控制",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "解释外部请求、进程响应与退出观察的关系"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "用 PID 4210 和示意 ps/TERM 帮助理解停止请求的行为"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "TERM 是请求非必然立即退出；教学终端输出不是现场"
+          }
+        ],
+        "critical_failures": [
+          "声称发出 TERM 即保证所有进程退出"
+        ],
+        "not_required": [
+          "不强制用某种图、代码或叙事形式；关键是因果过程可复述"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 36,
@@ -1105,20 +1770,40 @@
       "files": [
         "evals/fixtures/learning-reality-gpu-lease.md"
       ],
-      "expected_output": "用GPU小时租金×可计费小时形成数量级，以70%与50%改变一个条件后解释收入差异；固定最低租金改变价格暴露但不消灭违约风险；明确教学假设并停止在有用深度。",
-      "assertions": [
-        "先解释为什么AI算力需求增长并不保证特定GPU资产赚钱，而不是上来罗列NPV/IRR或预测行业规模。",
-        "70%计费利用率年租金36,792元，50%为26,280元，变化10,512元；口径为一张GPU、8760小时、6元/小时的教学假设。",
-        "保底收费时，实际使用率下跌不必然等于应收租金下降；客户违约和真实合同条款仍未知。",
-        "不声称真实企业报价、真实客户合同或已测得项目回报；不为显示专业强制写完整五年DCF。"
-      ],
-      "reality_calibration": {
-        "mode": "conditional_domain_adaptive",
-        "minimum_evidence": "decision_relevant",
-        "source_boundary": "facts_assumptions_derivations_unknowns",
-        "output": "plain_language_mechanism_first_no_forced_metrics"
-      },
-      "expected_calibration_kind": "minimal_quantitative"
+      "expected_output": "用计费小时、利用率、单价解释收入形成机制；核对70%与50%利用率对应36792与26280元的假设收入，并区分保底。",
+      "learning_eval": {
+        "primary_rule": "R02",
+        "related_rules": [
+          "R00",
+          "R09"
+        ],
+        "failure_mode": "从 AI 需求增长直接推断 GPU 租赁必赚钱",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "用计费小时、利用率、单价解释收入形成机制"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "核对70%与50%利用率对应36792与26280元的假设收入，并区分保底"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "教学测算不是实际利润、合同或付款保证，不必强制五年DCF"
+          }
+        ],
+        "critical_failures": [
+          "将计费利用率等同有保证的实际回款"
+        ],
+        "not_required": [
+          "不强制每个任务进行数量建模或指标设计，只检查对结论有影响的口径"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 37,
@@ -1142,20 +1827,40 @@
       "files": [
         "evals/fixtures/learning-reality-api-latency.md"
       ],
-      "expected_output": "把端到端延迟与顺序阶段联系起来，指出单条慢请求外部模型接口1.86秒远大于框架0.12秒，但一个追踪不能证明所有请求的p95；说明下一份最有价值的真实证据。",
-      "assertions": [
-        "先解释关键路径而非框架名词列表；用一个具体请求的0.12/0.22/1.86秒定位优先怀疑区段。",
-        "若只将该请求外部接口耗时缩短1秒，在其他阶段不变假设下，该请求从2.20秒预计到1.20秒。",
-        "不把各阶段p95简单相加，不把单条合成追踪当成总体p95的实测证明。",
-        "提出验证足够代表性的链路/阶段分布，而非为了精确而强行给出收益百分比或全套压测方案。"
-      ],
-      "reality_calibration": {
-        "mode": "conditional_domain_adaptive",
-        "minimum_evidence": "decision_relevant",
-        "source_boundary": "facts_assumptions_derivations_unknowns",
-        "output": "plain_language_mechanism_first_no_forced_metrics"
-      },
-      "expected_calibration_kind": "execution_trace"
+      "expected_output": "从分段追踪解释端到端延迟的可能瓶颈；用0.12/0.22/1.86秒识别可疑区段及单条件变化影响。",
+      "learning_eval": {
+        "primary_rule": "R11",
+        "related_rules": [
+          "R00",
+          "R09"
+        ],
+        "failure_mode": "单条慢请求被当成整体 p95 的框架瓶颈证据",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "从分段追踪解释端到端延迟的可能瓶颈"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "用0.12/0.22/1.86秒识别可疑区段及单条件变化影响"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "单条合成 Trace 无法证明总体 p95，不必罗列所有压测步骤"
+          }
+        ],
+        "critical_failures": [
+          "直接将各阶段 p95 相加或声称更换框架一定达标"
+        ],
+        "not_required": [
+          "成熟定义无需强制实验，只有竞争解释影响核心结论时需要区分性证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 38,
@@ -1179,20 +1884,40 @@
       "files": [
         "evals/fixtures/learning-reality-loan-process.md"
       ],
-      "expected_output": "从APPROVED → SIGNED → EFFECTIVE推导真正决定可用额度的生效状态和核验责任，并锚定示例用信失败记录；不冒充真实银行制度。",
-      "assertions": [
-        "具体区分审批、签约、生效三个状态，以及何时用信系统才允许引用额度。",
-        "使用单据X未满足生效条件却APPROVED/SIGNED的事实，解释为何调用返回额度不可用。",
-        "指出应核查生效核验、状态/接口映射、责任交接，而不擅自断言真实监管或全行规则。",
-        "不虚构平均审批时长、完成率、绩效/财务指标；明确fixture为合成案例。"
-      ],
-      "reality_calibration": {
-        "mode": "conditional_domain_adaptive",
-        "minimum_evidence": "decision_relevant",
-        "source_boundary": "facts_assumptions_derivations_unknowns",
-        "output": "plain_language_mechanism_first_no_forced_metrics"
-      },
-      "expected_calibration_kind": "workflow_state"
+      "expected_output": "区分 APPROVED、SIGNED、EFFECTIVE 与可用额度门禁；用单据 X 未满足生效条件的状态说明结果及核验位置。",
+      "learning_eval": {
+        "primary_rule": "R07",
+        "related_rules": [
+          "R00",
+          "R05"
+        ],
+        "failure_mode": "审批完成被错误理解为额度一定可用",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "区分 APPROVED、SIGNED、EFFECTIVE 与可用额度门禁"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "用单据 X 未满足生效条件的状态说明结果及核验位置"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "附件是合成业务，不要求凭空量化 ROI"
+          }
+        ],
+        "critical_failures": [
+          "把审批和签约直接当作生效"
+        ],
+        "not_required": [
+          "不强制用某种图、代码或叙事形式；关键是因果过程可复述"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 39,
@@ -1216,20 +1941,40 @@
       "files": [
         "evals/fixtures/learning-reality-health-evidence.md"
       ],
-      "expected_output": "区分观察、假说、群体因果，说明需要何种研究/临床评估支撑；拒绝无来源有效率，不给个体诊断。",
-      "assertions": [
-        "清楚区分两条网友体验与经验证的因果或适用于所有人的结论。",
-        "不编造某种干预有效率、样本量、统计显著性或权威指南要求。",
-        "用最少的证据层级和替代解释帮助形成判断，不强行提供数字模型。",
-        "提及严重或持续问题需要专业评估，不把学习解释当作诊断或治疗保证。"
-      ],
-      "reality_calibration": {
-        "mode": "conditional_domain_adaptive",
-        "minimum_evidence": "decision_relevant",
-        "source_boundary": "facts_assumptions_derivations_unknowns",
-        "output": "plain_language_mechanism_first_no_forced_metrics"
-      },
-      "expected_calibration_kind": "evidence_quality"
+      "expected_output": "区分个人打鼾体验、可能原因与群体证据；解释为什么替代解释或临床评估会影响结论。",
+      "learning_eval": {
+        "primary_rule": "R09",
+        "related_rules": [
+          "R00",
+          "R12"
+        ],
+        "failure_mode": "把两条社交媒体经验推广为普遍医学因果",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "区分个人打鼾体验、可能原因与群体证据"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "解释为什么替代解释或临床评估会影响结论"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "不编造有效率和个体诊断；严重持续症状可建议专业评估"
+          }
+        ],
+        "critical_failures": [
+          "断言所有孕期打鼾都因枕头低且垫高可治"
+        ],
+        "not_required": [
+          "成熟原理不要求真实生产压测，具体强事实才需要相称的证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 40,
@@ -1253,20 +1998,40 @@
       "files": [
         "evals/fixtures/learning-reality-memory-comparability.md"
       ],
-      "expected_output": "先验证两个对象、价格口径和时间，再计算相对比值可观察的范围，指出同一SKU或全市场涨幅不可由此推出。",
-      "assertions": [
-        "准确指出2022年2666MHz实际订单和2026年3200MHz页面报价的型号与成交口径差异。",
-        "可以计算791/189约4.19、表面差约318.5%，但不称之为同款真实市场涨幅。",
-        "说明最小验证办法是同SKU、相近条件的多时点成交/报价数据，而不是捏造总体行业数据。",
-        "以通俗语言解释‘算术无误≠可比性已证实’，不强行建设计量经济学模型。"
-      ],
-      "reality_calibration": {
-        "mode": "conditional_domain_adaptive",
-        "minimum_evidence": "decision_relevant",
-        "source_boundary": "facts_assumptions_derivations_unknowns",
-        "output": "plain_language_mechanism_first_no_forced_metrics"
-      },
-      "expected_calibration_kind": "comparability"
+      "expected_output": "核对189元实际订单与791元页面报价的比较口径；说明2666MHz与3200MHz不同 SKU、成交与报价差异。",
+      "learning_eval": {
+        "primary_rule": "R02",
+        "related_rules": [
+          "R00",
+          "R09"
+        ],
+        "failure_mode": "计算增长率正确但比较对象并不一致",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "核对189元实际订单与791元页面报价的比较口径"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "说明2666MHz与3200MHz不同 SKU、成交与报价差异"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "约318.5%只是两数的算术变化，不能当同款市场涨幅"
+          }
+        ],
+        "critical_failures": [
+          "断言同一根内存四年实际涨价318%"
+        ],
+        "not_required": [
+          "不强制每个任务进行数量建模或指标设计，只检查对结论有影响的口径"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 41,
@@ -1288,20 +2053,40 @@
         "output_policy": "integrated_learning_unless_explicit"
       },
       "files": [],
-      "expected_output": "简洁区分服务期与最低付款义务，并用一个真实语义的生活类比；不为满足现实校准强行套公式、表格或商业尽调。",
-      "assertions": [
-        "先用一两句话解释‘服务持续多久’与‘客户最低要付多少’是不同义务。",
-        "提供一个小而有用的生活/服务例子，并说明最终以合同具体条款为准。",
-        "不创造付款比例、价格、合同数额，不强行附加数量模型、临界值或复杂风险框架。",
-        "没有附件时D/R对用户原问题轻量前置，不假造有独立来源文件。"
-      ],
-      "reality_calibration": {
-        "mode": "conditional_domain_adaptive",
-        "minimum_evidence": "decision_relevant",
-        "source_boundary": "facts_assumptions_derivations_unknowns",
-        "output": "plain_language_mechanism_first_no_forced_metrics"
-      },
-      "expected_calibration_kind": "skip"
+      "expected_output": "说清服务五年与最低付款承诺五年的义务差别；以简短合同或生活例子说明何时存在应付款义务。",
+      "learning_eval": {
+        "primary_rule": "R15",
+        "related_rules": [
+          "R00",
+          "R01"
+        ],
+        "failure_mode": "简短合同概念被强制套复杂数量模型",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "说清服务五年与最低付款承诺五年的义务差别"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "以简短合同或生活例子说明何时存在应付款义务"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "不创造虚构金额、概率、表格或尽调报告"
+          }
+        ],
+        "critical_failures": [
+          "把服务期限直接当不可撤销付款承诺"
+        ],
+        "not_required": [
+          "完成问题后应停止；不必新增额外研究、实施或自测"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 42,
@@ -1325,19 +2110,39 @@
       "files": [
         "evals/fixtures/learning-problem-a-share-sample.md"
       ],
-      "expected_output": "先区分涨幅选样与实际研究问题，由不同经营结果与行业论证之间的张力提出能够区分价值捕获机制的研究问题，再用不同公司展示至少一个初步检验；保留材料无法回答的根本缺口。",
-      "assertions": [
-        "指出三所涨幅股只是样本选择，不能用只选上涨股推导上涨原因、普遍投资规律或当日催化。",
-        "识别至少两条真正不同的现实张力（如内容业务快增却亏损、AI安全订单预期与亏损、化工利润价差），而不是每家公司贴‘需求是否转成利润’模板。",
-        "提出一个与用户学习任务对齐且能够区分至少两种解释的主研究问题，说明为何这个问题更有解释价值及需要的关键证据。",
-        "不预写‘平台必然掠夺利润’等结论，不将研究报告评级当成事实，不擅自转成选股/买卖建议；证据不足时明确。"
-      ],
-      "problem_discovery": {
-        "mode": "conditional",
-        "question_test": "grounded_discriminating_user_aligned",
-        "outcome": "select_revise_bound_or_preserve",
-        "anti_pattern": "abstraction_is_not_depth",
-        "expected_outcome": "reframe"
+      "expected_output": "识别上涨样本与研究问题之间没有直接因果证据；利用不同公司的经营矛盾提出有区分力的主问题。",
+      "learning_eval": {
+        "primary_rule": "R03",
+        "related_rules": [
+          "R00",
+          "R01"
+        ],
+        "failure_mode": "只在上涨股票清单上机械套同一个利润问题",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "识别上涨样本与研究问题之间没有直接因果证据"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "利用不同公司的经营矛盾提出有区分力的主问题"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "素材不足时不推测当天上涨原因、不写买卖建议"
+          }
+        ],
+        "critical_failures": [
+          "用只选上涨股样本推断上涨因果"
+        ],
+        "not_required": [
+          "问题已明确时无须重新抽象或设计研究问题"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -1362,19 +2167,39 @@
       "files": [
         "evals/fixtures/learning-problem-content-economics.md"
       ],
-      "expected_output": "从制作成本降低与分发收款变化相互抵消的矛盾中，找到对收益分配与用户关系的关键问题；不能把某个渠道作为未经证明的唯一罪魁。",
-      "assertions": [
-        "基于合成案例指出A单片由150-100=50变为115-70=45，虽然制作成本下降30却贡献收益下降5；并指出B 160-100=60的对照。",
-        "主问题能区分制作成本、定价/分账、渠道、留存等竞争机制，而不是套术语或预先断言平台控制全部利润。",
-        "明确合成数据是假设且没有真实平台份额、内容IP竞争或用户留存数据。",
-        "解释这个问题将改变搜集什么证据，不强制做完整DCF或股票估值。"
-      ],
-      "problem_discovery": {
-        "mode": "conditional",
-        "question_test": "grounded_discriminating_user_aligned",
-        "outcome": "select_revise_bound_or_preserve",
-        "anti_pattern": "abstraction_is_not_depth",
-        "expected_outcome": "reframe"
+      "expected_output": "说明 A 的贡献收益50变45与 B 的60如何影响结论；联系成本、分账、定价或渠道差异解释价值捕获机制。",
+      "learning_eval": {
+        "primary_rule": "R08",
+        "related_rules": [
+          "R00",
+          "R07"
+        ],
+        "failure_mode": "成本下降被直接推成制片公司利润增长",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "说明 A 的贡献收益50变45与 B 的60如何影响结论"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "联系成本、分账、定价或渠道差异解释价值捕获机制"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "案例为教学假设；无需强制 DCF 或平台垄断论"
+          }
+        ],
+        "critical_failures": [
+          "声称成本降30必然让制作公司多赚30"
+        ],
+        "not_required": [
+          "无需为比较而比较；只检查当前真正存在的机制差异"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -1399,19 +2224,39 @@
       "files": [
         "evals/fixtures/learning-problem-agent-misdiagnosis.md"
       ],
-      "expected_output": "从声称已执行与受控执行证据之间的缺口找关键研究问题，通过竞争解释识别下一份日志或文件证据。",
-      "assertions": [
-        "区分助手文本声称读取与结构化Tool Call、真实文件读入、Tool Result/Observation、文件版本。",
-        "不能仅凭缺少日志就断言没有执行；至少区分调用没发生、文件版本错、已读但理解错等竞争机制。",
-        "提出最小区分性证据并解释它如何改变问题方向，不预设需要更大模型或首先堆提示词。",
-        "不得伪造真实源码、已执行Probe或外部系统日志；机制问题服务用户定位失败。"
-      ],
-      "problem_discovery": {
-        "mode": "conditional",
-        "question_test": "grounded_discriminating_user_aligned",
-        "outcome": "select_revise_bound_or_preserve",
-        "anti_pattern": "abstraction_is_not_depth",
-        "expected_outcome": "reframe"
+      "expected_output": "区分文件是否读入、读了哪版和读后抽取错误；指出至少一个能区分调用、版本或理解错误的关键证据。",
+      "learning_eval": {
+        "primary_rule": "R11",
+        "related_rules": [
+          "R00",
+          "R09"
+        ],
+        "failure_mode": "听到‘金额错’就直接归因模型太笨",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "区分文件是否读入、读了哪版和读后抽取错误"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "指出至少一个能区分调用、版本或理解错误的关键证据"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "附件不提供真实日志则不捏造，也无需先换大模型"
+          }
+        ],
+        "critical_failures": [
+          "以一句‘已读文件’文本宣称读取已验证"
+        ],
+        "not_required": [
+          "成熟定义无需强制实验，只有竞争解释影响核心结论时需要区分性证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -1436,19 +2281,39 @@
       "files": [
         "evals/fixtures/learning-reality-loan-process.md"
       ],
-      "expected_output": "识别现有问题已足够具体且能被状态转移直接检验，准确回答审批/签约/生效的区别，而不追求虚假的宏大问题。",
-      "assertions": [
-        "明确直接保留原问题比升级成宏观数字化或组织治理问题更有价值。",
-        "对照APPROVED、SIGNED、EFFECTIVE状态与生效条件，解释示例额度不可用。",
-        "不要编造银行真实制度或数字指标；标注为合成案例。",
-        "不为‘问题发现’输出多个互不相关的候选问题清单。"
-      ],
-      "problem_discovery": {
-        "mode": "conditional",
-        "question_test": "grounded_discriminating_user_aligned",
-        "outcome": "select_revise_bound_or_preserve",
-        "anti_pattern": "abstraction_is_not_depth",
-        "expected_outcome": "preserve"
+      "expected_output": "直接回答审批签约后为什么额度仍不可用；结合生效条件和 APPROVED/SIGNED/EFFECTIVE 的状态转变。",
+      "learning_eval": {
+        "primary_rule": "R03",
+        "related_rules": [
+          "R00",
+          "R01"
+        ],
+        "failure_mode": "把明确的授信生效问题升级成宏大转型问题",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "直接回答审批签约后为什么额度仍不可用"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "结合生效条件和 APPROVED/SIGNED/EFFECTIVE 的状态转变"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "只讨论合成案例，不必发散组织改革或指标体系"
+          }
+        ],
+        "critical_failures": [
+          "把未生效业务描述为已经可合法用信"
+        ],
+        "not_required": [
+          "问题已明确时无须重新抽象或设计研究问题"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -1471,19 +2336,39 @@
         "output_policy": "integrated_learning_unless_explicit"
       },
       "files": [],
-      "expected_output": "保持简明的定义区别，不强制重构根本问题或增加问题链。",
-      "assertions": [
-        "直接区分前者是服务时长、后者是最低付款义务，两者需要具体合同判断。",
-        "尊重用户的一句话要求，不新增宏观商业研究任务或投资推荐。",
-        "不强行使用多层问题发现表格、公式或假设数据。",
-        "根据Learning现有要求保持D/R的轻量前置，不编造独立文件。"
-      ],
-      "problem_discovery": {
-        "mode": "conditional",
-        "question_test": "grounded_discriminating_user_aligned",
-        "outcome": "select_revise_bound_or_preserve",
-        "anti_pattern": "abstraction_is_not_depth",
-        "expected_outcome": "preserve"
+      "expected_output": "用一句话区分服务期限和最低付款承诺；简短语句同时说清时间概念与支付义务。",
+      "learning_eval": {
+        "primary_rule": "R15",
+        "related_rules": [
+          "R00",
+          "R01"
+        ],
+        "failure_mode": "一句定义被自动展开成研究框架",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "用一句话区分服务期限和最低付款承诺"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "简短语句同时说清时间概念与支付义务"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "不展开估值、风控或行业研究，也不编造合同条款"
+          }
+        ],
+        "critical_failures": [
+          "将服务五年等同客户必付五年费用"
+        ],
+        "not_required": [
+          "完成问题后应停止；不必新增额外研究、实施或自测"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -1508,19 +2393,39 @@
       "files": [
         "evals/fixtures/learning-domain-stock-research.md"
       ],
-      "expected_output": "识别对应领域的终点和基础机制，再组织子问题；用证据校准，不把中间指标当最终价值。",
-      "assertions": [
-        "明确区分股票短期涨幅筛选、股票内在价值研究、短期价格预测三者；不能以不预测短期涨价或不给买卖建议为由拒绝建立股票价值的基本理论锚点。",
-        "明确股票内在价值与未来股东可获得的现金流、时间和风险调整折现有关；允许FCFE或FCFF（FCFF先得企业价值再调整净债务等），不把利润、回款或营业收入当终点。",
-        "把至少两种公司经营机制（如内容成本与分账、AI安全付费、化工价差与再投资）具体映射到现金流的金额、时间、再投资或风险，而不是只用‘经济利益保留’替代估值逻辑。",
-        "区分当前市场价格包含的增长/风险预期与实际价值判断；没有完整数据时不编造目标价、收益率或买卖结论。"
-      ],
-      "domain_anchor": {
-        "trigger": "intent_and_domain_conditional",
-        "target": "terminal_criterion_before_problem_discovery",
-        "method": "domain_fundamentals_link_drivers_to_outcomes",
-        "guardrail": "no_forced_model_or_cross_domain_universality",
-        "expected_outcome": "anchor"
+      "expected_output": "明确经营价值判断与短期涨幅、目标价不同；将未来股权现金流、时间和风险与经营机制关联。",
+      "learning_eval": {
+        "primary_rule": "R04",
+        "related_rules": [
+          "R00",
+          "R07"
+        ],
+        "failure_mode": "行业新闻直接替代股票内在价值的基本理论",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "明确经营价值判断与短期涨幅、目标价不同"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "将未来股权现金流、时间和风险与经营机制关联"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "可用 FCFE 或 FCFF 正确桥接股权价值，不必给精确买点"
+          }
+        ],
+        "critical_failures": [
+          "把营业收入或净利润直接当股东可得现金流"
+        ],
+        "not_required": [
+          "不因没有重新发明新理论或缺少无关引用扣分"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -1545,19 +2450,39 @@
       "files": [
         "evals/fixtures/learning-domain-profit-vs-cash.md"
       ],
-      "expected_output": "识别对应领域的终点和基础机制，再组织子问题；用证据校准，不把中间指标当最终价值。",
-      "assertions": [
-        "明确用100+20-150-20=-50和70+10-30-5=45对比利润与FCFF，而不以NOPAT或增长率为估值终点。",
-        "指出高再投资支出可能创造未来价值，单期FCFF较低本身不能证明A的企业/股权价值必低于B；需要未来ROIC、资本成本、持续现金流。",
-        "区分企业价值FCFF与股权价值FCFE或FCFF之后净债务等调整，不能将不匹配的折现率或两种价值混用。",
-        "提出下一步应验证哪些高价值现金流输入和当前价格预期，而非直接给出投资建议。"
-      ],
-      "domain_anchor": {
-        "trigger": "intent_and_domain_conditional",
-        "target": "terminal_criterion_before_problem_discovery",
-        "method": "domain_fundamentals_link_drivers_to_outcomes",
-        "guardrail": "no_forced_model_or_cross_domain_universality",
-        "expected_outcome": "anchor"
+      "expected_output": "对比给定案例的 FCFF：A为-50、B为45；解释再投资、ROIC 和未来现金流为何仍影响最终价值。",
+      "learning_eval": {
+        "primary_rule": "R04",
+        "related_rules": [
+          "R00",
+          "R07"
+        ],
+        "failure_mode": "利润增长被当成股权价值必然提高",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "对比给定案例的 FCFF：A为-50、B为45"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "解释再投资、ROIC 和未来现金流为何仍影响最终价值"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "企业价值与股权价值、FCFF 与 FCFE 的口径不能混用"
+          }
+        ],
+        "critical_failures": [
+          "据单期 FCFF 高低断言 A 的股权必低于 B"
+        ],
+        "not_required": [
+          "不因没有重新发明新理论或缺少无关引用扣分"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -1582,19 +2507,39 @@
       "files": [
         "evals/fixtures/learning-domain-software-slo.md"
       ],
-      "expected_output": "识别对应领域的终点和基础机制，再组织子问题；用证据校准，不把中间指标当最终价值。",
-      "assertions": [
-        "先识别用户任务正确完成（指定合同版本、授权条款、金额）及可靠性/性能约束，而不以低p95单独定义系统成功。",
-        "比较至少两条可解释错误的技术机制，如版本检索选择、工具实际读取、金额抽取；指出需要的执行/文件证据。",
-        "清楚区分3份样本发现错误与系统总体错误率，不能据此编造规模统计。",
-        "不强行写财务DCF或声称程序实测、也不将‘更快’本身等同于‘更正确’。"
-      ],
-      "domain_anchor": {
-        "trigger": "intent_and_domain_conditional",
-        "target": "terminal_criterion_before_problem_discovery",
-        "method": "domain_fundamentals_link_drivers_to_outcomes",
-        "guardrail": "no_forced_model_or_cross_domain_universality",
-        "expected_outcome": "anchor"
+      "expected_output": "明确抽对合同版本、金额与授权才是任务成功；解释检索版本、文件读取、抽取错误等可能机制。",
+      "learning_eval": {
+        "primary_rule": "R01",
+        "related_rules": [
+          "R00",
+          "R15"
+        ],
+        "failure_mode": "性能改进指标替代文档助手任务正确性",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "明确抽对合同版本、金额与授权才是任务成功"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "解释检索版本、文件读取、抽取错误等可能机制"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "3份样本不是总体错误率，不需接入股票估值框架"
+          }
+        ],
+        "critical_failures": [
+          "以 p95 降低证明抽取错误已解决"
+        ],
+        "not_required": [
+          "不强制固定文章结构；以是否回答实际用户任务为准"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -1619,19 +2564,39 @@
       "files": [
         "evals/fixtures/learning-domain-stock-ticker.md"
       ],
-      "expected_output": "保持事实任务简明，不因股票关键词强制估值。",
-      "assertions": [
-        "识别用户任务是事实展示不是股票基本面分析，直列三所对应公司、代码与涨幅，明示合成样例。",
-        "即使材料主题是股票，也不强迫贴现现金流、投资决策、跨公司深层问题研究或长篇模型。",
-        "保持用户边界，不冒充实盘行情、不虚构新股上市或涨停信息。",
-        "如果进入Learning路线，仍按原规则对D/R做必要且轻量的前置，不声称独立运行隔离已验证。"
-      ],
-      "domain_anchor": {
-        "trigger": "intent_and_domain_conditional",
-        "target": "terminal_criterion_before_problem_discovery",
-        "method": "domain_fundamentals_link_drivers_to_outcomes",
-        "guardrail": "no_forced_model_or_cross_domain_universality",
-        "expected_outcome": "skip"
+      "expected_output": "依据附件列出三个交易所各前三名及必要字段；标注样例数据口径，回答直接且完整。",
+      "learning_eval": {
+        "primary_rule": "R15",
+        "related_rules": [
+          "R00",
+          "R01"
+        ],
+        "failure_mode": "用户只要事实榜单却强制进入股票研究课程",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "依据附件列出三个交易所各前三名及必要字段"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "标注样例数据口径，回答直接且完整"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "不强制估值、股价预测或深层商业研究"
+          }
+        ],
+        "critical_failures": [
+          "把合成榜单写成真实当日市场结果"
+        ],
+        "not_required": [
+          "完成问题后应停止；不必新增额外研究、实施或自测"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -1656,13 +2621,40 @@
       "files": [
         "evals/fixtures/learning-general-observational-study.md"
       ],
-      "expected_output": "理解关联、混杂和因果的可检验差异",
-      "assertions": [
-        "区分两组观察均值差异（6h vs 7h）与个人必然少睡一小时的因果结论。",
-        "指出自愿样本、考试压力或作息等至少一个竞争解释以及最有区分力的补充证据。",
-        "不得杜撰真实试验、统计显著性、普遍临床效果或制造无依据建议。",
-        "解释机制而非罗列研究方法术语，答案不需要股权现金流或经济回报模型。"
-      ]
+      "expected_output": "解释观察组 6h 与 7h 差异最多能说明关联；结合压力、作息、自选组等混杂说明验证思路。",
+      "learning_eval": {
+        "primary_rule": "R11",
+        "related_rules": [
+          "R00",
+          "R09"
+        ],
+        "failure_mode": "把两组睡眠均值差当已证明咖啡因果",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "解释观察组 6h 与 7h 差异最多能说明关联"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "结合压力、作息、自选组等混杂说明验证思路"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "不伪造试验、显著性或临床建议"
+          }
+        ],
+        "critical_failures": [
+          "把组间一小时均值差判成人人喝咖啡少睡一小时"
+        ],
+        "not_required": [
+          "成熟定义无需强制实验，只有竞争解释影响核心结论时需要区分性证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 52,
@@ -1686,13 +2678,40 @@
       "files": [
         "evals/fixtures/learning-general-policy-exception.md"
       ],
-      "expected_output": "找到规则与例外的组合条件，以及对具体业务证据的需要",
-      "assertions": [
-        "整合第4、5、6条，不因纸面签名缺失就认定所有业务都不合法。",
-        "区分有效电子签章与满足特批条件且事后补签的例外路径，不能任意推广。",
-        "明确具体合同是否有电子授权或特批记录仍未知，不臆造实际银行/监管规定。",
-        "使用流程/条件证据解释，不套投资、经营或现金流分析。"
-      ]
+      "expected_output": "整合第4、5、6条理解‘签署后执行’；区分有效电子签章、例外特批及事后补签前提。",
+      "learning_eval": {
+        "primary_rule": "R08",
+        "related_rules": [
+          "R00",
+          "R07"
+        ],
+        "failure_mode": "只抓制度一条规则而忽视例外和条件组合",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "整合第4、5、6条理解‘签署后执行’"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "区分有效电子签章、例外特批及事后补签前提"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "真实合同授权和审批记录未知，不套监管结论"
+          }
+        ],
+        "critical_failures": [
+          "把无纸面签字等同所有业务无效"
+        ],
+        "not_required": [
+          "无需为比较而比较；只检查当前真正存在的机制差异"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 53,
@@ -1716,13 +2735,40 @@
       "files": [
         "evals/fixtures/learning-general-history-sources.md"
       ],
-      "expected_output": "通过冲突来源理解多因解释与证据边界",
-      "assertions": [
-        "准确识别纪要强调安全、报纸强调工资、回忆录提示双因素但记忆有限。",
-        "说明不同来源立场、时点与证据完整度，提出怎样通过更原始的协商记录厘清。",
-        "不能从三份材料判断唯一真实起因或发明当年后续事件。",
-        "不强行把历史解释简化为统一量化收益目标；能形成有边界的解释。"
-      ]
+      "expected_output": "解释纪要、报纸、回忆录各自提出什么因素；分析来源立场和时点如何影响证据权重与调查方向。",
+      "learning_eval": {
+        "primary_rule": "R09",
+        "related_rules": [
+          "R00",
+          "R12"
+        ],
+        "failure_mode": "将不同历史来源拼成唯一确定因果故事",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "解释纪要、报纸、回忆录各自提出什么因素"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "分析来源立场和时点如何影响证据权重与调查方向"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "承认史料冲突，不强制唯一量化终点"
+          }
+        ],
+        "critical_failures": [
+          "发明未记载的历史后续事件"
+        ],
+        "not_required": [
+          "成熟原理不要求真实生产压测，具体强事实才需要相称的证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 54,
@@ -1746,13 +2792,40 @@
       "files": [
         "evals/fixtures/learning-general-math-conditional.md"
       ],
-      "expected_output": "理解等价变换的逻辑条件与反例",
-      "assertions": [
-        "以a=-2,b=2直接推翻原命题，并区分开平方对应绝对值关系。",
-        "给出a=b或a=-b的适用结论和非负条件下推出a=b的理由。",
-        "不强制经验测量、真实世界数据、财务估值或反复追问更深抽象本质。",
-        "解释可以简洁，并能对应附件的数学材料，不伪造计算工具执行。"
-      ]
+      "expected_output": "用 a=-2,b=2 反例说明 a²=b² 不推出 a=b；解释 |a|=|b|、a=±b 及非负条件下的结论。",
+      "learning_eval": {
+        "primary_rule": "R12",
+        "related_rules": [
+          "R00",
+          "R09"
+        ],
+        "failure_mode": "遗漏平方的正负分支而得出错误命题",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "用 a=-2,b=2 反例说明 a²=b² 不推出 a=b"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "解释 |a|=|b|、a=±b 及非负条件下的结论"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "数学证明可以直接、简短，不必现实实验"
+          }
+        ],
+        "critical_failures": [
+          "把平方相等无条件等同原数相等"
+        ],
+        "not_required": [
+          "非关键四舍五入或措辞问题可局部修正，不能压过正确的主线"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 55,
@@ -1776,13 +2849,40 @@
       "files": [
         "evals/fixtures/learning-general-literary-interpretation.md"
       ],
-      "expected_output": "解释有根据但可能多义的文本阅读",
-      "assertions": [
-        "指出至少两个解释分别由哪些具体文本细节支持，说明文本留下的空白。",
-        "不把作者意图、人物心理或历史背景冒充已有事实。",
-        "承认文学解释可以有合理多义性，不强制建立唯一的数值终点或科学控制实验。",
-        "避免把讨论推进成泛泛的‘人生根本价值’命题，保留用户阅读目的。"
-      ]
+      "expected_output": "从窗、路灯和未寄出的信支持合理的多种解读；解释每种解读与具体文本细节的关系及留白。",
+      "learning_eval": {
+        "primary_rule": "R10",
+        "related_rules": [
+          "R00",
+          "R09"
+        ],
+        "failure_mode": "把文学多义性强行缩减为唯一科学假说",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "从窗、路灯和未寄出的信支持合理的多种解读"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "解释每种解读与具体文本细节的关系及留白"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "不冒充作者心理或历史事实，不做情绪数值评分"
+          }
+        ],
+        "critical_failures": [
+          "把未经文本支持的唯一人物动机宣称为事实"
+        ],
+        "not_required": [
+          "教学例子无需证明真实效果，但不能被描述成真实测量"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 56,
@@ -1806,13 +2906,40 @@
       "files": [
         "evals/fixtures/learning-general-multigoal-design.md"
       ],
-      "expected_output": "区别速度优化与授权边界，保留多目标约束",
-      "assertions": [
-        "准确指出响应速度改善与未授权读取两种可观察结果及其不同性质。",
-        "指出访问控制可能是不可牺牲的约束，不能因为更快就推出整体成功。",
-        "不在没有用户偏好权重的情况下强造一个通用数值效用函数或NPV。",
-        "学习解释应指向哪些权限测试与成功标准，而非直接改写真实平台代码。"
-      ]
+      "expected_output": "清楚区分速度指标与授权正确性约束；解释为什么未授权读取可以否定整体成功判断。",
+      "learning_eval": {
+        "primary_rule": "R02",
+        "related_rules": [
+          "R00",
+          "R09"
+        ],
+        "failure_mode": "因 p95 变快就认定越权产品优化成功",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "清楚区分速度指标与授权正确性约束"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "解释为什么未授权读取可以否定整体成功判断"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "不强制造数值效用函数或直接重写系统代码"
+          }
+        ],
+        "critical_failures": [
+          "用性能改善抵消真实越权读取缺陷"
+        ],
+        "not_required": [
+          "不强制每个任务进行数量建模或指标设计，只检查对结论有影响的口径"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 57,
@@ -1836,13 +2963,40 @@
       "files": [
         "evals/fixtures/learning-general-code-state.md"
       ],
-      "expected_output": "精确对应执行顺序和异常后的错误状态，不假装实际执行",
-      "assertions": [
-        "指出job.status先设置done、write之后才await，write异常时可能已把状态标为done。",
-        "解释为什么成功后更新状态或失败时回滚/标错更符合要求，体现机制而非函数名清单。",
-        "锚定给定代码，不编造实际运行日志、持久化数据库、文件链接或事务保证。",
-        "保持简洁，不强制股票折现等领域知识，也不自动变成完整实施工单。"
-      ]
+      "expected_output": "解释 status=done 发生在 await write() 之前的危险；沿代码顺序推导写入失败仍可能显示 done，说明修正方向。",
+      "learning_eval": {
+        "primary_rule": "R07",
+        "related_rules": [
+          "R00",
+          "R05"
+        ],
+        "failure_mode": "只罗列 TypeScript 函数名而漏掉异步状态因果",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "解释 status=done 发生在 await write() 之前的危险"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "沿代码顺序推导写入失败仍可能显示 done，说明修正方向"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "不能将模拟推演当真实执行日志，不强制施工工单"
+          }
+        ],
+        "critical_failures": [
+          "声称先设 done 的实现能可靠报告写入成功"
+        ],
+        "not_required": [
+          "不强制用某种图、代码或叙事形式；关键是因果过程可复述"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 58,
@@ -1866,13 +3020,40 @@
       "files": [
         "evals/fixtures/learning-general-trivial-definition.md"
       ],
-      "expected_output": "保留精准的简单概念题，不因复杂Learning框架造成过度展开",
-      "assertions": [
-        "准确解释同步等待结果、异步可在结果就绪前继续其他工作。",
-        "不把异步直接等同更快或更高吞吐。",
-        "简短直接，不增加根本价值理论、强制反例实验、表格或无关问题。",
-        "不得宣称运行程序，D/R仍以当前输入轻量前置且无Runtime Trace时不声称隔离已验证。"
-      ]
+      "expected_output": "简洁解释同步等待和异步继续执行的差别；说明异步不自动等于更快的必要条件。",
+      "learning_eval": {
+        "primary_rule": "R15",
+        "related_rules": [
+          "R00",
+          "R01"
+        ],
+        "failure_mode": "同步异步定义被扩展成一整套学习工程",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "简洁解释同步等待和异步继续执行的差别"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "说明异步不自动等于更快的必要条件"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "不引入无关理论或虚构真实运行"
+          }
+        ],
+        "critical_failures": [
+          "把异步必然等同吞吐或速度提升"
+        ],
+        "not_required": [
+          "完成问题后应停止；不必新增额外研究、实施或自测"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 59,
@@ -1896,13 +3077,40 @@
       "files": [
         "evals/fixtures/learning-test-adequacy-investment.md"
       ],
-      "expected_output": "区分‘算术放大’与‘高主观把握能否支持高杠杆’，选择可区分买入价格/复利或被迫卖出的一项或数项有针对性的情景，避免假装证明真实投资可行。",
-      "assertions": [
-        "点明原例仅验证杠杆放大价格变动，不验证80%主观确定性对仓位决策是否足够；明确主问题和原例结论不一致。",
-        "选择至少一个会使原主张判断变化的条件（如100元与120元买入，或同终点不同回撤触发担保风险），说明为何比简单亏损乘2更有区分力。",
-        "不把假定80%当实证胜率；区分教学推演、企业价值预期与真实融资规则，不从情景给出真实证券买卖结论。",
-        "控制深度：不要求三套模型全写，新增量化必须确实回答主问题，拒绝无目的的更复杂计算。"
-      ]
+      "expected_output": "区分杠杆放大和‘高主观确定性是否足以加杠杆’；使用买入价格差异或中途回撤等有区分力情境。",
+      "learning_eval": {
+        "primary_rule": "R10",
+        "related_rules": [
+          "R00",
+          "R09"
+        ],
+        "failure_mode": "杠杆亏损乘法旁支取代主问题验证",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "区分杠杆放大和‘高主观确定性是否足以加杠杆’"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "使用买入价格差异或中途回撤等有区分力情境"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "80%是主观假设不是真实胜率，不必建立三套模型"
+          }
+        ],
+        "critical_failures": [
+          "把跌30%×2当成高确信度足以加杠杆的证明"
+        ],
+        "not_required": [
+          "教学例子无需证明真实效果，但不能被描述成真实测量"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 60,
@@ -1926,13 +3134,40 @@
       "files": [
         "evals/fixtures/learning-test-adequacy-tool-routing.md"
       ],
-      "expected_output": "识别原例为已选工具的执行演示，重构能够比较本地文件、制度搜索、复合请求的工具选择问题与可核验证据。",
-      "assertions": [
-        "明确‘工具已被选中后如何执行’与‘为什么选这个工具’是两个不同研究问题，旧例仅回答了旁支。",
-        "利用至少A与B两种不同意图对工具描述和请求的差异说明路由输入，C可能需要多步而不是总选一种。",
-        "区分模型可见工具声明、输出的结构化tool-call、policy/参数验证、实际执行，不能凭一条执行成功记录臆造模型隐藏决策。",
-        "指出怎样用具体工具可见上下文和选择事件日志核对，而不是只重复Observation闭环。"
-      ]
+      "expected_output": "直接解释模型决定调用何种工具所依赖的信息；对比本地文件、制度搜索和混合请求的路由差异。",
+      "learning_eval": {
+        "primary_rule": "R01",
+        "related_rules": [
+          "R00",
+          "R15"
+        ],
+        "failure_mode": "工具执行成功示例没有回答如何选择工具",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "直接解释模型决定调用何种工具所依赖的信息"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "对比本地文件、制度搜索和混合请求的路由差异"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "执行闭环可以提及但不能代替路由，不能编造隐藏决策"
+          }
+        ],
+        "critical_failures": [
+          "把已选 read_local_file 的执行记录当作工具选择依据"
+        ],
+        "not_required": [
+          "不强制固定文章结构；以是否回答实际用户任务为准"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 61,
@@ -1956,13 +3191,40 @@
       "files": [
         "evals/fixtures/learning-test-adequacy-workflow.md"
       ],
-      "expected_output": "用一笔未满足生效条件的负样本区分只看审批标记与真正生效门禁，不以正常路径通过证明所有控制。",
-      "assertions": [
-        "指出正常单据X两个竞争实现都会放行，因此正常成功案例不能区分实现A与B，不能证明门禁充分。",
-        "以审批和签约完成但有生效条件未满足的Y为最小区分样例，说明A拒绝、B可能放行；明确是待测预期。",
-        "不捏造真实银行生产结果、真实监管要求或已运行日志，说明需查的状态/条件及工具记录。",
-        "证据分析必须沿‘生效条件是否真正阻断用信’这个原问题，不泛化为所有银行数字化问题。"
-      ]
+      "expected_output": "解释 X 正常成功为何不能证明控制正确；比较 Y 未满足条件时两种实现的不同预期行为。",
+      "learning_eval": {
+        "primary_rule": "R11",
+        "related_rules": [
+          "R00",
+          "R09"
+        ],
+        "failure_mode": "正常用信样本无法区分错误的生效门禁",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "解释 X 正常成功为何不能证明控制正确"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "比较 Y 未满足条件时两种实现的不同预期行为"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "是假设测试不是生产实测，不必推广全行制度"
+          }
+        ],
+        "critical_failures": [
+          "仅因一笔正常业务成功就声称门禁充分"
+        ],
+        "not_required": [
+          "成熟定义无需强制实验，只有竞争解释影响核心结论时需要区分性证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 62,
@@ -1986,13 +3248,40 @@
       "files": [
         "evals/fixtures/learning-general-observational-study.md"
       ],
-      "expected_output": "区别观察均值和因果效应的检验对象，给出能控制混杂因素的更有区分力的设计且不冒充真实结果。",
-      "assertions": [
-        "明确组间1小时均值差只说明关联而非因果，原观察不能排除作息/考试压力等竞争解释。",
-        "解释随机分组或合理控制混杂/个体内对照等至少一种检验思路，以及如何区分咖啡影响与选择偏差。",
-        "不伪造随机试验结果、显著性或临床建议，认可仍存在不可测的混杂和外推限制。",
-        "不强制股票估值、演化成空洞的‘所有相关均非因果’口号。"
-      ]
+      "expected_output": "说清咖啡组 6h 和非咖啡组 7h 是观察关联；解释随机分组或控制混杂怎样产生更强区分证据。",
+      "learning_eval": {
+        "primary_rule": "R11",
+        "related_rules": [
+          "R00",
+          "R09"
+        ],
+        "failure_mode": "组间睡眠均值比较被冒充因果实验证明",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "说清咖啡组 6h 和非咖啡组 7h 是观察关联"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "解释随机分组或控制混杂怎样产生更强区分证据"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "未提供实测结果不编造因果效应，也不演成无关领域研究"
+          }
+        ],
+        "critical_failures": [
+          "声称一小时均值差完全由咖啡造成"
+        ],
+        "not_required": [
+          "成熟定义无需强制实验，只有竞争解释影响核心结论时需要区分性证据"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 63,
@@ -2016,13 +3305,40 @@
       "files": [
         "evals/fixtures/learning-general-trivial-definition.md"
       ],
-      "expected_output": "能用定义和一句最小例子清楚解释差异，并尊重简单概念题的低成本停止条件。",
-      "assertions": [
-        "准确解释同步调用等待、异步可在结果就绪前继续工作，不把异步自动等同更快。",
-        "不把定义教学强制升级为双假设实验、复杂控制变量方案或宏观认知框架。",
-        "简短表达且明确例子仅用于帮助理解、不是实测性能验证。",
-        "不虚构程序运行或测试结果。"
-      ]
+      "expected_output": "准确解释同步等待和异步先继续做别的工作的区别；短例子足以帮助理解即可，不必提供完整实验设计。",
+      "learning_eval": {
+        "primary_rule": "R14",
+        "related_rules": [
+          "R00",
+          "R07"
+        ],
+        "failure_mode": "简单同步异步解释被强制升级为反事实试验",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "准确解释同步等待和异步先继续做别的工作的区别"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "短例子足以帮助理解即可，不必提供完整实验设计"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "教学示例并非性能实测，答案应简短"
+          }
+        ],
+        "critical_failures": [
+          "将异步等同必然更快或强制复杂验证流程"
+        ],
+        "not_required": [
+          "文章质量评估不等于真实用户掌握度测试；练习按任务需要触发"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 64,
@@ -2297,15 +3613,7 @@
       "files": [
         "evals/fixtures/vllm-learning-term-dump.md"
       ],
-      "expected_output": "围绕显存容量与计算调度两条约束，以机制需要为依据组织 PagedAttention、Continuous Batching 等概念；适度说明前缀缓存与长输入情况，能支持有关显存充足但串行执行、共享前缀不存在、吞吐和延迟变化的迁移判断。D/R 必须有独立前置；未执行时不宣称已完成。",
-      "assertions": [
-        "建立明确的学习目标，将显存缓存容量与 GPU 计算调度两类约束区分开，而不是沿原素材八个术语的顺序写目录。",
-        "每个重要新概念都有明确的问题背景和机制解释；只保留支持核心问题或必要边界的知识，其他内容适度压缩或放到后续。",
-        "能从解释推导‘显存充足但逐条执行’时单靠改进 KV Cache 管理未必有效，且推导不依赖文章没有介绍的前提。",
-        "能解释共享前缀不存在时前缀缓存收益减弱、以及更高并发不必然意味着用户延迟更短。",
-        "教学例子与真实吞吐实验严格区分；不能把所附合成素材或假设推演当成实际 vLLM 测量。",
-        "若有运行 Trace，验证本轮 D/R 从同一原始输入独立执行并先于 L 完成；没有 Trace 时标注不可验证，不以三段式文本充当独立执行。"
-      ],
+      "expected_output": "围绕实际目标区分 KV Cache 容量与执行调度限制；说明 PagedAttention、Continuous Batching 在条件变化下分别有何用处。",
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -2315,6 +3623,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R08",
+        "related_rules": [
+          "R00",
+          "R07"
+        ],
+        "failure_mode": "混淆显存管理与计算调度并沿视频术语机械罗列",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "围绕实际目标区分 KV Cache 容量与执行调度限制"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "说明 PagedAttention、Continuous Batching 在条件变化下分别有何用处"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "前缀缓存有共享才显著收益；并发提高不保证请求延迟下降"
+          }
+        ],
+        "critical_failures": [
+          "声称 PagedAttention 单独就解决串行推理执行瓶颈"
+        ],
+        "not_required": [
+          "无需为比较而比较；只检查当前真正存在的机制差异"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     },
     {
@@ -2327,13 +3668,7 @@
         "L"
       ],
       "files": [],
-      "expected_output": "用通俗、简明的转账或两步修改例子说明事务原子性是全部提交或全部回滚；不把 R00–R15 打印成必经16步、不强制无关理论、对照、量化或长篇案例；D/R 前置按现行执行约束处理。",
-      "assertions": [
-        "准确解释数据库事务原子性，并用足以说明全部成功或全部不生效的简短例子帮助理解。",
-        "不机械打印 R00–R15，未为了满足每条规则编造独立实验、复杂机制或长篇对照。",
-        "不声称一个简单的事务例子已验证某数据库产品的具体运行行为。",
-        "若有 Trace 则检查 D/R 前置；无 Trace 不宣称实际独立隔离已得到验证。"
-      ],
+      "expected_output": "正确解释事务全部成功或全部不生效；用简单两步更新或转账例子说明含义。",
       "learning_preflight": {
         "required_before_L": [
           "D",
@@ -2343,6 +3678,39 @@
         "completion_barrier": "both_complete_before_L",
         "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
         "output_policy": "integrated_learning_unless_explicit"
+      },
+      "learning_eval": {
+        "primary_rule": "R06",
+        "related_rules": [
+          "R00",
+          "R13"
+        ],
+        "failure_mode": "把短原子性解释机械套成十六步清单",
+        "rubric": [
+          {
+            "id": "goal",
+            "weight": 4,
+            "criterion": "正确解释事务全部成功或全部不生效"
+          },
+          {
+            "id": "mechanism",
+            "weight": 4,
+            "criterion": "用简单两步更新或转账例子说明含义"
+          },
+          {
+            "id": "boundary",
+            "weight": 2,
+            "criterion": "不需要迁移试题、全量实验或术语目录，不冒充产品测量"
+          }
+        ],
+        "critical_failures": [
+          "把部分写入成功仍视为整体事务原子性"
+        ],
+        "not_required": [
+          "不因采用定义→原理→步骤的自然顺序扣分，除非用户明确要求先展示案例"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
       }
     }
   ]
