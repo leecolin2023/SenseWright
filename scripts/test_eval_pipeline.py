@@ -52,6 +52,9 @@ def main():
             for criterion in grade["criteria"]:
                 criterion["rating"] = 2
                 criterion["evidence"] = "测试桩：仅用于验证数据管道，不代表真实文章已获此评分"
+            grade["failure_mode_assessment"]["occurred"] = False
+            grade["failure_mode_assessment"]["severity"] = "none"
+            grade["failure_mode_assessment"]["evidence"] = "测试桩"
             for item in grade["critical_failures"]:
                 item["occurred"] = False
                 item["evidence"] = "测试桩"
