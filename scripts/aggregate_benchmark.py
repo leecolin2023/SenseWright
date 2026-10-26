@@ -47,6 +47,19 @@ def grade_learning(grade, contract):
         if not isinstance(check.get("evidence"), str) or not check["evidence"].strip():
             return None, "each criterion needs independent evidence"
         score += criterion["weight"] * rating / 2
+    failure_check = grade.get("failure_mode_assessment")
+    if not isinstance(failure_check, dict) or failure_check.get("description") != contract["failure_mode"]:
+        return None, "missing rule failure-mode assessment"
+    failure_occurred = failure_check.get("occurred")
+    severity = failure_check.get("severity")
+    if type(failure_occurred) is not bool:
+        return None, "rule failure-mode occurrence must be true or false"
+    if severity not in (("minor", "major", "critical") if failure_occurred else ("none",)):
+        return None, "rule failure-mode severity inconsistent with occurrence"
+    if failure_occurred and not isinstance(failure_check.get("evidence"), str):
+        return None, "rule failure-mode needs evidence"
+    if failure_occurred and not failure_check["evidence"].strip():
+        return None, "rule failure-mode evidence cannot be empty"
     failures = grade.get("critical_failures")
     expected = contract["critical_failures"]
     if not isinstance(failures, list) or len(failures) != len(expected):
@@ -59,7 +72,8 @@ def grade_learning(grade, contract):
             observed += 1
             if not isinstance(item.get("evidence"), str) or not item["evidence"].strip():
                 return None, "critical failure requires concrete evidence"
-    return {"score": score, "critical_count": observed}, None
+    return {"score": score, "critical_count": observed, "failure_occurred": failure_occurred,
+            "failure_severity": severity}, None
 
 
 def grade_legacy(grade, assertions):
@@ -115,6 +129,8 @@ def main():
     rule_results = {}
     rule_pairs = {}
     paired_deltas = {}
+    paired_failure_changes = {}
+    rule_failure_counts = {}
     per_case = []
     learning_total = 0
     pairwise = {"with_skill": 0, baseline: 0, "tie": 0, "graded": 0}
@@ -122,7 +138,7 @@ def main():
     for variant in configs:
         summary[variant] = {
             "learning_graded": 0, "learning_total": 0, "learning_scores": [],
-            "learning_critical_cases": 0, "learning_ungraded": [],
+            "learning_critical_cases": 0, "learning_failure_cases": 0, "learning_ungraded": [],
             "preflight": {"verified": 0, "failed": 0, "unverified": 0},
             "legacy_passed": 0, "legacy_total": 0, "legacy_graded_cases": 0,
             "tokens": [], "duration_ms": [],
@@ -167,10 +183,12 @@ def main():
                     s["learning_graded"] += 1
                     s["learning_scores"].append(result["score"])
                     s["learning_critical_cases"] += int(result["critical_count"] > 0)
+                    s["learning_failure_cases"] += int(result["failure_occurred"])
                     case_item["variants"][variant] = {"graded": True, **result, "preflight": status}
                     rule = metadata["learning_eval"]["primary_rule"]
                     bucket = rule_results.setdefault(rule, {}).setdefault(variant, [])
                     bucket.append(result["score"])
+                    rule_failure_counts.setdefault(rule, {}).setdefault(variant, []).append(int(result["failure_occurred"]))
             else:
                 result = grade_legacy(grade, metadata["assertions"]) if grade else None
                 if result:
@@ -182,7 +200,12 @@ def main():
             a = case_item["variants"]["with_skill"]
             b = case_item["variants"][baseline]
             if a["graded"] and b["graded"]:
-                paired_deltas.setdefault(metadata["learning_eval"]["primary_rule"], []).append(a["score"] - b["score"])
+                rule = metadata["learning_eval"]["primary_rule"]
+                paired_deltas.setdefault(rule, []).append(a["score"] - b["score"])
+                change = "reduced" if b["failure_occurred"] and not a["failure_occurred"] else (
+                    "regressed" if a["failure_occurred"] and not b["failure_occurred"] else "unchanged"
+                )
+                paired_failure_changes.setdefault(rule, {"reduced": 0, "regressed": 0, "unchanged": 0})[change] += 1
         per_case.append(case_item)
     for variant, s in summary.items():
         s["learning_score_mean_10"] = mean(s.pop("learning_scores"))
@@ -195,11 +218,13 @@ def main():
                 variant: {
                     "graded": len(rule_results.get(rule, {}).get(variant, [])),
                     "mean_score_10": mean(rule_results.get(rule, {}).get(variant, [])),
+                    "failure_cases": sum(rule_failure_counts.get(rule, {}).get(variant, [])),
                 }
                 for variant in configs
             },
             "paired_comparisons": len(paired_deltas.get(rule, [])),
             "paired_mean_delta_10": mean(paired_deltas.get(rule, [])),
+            "paired_failure_changes": paired_failure_changes.get(rule, {"reduced": 0, "regressed": 0, "unchanged": 0}),
             "pairwise": rule_pairs.get(rule, {"with_skill": 0, baseline: 0, "tie": 0, "graded": 0}),
         }
         for rule in sorted(set(rule_pairs) | set(rule_results))
@@ -218,12 +243,12 @@ def main():
         "",
         "This report only aggregates **supplied actual results**. Missing/unverified entries are not failures.",
         "",
-        "| Variant | Learning graded/total | Mean rubric score /10 | Critical cases | D/R→L verified |",
-        "|---|---:|---:|---:|---:|",
+        "| Variant | Learning graded/total | Mean rubric score /10 | Rule failures | Critical cases | D/R→L verified |",
+        "|---|---:|---:|---:|---:|---:|",
     ]
     for variant, s in summary.items():
         score = f"{s['learning_score_mean_10']:.2f}" if s["learning_score_mean_10"] is not None else "n/a"
-        lines.append(f"| {variant} | {s['learning_graded']}/{s['learning_total']} | {score} | {s['learning_critical_cases']} | {s['preflight']['verified']} |")
+        lines.append(f"| {variant} | {s['learning_graded']}/{s['learning_total']} | {score} | {s['learning_failure_cases']} | {s['learning_critical_cases']} | {s['preflight']['verified']} |")
     lines += [
         "",
         "## Blind pairwise preference",
@@ -233,8 +258,8 @@ def main():
         "",
         "## Scores by primary Learning rule",
         "",
-        "| Rule | with_skill graded / mean | baseline graded / mean | Paired Δ /10 | Pairwise W / B / T |",
-        "|---|---:|---:|---:|---:|",
+        "| Rule | with_skill failure/graded | baseline failure/graded | Paired reduced/regressed | Rubric Δ /10 | Pairwise W/B/T |",
+        "|---|---:|---:|---:|---:|---:|",
     ]
     for rule, values in by_rule.items():
         def shown(variant):
@@ -244,7 +269,14 @@ def main():
         delta_display = f"{delta:+.2f}" if delta is not None else "n/a"
         pairs = values["pairwise"]
         pair_display = f"{pairs['with_skill']} / {pairs[baseline]} / {pairs['tie']}"
-        lines.append(f"| {rule} | {shown('with_skill')} | {shown(baseline)} | {delta_display} | {pair_display} |")
+        changes = values["paired_failure_changes"]
+        change_display = f"{changes['reduced']} / {changes['regressed']}"
+        a = values["variants"]["with_skill"]
+        b = values["variants"][baseline]
+        lines.append(
+            f"| {rule} | {a['failure_cases']}/{a['graded']} | {b['failure_cases']}/{b['graded']} | "
+            f"{change_display} | {delta_display} | {pair_display} |"
+        )
     lines += [
         "",
         "## Limitations",
