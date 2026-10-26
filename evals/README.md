@@ -26,7 +26,7 @@ Learning 的每条 R00–R15 规则都针对一类具体认知失败：例如把
 每个 Learning 测试保留已有 `id`、`name`、`prompt`、`files`、`expected_route` 和 D/R→L 前置合同，改为：
 
 - `primary_rule`：本例重点验证 R00–R15 的哪条规则；`related_rules` 仅说明相关维度，**不产生重复扣分**。
-- `failure_mode`：本规则需要避免的具体失败；不是强迫输出展示的文字。
+- `failure_mode`：本规则需要避免的具体失败；不是强迫输出展示的文字。独立评审应在 `failure_mode_assessment` 中明确该失败是否发生（`occurred: true|false`）、严重度（`none|minor|major|critical`）与回答证据。
 - `rubric`：三个独立任务检查：`goal`（权重 4）、`mechanism`（权重 4）、`boundary`（权重 2）。
 - `critical_failures`：会推翻核心学习结论的错误；独立报告，不用细枝末节抵消。
 - `not_required`：本例不得强制的形式或额外步骤；**不是禁止用户明确要求的内容**。
@@ -68,7 +68,7 @@ python scripts/init_eval_workspace.py --iteration 1 --baseline learning_v0_6_2_p
 
 ## 三、独立评审与成对比较
 
-独立评分的评审者应看到同一份原题、允许使用的材料、匿名回答和 Rubric，但**不能把回答模型的自评当独立证据**。可以是另一模型或人工评审，记录 `reviewer.id`、`kind: human|model`、`independent: true`、`blind_to_variant: true`。先运行下方 `prepare_pairwise.py`，只向评审者提供 `judge_packet.json`、原始材料以及匿名 A/B 的文章与评分模板。对 **A、B 分别独立评分**，分别将 `A.grading.template.json`、`B.grading.template.json` 填写为 `A.grading.json`、`B.grading.json`。每条 criterion 填 `rating` 和回答证据，关键失败填 `occurred` 及证据。
+独立评分的评审者应看到同一份原题、允许使用的材料、匿名回答和 Rubric，但**不能把回答模型的自评当独立证据**。可以是另一模型或人工评审，记录 `reviewer.id`、`kind: human|model`、`independent: true`、`blind_to_variant: true`。先运行下方 `prepare_pairwise.py`，只向评审者提供 `judge_packet.json`、原始材料以及匿名 A/B 的文章与评分模板。对 **A、B 分别独立评分**，分别将 `A.grading.template.json`、`B.grading.template.json` 填写为 `A.grading.json`、`B.grading.json`。每条 criterion 填 `rating` 和回答证据；另外填写 `failure_mode_assessment.occurred`、对应严重度与证据，关键失败另填 `occurred` 及证据。
 
 ```bash
 python scripts/prepare_pairwise.py .eval-workspace/iteration-1
@@ -88,7 +88,7 @@ python scripts/aggregate_benchmark.py .eval-workspace/iteration-1
 2. **质量分数**（0–10）与关键失败案例数：不得在覆盖率不同的情况下只比较平均分。
 3. **R00 运行验证数**（verified/failed/unverified）：它是独立执行证据，不是文章文风评分。
 4. **成对偏好**（新版胜/基线胜/平局/未评）：盲评应保留具体理由。
-5. **按 primary_rule 汇总**：有助于发现哪些规则有效、哪些规则没有实际增益。
+5. **按 primary_rule 汇总**：对同一案例比较失败模式是否从‘发生’变为‘未发生’（reduced）或反向退步（regressed），再结合配对 Rubric 分差、盲评胜负解释规则效益，而不是只看总分。
 
 这套工具仅聚合**外部真实执行与独立评分**，不会自动调用 LLM、自动进行主观判分，也不能从文章质量推断用户真的已学会。若要测量真实学习效果，应另做读者前后测/闭卷复述，而不是强制每篇教学文章附题。
 
