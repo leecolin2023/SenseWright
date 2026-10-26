@@ -48,7 +48,6 @@ def main():
         metadata = {k: v for k, v in case.items() if k not in ("assertions",)}
         if "L" not in case["expected_route"]:
             metadata["assertions"] = case["assertions"]
-        dump(case_dir / "eval_metadata.json", metadata) if case_dir.exists() else None
         case_dir.mkdir(parents=True, exist_ok=True)
         dump(case_dir / "eval_metadata.json", metadata)
 
