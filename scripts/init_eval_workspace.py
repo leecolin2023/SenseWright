@@ -93,7 +93,7 @@ def main():
             })
         manifest["cases"].append(name)
     dump(iteration / "manifest.json", manifest)
-    print(f"Prepared {iteration.relative_to(ROOT)}: {len(cases)} cases; no outputs or scores generated")
+    print(f"Prepared {iteration}: {len(cases)} cases; no outputs or scores generated")
 
 
 if __name__ == "__main__":
