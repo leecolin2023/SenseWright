@@ -113,6 +113,8 @@ def main():
     configs = ("with_skill", baseline)
     summary = {}
     rule_results = {}
+    rule_pairs = {}
+    paired_deltas = {}
     per_case = []
     learning_total = 0
     pairwise = {"with_skill": 0, baseline: 0, "tie": 0, "graded": 0}
@@ -134,9 +136,13 @@ def main():
         if learning:
             learning_total += 1
             winner = pair_result(case_dir, baseline)
+            rule = metadata["learning_eval"]["primary_rule"]
+            bucket = rule_pairs.setdefault(rule, {"with_skill": 0, baseline: 0, "tie": 0, "graded": 0})
             if winner is not None:
                 pairwise[winner] += 1
                 pairwise["graded"] += 1
+                bucket[winner] += 1
+                bucket["graded"] += 1
         else:
             winner = None
         case_item = {"case": name, "learning": learning, "primary_rule": metadata.get("learning_eval", {}).get("primary_rule"), "pairwise_winner": winner, "variants": {}}
@@ -172,13 +178,32 @@ def main():
                     s["legacy_passed"] += result["passed"]
                     s["legacy_total"] += result["total"]
                 case_item["variants"][variant] = {"graded": result is not None, **(result or {})}
+        if learning:
+            a = case_item["variants"]["with_skill"]
+            b = case_item["variants"][baseline]
+            if a["graded"] and b["graded"]:
+                paired_deltas.setdefault(metadata["learning_eval"]["primary_rule"], []).append(a["score"] - b["score"])
         per_case.append(case_item)
     for variant, s in summary.items():
         s["learning_score_mean_10"] = mean(s.pop("learning_scores"))
         s["tokens_mean"] = mean(s.pop("tokens"))
         s["duration_ms_mean"] = mean(s.pop("duration_ms"))
         s["legacy_assertion_pass_rate"] = s["legacy_passed"] / s["legacy_total"] if s["legacy_total"] else None
-    by_rule = {rule: {variant: {"graded": len(rule_results.get(rule, {}).get(variant, [])), "mean_score_10": mean(rule_results.get(rule, {}).get(variant, []))} for variant in configs} for rule in sorted(rule_results)}
+    by_rule = {
+        rule: {
+            "variants": {
+                variant: {
+                    "graded": len(rule_results.get(rule, {}).get(variant, [])),
+                    "mean_score_10": mean(rule_results.get(rule, {}).get(variant, [])),
+                }
+                for variant in configs
+            },
+            "paired_comparisons": len(paired_deltas.get(rule, [])),
+            "paired_mean_delta_10": mean(paired_deltas.get(rule, [])),
+            "pairwise": rule_pairs.get(rule, {"with_skill": 0, baseline: 0, "tie": 0, "graded": 0}),
+        }
+        for rule in sorted(set(rule_pairs) | set(rule_results))
+    }
     benchmark = {
         "schema_version": "0.2", "iteration": manifest["iteration"],
         "baseline": baseline, "learning_case_count": learning_total,
@@ -208,14 +233,18 @@ def main():
         "",
         "## Scores by primary Learning rule",
         "",
-        "| Rule | with_skill graded / mean | baseline graded / mean |",
-        "|---|---:|---:|",
+        "| Rule | with_skill graded / mean | baseline graded / mean | Paired Δ /10 | Pairwise W / B / T |",
+        "|---|---:|---:|---:|---:|",
     ]
     for rule, values in by_rule.items():
         def shown(variant):
-            item = values[variant]
+            item = values["variants"][variant]
             return str(item["graded"]) + " / " + (f"{item['mean_score_10']:.2f}" if item["mean_score_10"] is not None else "n/a")
-        lines.append(f"| {rule} | {shown('with_skill')} | {shown(baseline)} |")
+        delta = values["paired_mean_delta_10"]
+        delta_display = f"{delta:+.2f}" if delta is not None else "n/a"
+        pairs = values["pairwise"]
+        pair_display = f"{pairs['with_skill']} / {pairs[baseline]} / {pairs['tie']}"
+        lines.append(f"| {rule} | {shown('with_skill')} | {shown(baseline)} | {delta_display} | {pair_display} |")
     lines += [
         "",
         "## Limitations",
