@@ -62,6 +62,12 @@ def main():
                         {"id": criterion["id"], "rating": None, "evidence": None}
                         for criterion in contract["rubric"]
                     ],
+                    "failure_mode_assessment": {
+                        "description": contract["failure_mode"],
+                        "occurred": None,
+                        "severity": None,
+                        "evidence": None,
+                    },
                     "critical_failures": [
                         {"description": failure, "occurred": None, "evidence": None}
                         for failure in contract["critical_failures"]
