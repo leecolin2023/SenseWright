@@ -1,5 +1,12 @@
 # 更新记录（Changelog）
 
+## 2026-10-27 · Learning Eval V0.2：规则失败模式驱动的任务评测（原位重构）
+
+- **没有删除、归档、重编号任何测试用例。** 保留原有 80 个任务、57 个 Learning 案例和现有 fixtures/triggering；将 57 个 Learning 案例直接改为 `primary_rule / failure_mode / task rubric / critical_failures / not_required`，R00–R15 均有对应主规则测试。非 Learning 测试沿用现有断言。
+- 取消 Learning 案例中的旧 `assertions` 及遗留的 `mechanism_mapping / reality_calibration / problem_discovery / domain_anchor` 合同，以适用当前 V0.7.0 的「自然教学顺序合法、主干优先、按需验证」标准。
+- 新增独立评分（goal 4 / mechanism 4 / boundary 2；每维 0/1/2，证据必填）、致命错误标记、盲法 A/B 成对偏好、规则级成对分差与胜负汇总。D/R→L Trace 独立验证并标记 verified/failed/unverified，不从正文自述推断已执行。
+- 改造 `init_eval_workspace.py`、`aggregate_benchmark.py`、`validate_evals.py`，新增 `prepare_pairwise.py`、`resolve_blind_grades.py` 和离线流水线测试，CI 增加 smoke test。**这里仅提供测试合同与工具，不声称已经生成真实模型回答、完成独立评审或证明学习提升。**
+
 ## 2026-10-23 · Learning V0.7.0：机制主干优先（原位修订）
 
 - 按实际文章审阅反馈，修正 R05/R06 对知识删减和“先问题后概念”的过度偏好：经典的定义→原理→步骤解释可以直接成立，保留背景、示例、解释厚度，不强行改写成连续设问。
