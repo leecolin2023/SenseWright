@@ -17,3 +17,6 @@ jobs:
         run: python scripts/validate_skills.py
       - name: Validate evaluation assets
         run: python scripts/validate_evals.py
+
+      - name: Smoke-test Learning rubric and blind pairwise pipeline
+        run: python scripts/test_eval_pipeline.py
