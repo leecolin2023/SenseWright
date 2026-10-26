@@ -18,7 +18,7 @@ Learning 的每条 R00–R15 规则都针对一类具体认知失败：例如把
 | [baselines.json](baselines.json) | 冻结 Git 对照版本；选择合适邻近版本而非默认比较最早版本 |
 | [../scripts/validate_evals.py](../scripts/validate_evals.py) | 静态验证字段、fixture、Learning R00–R15 主规则覆盖 |
 | [../scripts/init_eval_workspace.py](../scripts/init_eval_workspace.py) | 生成任务目录、独立评分空模板、匿名 A/B 分配 |
-| [../scripts/prepare_pairwise.py](../scripts/prepare_pairwise.py) | 将实际输出复制为匿名 A/B 文件 |
+| [../scripts/prepare_pairwise.py](../scripts/prepare_pairwise.py) | 将实际输出、任务 Rubric 和评分模板复制为匿名 A/B 文件 |\n| [../scripts/resolve_blind_grades.py](../scripts/resolve_blind_grades.py) | 评分结束后解盲，将 A/B 独立评分映射回原版本 |\n| [../scripts/test_eval_pipeline.py](../scripts/test_eval_pipeline.py) | 使用合成评分桩验证流水线文件流转，不代表真实文章获得该分数 |
 | [../scripts/aggregate_benchmark.py](../scripts/aggregate_benchmark.py) | 汇总已完成的独立评分、独立运行记录及成对偏好；无评分保持未评测 |
 
 ## 一、单案例合同
@@ -68,13 +68,13 @@ python scripts/init_eval_workspace.py --iteration 1 --baseline learning_v0_6_2_p
 
 ## 三、独立评审与成对比较
 
-独立评分的评审者应看到同一份原题、允许使用的材料、回答和 Rubric，但**不能把回答模型的自评当独立证据**。可以是另一模型或人工评审，记录 `reviewer.id`、`kind: human|model`、`independent: true`、`blind_to_variant: true`。将填好的 `grading.template.json` 保存为 `grading.json`，每条 criterion 填 `rating` 及可核查的 `evidence`，关键失败填 `occurred` 及证据。未填完整不会被统计为 0 分，而是 **ungraded**。
+独立评分的评审者应看到同一份原题、允许使用的材料、匿名回答和 Rubric，但**不能把回答模型的自评当独立证据**。可以是另一模型或人工评审，记录 `reviewer.id`、`kind: human|model`、`independent: true`、`blind_to_variant: true`。先运行下方 `prepare_pairwise.py`，只向评审者提供 `judge_packet.json`、原始材料以及匿名 A/B 的文章与评分模板。对 **A、B 分别独立评分**，分别将 `A.grading.template.json`、`B.grading.template.json` 填写为 `A.grading.json`、`B.grading.json`。每条 criterion 填 `rating` 和回答证据，关键失败填 `occurred` 及证据。
 
 ```bash
 python scripts/prepare_pairwise.py .eval-workspace/iteration-1
 ```
 
-该命令仅在两份实际输出都存在时复制 A.md/B.md。盲评者只应接收 A、B、同一问题/材料及 Rubric，**不可接收 assignment.json，也不能看到模型/版本标签**。按读者目标比较哪个回答更有助理解、是否出现重大机制错误、是否过度教学或无据宣称；允许 `tie`。在 `vote.json` 填 `reviewer`（独立、盲评）、`winner: A|B|tie` 及 `evidence`，再由统计程序读取隐藏的答案分配映射。评分标签是过程声明，不等于已技术证明评分者独立；重大差异应人工复核。
+该命令仅在两份实际输出都存在时复制 A.md/B.md。盲评者只应接收 A、B、同一问题/材料及 Rubric，**不可接收 assignment.json，也不能看到模型/版本标签**。按读者目标比较哪个回答更有助理解、是否出现重大机制错误、是否过度教学或无据宣称；允许 `tie`。在 `vote.json` 填 `reviewer`（独立、盲评）、`winner: A|B|tie` 及 `evidence`。完成盲评后，才使用解盲映射导入评分：\n\n```bash\npython scripts/resolve_blind_grades.py .eval-workspace/iteration-1\n```\n\n该脚本拒绝覆盖已有正式评分，也拒绝证据不完整的评分；未完成评分保持 **ungraded**。独立评分和成对偏好应分别作出判断，最好由独立的评审者复核重大分歧。评分标签是过程声明，不等于已技术证明评分者独立。
 
 ## 四、聚合与解释
 
