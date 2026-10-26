@@ -1,157 +1,150 @@
 #!/usr/bin/env python3
-from pathlib import Path
+"""Validate evaluation assets only; does not run an LLM or grade its answers."""
 import json
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 EVALS = ROOT / "evals"
+RULES = {f"R{i:02d}" for i in range(16)}
+PREFLIGHT = {
+    "required_before_L": ["D", "R"],
+    "source_policy": "same_raw_input_independent_contexts",
+    "completion_barrier": "both_complete_before_L",
+    "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
+    "output_policy": "integrated_learning_unless_explicit",
+}
+LEGACY_L_CONTRACTS = {
+    "mechanism_mapping", "reality_calibration", "expected_calibration_kind",
+    "problem_discovery", "domain_anchor",
+}
+
 
 def load(name):
     return json.loads((EVALS / name).read_text(encoding="utf-8"))
+
+
+def present_text(value):
+    return isinstance(value, str) and bool(value.strip())
+
+
+def validate_learning(case, prefix, errors):
+    contract = case.get("learning_eval")
+    if not isinstance(contract, dict):
+        errors.append(f"{prefix}: missing learning_eval")
+        return None
+    rule = contract.get("primary_rule")
+    if rule not in RULES:
+        errors.append(f"{prefix}: primary_rule must be R00–R15")
+    related = contract.get("related_rules")
+    if not isinstance(related, list) or any(r not in RULES or r == rule for r in related) or len(related) != len(set(related)):
+        errors.append(f"{prefix}: invalid related_rules")
+    if not present_text(contract.get("failure_mode")):
+        errors.append(f"{prefix}: failure_mode must explain the concrete failure")
+    if contract.get("grading_policy") != "independent_evidence_based_0_1_2_per_criterion":
+        errors.append(f"{prefix}: unsupported grading_policy")
+    if contract.get("pairwise_policy") != "blind_A_B_same_prompt_fixture_runtime":
+        errors.append(f"{prefix}: unsupported pairwise_policy")
+    if "assertions" in case:
+        errors.append(f"{prefix}: Learning must use task rubric, not legacy assertions")
+    if any(key in case for key in LEGACY_L_CONTRACTS):
+        errors.append(f"{prefix}: obsolete Learning contract still present")
+    for field in ("critical_failures", "not_required"):
+        value = contract.get(field)
+        if not isinstance(value, list) or not value or not all(map(present_text, value)):
+            errors.append(f"{prefix}: {field} must contain concrete nonempty text")
+    rubric = contract.get("rubric")
+    if not isinstance(rubric, list) or len(rubric) != 3:
+        errors.append(f"{prefix}: rubric must contain 3 concrete criteria")
+    else:
+        expected_weights = {"goal": 4, "mechanism": 4, "boundary": 2}
+        ids = [item.get("id") for item in rubric if isinstance(item, dict)]
+        for item in rubric:
+            if not isinstance(item, dict) or item.get("id") not in expected_weights or item.get("weight") != expected_weights[item["id"]] or not present_text(item.get("criterion")):
+                errors.append(f"{prefix}: invalid rubric criterion/weight")
+        if set(ids) != set(expected_weights) or len(ids) != len(set(ids)):
+            errors.append(f"{prefix}: rubric IDs must be goal/mechanism/boundary")
+    if case.get("learning_preflight") != PREFLIGHT:
+        errors.append(f"{prefix}: D/R→L runtime preflight contract absent or changed")
+    return rule
+
 
 def main():
     errors = []
     data = load("evals.json")
     cases = data.get("evals", [])
-    ids, names = set(), set()
-
+    if data.get("eval_version") != "0.2":
+        errors.append("evals.json: expected Eval V0.2")
+    ids, names, covered = set(), set(), set()
     for case in cases:
-        prefix = f"eval {case.get('id')}"
-        for key in ("id", "name", "prompt", "expected_route", "expected_output", "files", "assertions"):
-            if key not in case:
-                errors.append(f"{prefix}: missing {key}")
-        if case.get("id") in ids:
+        ident = case.get("id")
+        prefix = f"eval {ident}"
+        for field in ("id", "name", "prompt", "expected_route", "expected_output", "files"):
+            if field not in case:
+                errors.append(f"{prefix}: missing {field}")
+        if ident in ids:
             errors.append(f"{prefix}: duplicate id")
-        ids.add(case.get("id"))
-        if case.get("name") in names:
+        ids.add(ident)
+        name = case.get("name")
+        if name in names:
             errors.append(f"{prefix}: duplicate name")
-        names.add(case.get("name"))
-        if any(x not in {"D", "R", "L", "P"} for x in case.get("expected_route", [])):
-            errors.append(f"{prefix}: invalid expected_route")
+        names.add(name)
+        for field in ("name", "prompt", "expected_output"):
+            if not present_text(case.get(field)):
+                errors.append(f"{prefix}: missing/empty {field}")
         route = case.get("expected_route", [])
+        if not isinstance(route, list) or not route or any(r not in {"D", "R", "L", "P"} for r in route):
+            errors.append(f"{prefix}: invalid route")
+            route = []
         if "L" in route:
             if route[:3] != ["D", "R", "L"]:
-                errors.append(f"{prefix}: Learning must be preceded by D and R")
-            expected_preflight = {
-                "required_before_L": ["D", "R"],
-                "source_policy": "same_raw_input_independent_contexts",
-                "completion_barrier": "both_complete_before_L",
-                "handoff": "mandatory_read_selective_use_scaffold_not_evidence",
-                "output_policy": "integrated_learning_unless_explicit",
-            }
-            if case.get("learning_preflight") != expected_preflight:
-                errors.append(f"{prefix}: missing or invalid Learning preflight contract")
-        elif "learning_preflight" in case:
-            errors.append(f"{prefix}: non-L case cannot set Learning preflight")
-        if "source_learning" in case:
-            errors.append(f"{prefix}: deprecated code-only source_learning contract")
-        if "mechanism_mapping" in case:
-            expected_mapping = {
-                "research_order": "verify_original_material_and_behavior_before_modeling",
-                "presentation_order": "problem_mechanism_realization_evidence_next_problem",
-                "evidence": "minimal_verifiable_anchors_appropriate_to_medium",
-                "contradictions": "revise_model_not_invent_implementation",
-            }
-            if "L" not in route or case.get("mechanism_mapping") != expected_mapping:
-                errors.append(f"{prefix}: invalid Mechanism-to-Implementation Mapping contract")
-            if not case.get("files"):
-                errors.append(f"{prefix}: mechanism-mapping eval must have source fixtures")
-        if "reality_calibration" in case or "expected_calibration_kind" in case:
-            expected_calibration = {
-                "mode": "conditional_domain_adaptive",
-                "minimum_evidence": "decision_relevant",
-                "source_boundary": "facts_assumptions_derivations_unknowns",
-                "output": "plain_language_mechanism_first_no_forced_metrics",
-            }
-            supported_kinds = {
-                "minimal_quantitative", "execution_trace", "workflow_state",
-                "evidence_quality", "comparability", "skip",
-            }
-            if "L" not in route or case.get("reality_calibration") != expected_calibration:
-                errors.append(f"{prefix}: invalid domain-adaptive Reality Calibration contract")
-            kind = case.get("expected_calibration_kind")
-            if kind not in supported_kinds:
-                errors.append(f"{prefix}: invalid expected_calibration_kind")
-            if kind != "skip" and not case.get("files"):
-                errors.append(f"{prefix}: calibrated evidence case must have a fixture")
-        if "problem_discovery" in case:
-            expected_discovery = {
-                "mode": "conditional",
-                "question_test": "grounded_discriminating_user_aligned",
-                "outcome": "select_revise_bound_or_preserve",
-                "anti_pattern": "abstraction_is_not_depth",
-            }
-            discovery = case.get("problem_discovery", {})
-            outcome = discovery.get("expected_outcome")
-            if "L" not in route or {
-                k: v for k, v in discovery.items() if k != "expected_outcome"
-            } != expected_discovery or outcome not in {"reframe", "preserve"}:
-                errors.append(f"{prefix}: invalid Problem Discovery contract")
-            if outcome == "reframe" and not case.get("files"):
-                errors.append(f"{prefix}: reframe eval must have raw evidence fixture")
-        if "domain_anchor" in case:
-            expected_anchor = {
-                "trigger": "intent_and_domain_conditional",
-                "target": "terminal_criterion_before_problem_discovery",
-                "method": "domain_fundamentals_link_drivers_to_outcomes",
-                "guardrail": "no_forced_model_or_cross_domain_universality",
-            }
-            anchor_contract = case.get("domain_anchor", {})
-            outcome = anchor_contract.get("expected_outcome")
-            if "L" not in route or {
-                key: value for key, value in anchor_contract.items()
-                if key != "expected_outcome"
-            } != expected_anchor or outcome not in {"anchor", "skip"}:
-                errors.append(f"{prefix}: invalid Domain Anchor contract")
-            if outcome == "anchor" and not case.get("files"):
-                errors.append(f"{prefix}: Domain Anchor eval requires an original input fixture")
-        if not case.get("assertions"):
-            errors.append(f"{prefix}: assertions must not be empty")
+                errors.append(f"{prefix}: Learning requires D/R before L")
+            rule = validate_learning(case, prefix, errors)
+            if rule in RULES:
+                covered.add(rule)
+        else:
+            if "learning_eval" in case or "learning_preflight" in case:
+                errors.append(f"{prefix}: non-L case contains Learning contract")
+            assertions = case.get("assertions")
+            if not isinstance(assertions, list) or not assertions or not all(map(present_text, assertions)):
+                errors.append(f"{prefix}: non-L case needs assertions")
         for rel in case.get("files", []):
-            if not (ROOT / rel).exists():
-                errors.append(f"{prefix}: fixture does not exist: {rel}")
-
-        references = case.get("reference_context", [])
-        if references and not any(x in {"L", "P"} for x in case.get("expected_route", [])):
-            errors.append(f"{prefix}: reference_context is only allowed when expected_route includes L or P")
-        for ref in references:
-            if ref.get("source_skill") not in {"D", "R", "L", "P"}:
-                errors.append(f"{prefix}: invalid reference source_skill")
-            rel = ref.get("file")
-            if not rel or not (ROOT / rel).exists():
-                errors.append(f"{prefix}: reference fixture does not exist: {rel}")
-            if not ref.get("purpose"):
-                errors.append(f"{prefix}: reference purpose is required")
-
-        gold_units = case.get("gold_review_units", [])
-        if gold_units and "R" not in case.get("expected_route", []):
-            errors.append(f"{prefix}: gold_review_units is only allowed for Review evals")
-        seen_units = set()
-        for unit in gold_units:
-            unit_id = unit.get("id")
-            if not unit_id or not unit.get("description"):
-                errors.append(f"{prefix}: each gold review unit needs id and description")
-            if unit_id in seen_units:
-                errors.append(f"{prefix}: duplicate gold review unit id: {unit_id}")
-            seen_units.add(unit_id)
-
+            if not (ROOT / rel).is_file():
+                errors.append(f"{prefix}: missing fixture {rel}")
+        refs = case.get("reference_context", [])
+        if refs and not any(s in route for s in ("L", "P")):
+            errors.append(f"{prefix}: reference_context only allowed for L or P")
+        for ref in refs:
+            if ref.get("source_skill") not in {"D", "R", "L", "P"} or not present_text(ref.get("purpose")) or not (ROOT / ref.get("file", "__missing__")).is_file():
+                errors.append(f"{prefix}: invalid reference_context")
+        gold = case.get("gold_review_units", [])
+        if gold and "R" not in route:
+            errors.append(f"{prefix}: gold_review_units requires R")
+        seen = set()
+        for unit in gold:
+            if not present_text(unit.get("id")) or not present_text(unit.get("description")) or unit.get("id") in seen:
+                errors.append(f"{prefix}: invalid/duplicate gold unit")
+            seen.add(unit.get("id"))
+    if covered != RULES:
+        errors.append("Learning R00–R15 primary-rule coverage incomplete: " + str(sorted(RULES - covered)))
     trigger = load("triggering.json").get("queries", [])
-    positives = sum(q.get("should_trigger") is True for q in trigger)
-    negatives = sum(q.get("should_trigger") is False for q in trigger)
-    if len(trigger) < 10 or positives == 0 or negatives == 0:
-        errors.append("triggering.json: need positive and negative near-miss cases")
-
+    positive = sum(q.get("should_trigger") is True for q in trigger)
+    negative = sum(q.get("should_trigger") is False for q in trigger)
+    if len(trigger) < 10 or not positive or not negative:
+        errors.append("triggering.json: must include positive and negative cases")
     baseline = load("baselines.json").get("baselines", [])
     if not any(b.get("name") == "old_skill" and b.get("ref") for b in baseline):
-        errors.append("baselines.json: old_skill git baseline is required")
-
+        errors.append("baselines.json: old_skill baseline missing")
     if errors:
         print("Eval validation failed:")
         for error in errors:
-            print(f"- {error}")
+            print("- " + error)
         return 1
-
-    print(f"OK: {len(cases)} task evals; {len(trigger)} trigger evals ({positives} positive / {negatives} negative)")
+    n_learning = sum("L" in c["expected_route"] for c in cases)
+    print(f"OK: {len(cases)} task evals ({n_learning} Learning); "
+          f"{len(trigger)} triggers ({positive} positive / {negative} negative); "
+          f"{len(covered)} primary Learning rules covered")
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
