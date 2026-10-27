@@ -95,6 +95,18 @@
       "type": "git_commit",
       "ref": "bf7bfa52840e680b406cee91cf9950e76ba8b60e",
       "description": "Frozen domain-neutral Learning core before strengthening link between research question and discriminative explanatory/test examples."
+    },
+    {
+      "name": "deep_read_v6_4_dual_contract",
+      "type": "git_commit",
+      "ref": "911cb33e50a1825aeeeca19e6b6b85620289a217",
+      "description": "Frozen original Deep Read V6.4 dual compression skill before the numbered-rule refactor. Prefer to compare current minimal D02/D03 against this direct predecessor design."
+    },
+    {
+      "name": "deep_read_v6_4_pre_two_rules",
+      "type": "git_commit",
+      "ref": "7774b3bfc9db135418ac990f928d5cd98cb09887",
+      "description": "Frozen Deep Read V6.4 with D01/D02/D03 immediately before D01 deletion; use to test incremental value of the eliminated D01 instruction."
     }
   ]
 }
