@@ -133,12 +133,18 @@ def main():
     rule_failure_counts = {}
     per_case = []
     learning_total = 0
+    deep_read_total = 0
+    deep_rule_results, deep_rule_pairs, deep_paired_deltas = {}, {}, {}
+    deep_paired_failure_changes, deep_rule_failure_counts = {}, {}
     pairwise = {"with_skill": 0, baseline: 0, "tie": 0, "graded": 0}
+    deep_pairwise = {"with_skill": 0, baseline: 0, "tie": 0, "graded": 0}
 
     for variant in configs:
         summary[variant] = {
             "learning_graded": 0, "learning_total": 0, "learning_scores": [],
             "learning_critical_cases": 0, "learning_failure_cases": 0, "learning_ungraded": [],
+            "deep_read_graded": 0, "deep_read_total": 0, "deep_read_scores": [],
+            "deep_read_critical_cases": 0, "deep_read_failure_cases": 0, "deep_read_ungraded": [],
             "preflight": {"verified": 0, "failed": 0, "unverified": 0},
             "legacy_passed": 0, "legacy_total": 0, "legacy_graded_cases": 0,
             "tokens": [], "duration_ms": [],
@@ -149,6 +155,7 @@ def main():
         if metadata is None:
             raise SystemExit(f"Missing metadata: {name}")
         learning = "L" in metadata["expected_route"]
+        deep_read = "deep_read_eval" in metadata and not learning
         if learning:
             learning_total += 1
             winner = pair_result(case_dir, baseline)
@@ -159,9 +166,23 @@ def main():
                 pairwise["graded"] += 1
                 bucket[winner] += 1
                 bucket["graded"] += 1
+        elif deep_read:
+            deep_read_total += 1
+            winner = pair_result(case_dir, baseline)
+            rule = metadata["deep_read_eval"]["primary_rule"]
+            bucket = deep_rule_pairs.setdefault(rule, {"with_skill": 0, baseline: 0, "tie": 0, "graded": 0})
+            if winner is not None:
+                deep_pairwise[winner] += 1
+                deep_pairwise["graded"] += 1
+                bucket[winner] += 1
+                bucket["graded"] += 1
         else:
             winner = None
-        case_item = {"case": name, "learning": learning, "primary_rule": metadata.get("learning_eval", {}).get("primary_rule"), "pairwise_winner": winner, "variants": {}}
+        case_item = {
+            "case": name, "learning": learning, "deep_read": deep_read,
+            "primary_rule": (metadata.get("learning_eval") or metadata.get("deep_read_eval") or {}).get("primary_rule"),
+            "pairwise_winner": winner, "variants": {},
+        }
         for variant in configs:
             run = case_dir / variant
             s = summary[variant]
@@ -189,6 +210,30 @@ def main():
                     bucket = rule_results.setdefault(rule, {}).setdefault(variant, [])
                     bucket.append(result["score"])
                     rule_failure_counts.setdefault(rule, {}).setdefault(variant, []).append(int(result["failure_occurred"]))
+            elif deep_read:
+                s["deep_read_total"] += 1
+                result, reason = grade_learning(grade, metadata["deep_read_eval"]) if grade else (None, "not graded")
+                if result is None:
+                    s["deep_read_ungraded"].append({"case": name, "reason": reason})
+                    case_item["variants"][variant] = {"graded": False, "reason": reason}
+                else:
+                    s["deep_read_graded"] += 1
+                    s["deep_read_scores"].append(result["score"])
+                    s["deep_read_critical_cases"] += int(result["critical_count"] > 0)
+                    s["deep_read_failure_cases"] += int(result["failure_occurred"])
+                    case_item["variants"][variant] = {"graded": True, **result}
+                    rule = metadata["deep_read_eval"]["primary_rule"]
+                    deep_rule_results.setdefault(rule, {}).setdefault(variant, []).append(result["score"])
+                    deep_rule_failure_counts.setdefault(rule, {}).setdefault(variant, []).append(int(result["failure_occurred"]))
+                if metadata.get("assertions"):
+                    # D+R Review assertions require their own separate grading record.
+                    review_grade = read_json(run / "review.grading.json")
+                    review_result = grade_legacy(review_grade, metadata["assertions"]) if review_grade else None
+                    if review_result:
+                        s["legacy_graded_cases"] += 1
+                        s["legacy_passed"] += review_result["passed"]
+                        s["legacy_total"] += review_result["total"]
+                    case_item["variants"][variant]["review_assertions_graded"] = review_result is not None
             else:
                 result = grade_legacy(grade, metadata["assertions"]) if grade else None
                 if result:
@@ -206,9 +251,20 @@ def main():
                     "regressed" if a["failure_occurred"] and not b["failure_occurred"] else "unchanged"
                 )
                 paired_failure_changes.setdefault(rule, {"reduced": 0, "regressed": 0, "unchanged": 0})[change] += 1
+        elif deep_read:
+            a = case_item["variants"]["with_skill"]
+            b = case_item["variants"][baseline]
+            if a["graded"] and b["graded"]:
+                rule = metadata["deep_read_eval"]["primary_rule"]
+                deep_paired_deltas.setdefault(rule, []).append(a["score"] - b["score"])
+                change = "reduced" if b["failure_occurred"] and not a["failure_occurred"] else (
+                    "regressed" if a["failure_occurred"] and not b["failure_occurred"] else "unchanged"
+                )
+                deep_paired_failure_changes.setdefault(rule, {"reduced": 0, "regressed": 0, "unchanged": 0})[change] += 1
         per_case.append(case_item)
     for variant, s in summary.items():
         s["learning_score_mean_10"] = mean(s.pop("learning_scores"))
+        s["deep_read_score_mean_10"] = mean(s.pop("deep_read_scores"))
         s["tokens_mean"] = mean(s.pop("tokens"))
         s["duration_ms_mean"] = mean(s.pop("duration_ms"))
         s["legacy_assertion_pass_rate"] = s["legacy_passed"] / s["legacy_total"] if s["legacy_total"] else None
@@ -229,11 +285,33 @@ def main():
         }
         for rule in sorted(set(rule_pairs) | set(rule_results))
     }
+    deep_by_rule = {
+        rule: {
+            "variants": {
+                variant: {
+                    "graded": len(deep_rule_results.get(rule, {}).get(variant, [])),
+                    "mean_score_10": mean(deep_rule_results.get(rule, {}).get(variant, [])),
+                    "failure_cases": sum(deep_rule_failure_counts.get(rule, {}).get(variant, [])),
+                }
+                for variant in configs
+            },
+            "paired_comparisons": len(deep_paired_deltas.get(rule, [])),
+            "paired_mean_delta_10": mean(deep_paired_deltas.get(rule, [])),
+            "paired_failure_changes": deep_paired_failure_changes.get(
+                rule, {"reduced": 0, "regressed": 0, "unchanged": 0}
+            ),
+            "pairwise": deep_rule_pairs.get(rule, {"with_skill": 0, baseline: 0, "tie": 0, "graded": 0}),
+        }
+        for rule in sorted(set(deep_rule_pairs) | set(deep_rule_results))
+    }
     benchmark = {
-        "schema_version": "0.2", "iteration": manifest["iteration"],
+        "schema_version": "0.3", "iteration": manifest["iteration"],
         "baseline": baseline, "learning_case_count": learning_total,
+        "deep_read_case_count": deep_read_total,
         "configs": summary, "learning_by_primary_rule": by_rule,
+        "deep_read_by_primary_rule": deep_by_rule,
         "pairwise": {**pairwise, "ungraded": learning_total - pairwise["graded"]},
+        "deep_read_pairwise": {**deep_pairwise, "ungraded": deep_read_total - deep_pairwise["graded"]},
         "cases": per_case,
         "interpretation": "Scores require independent blind evidence; absent data are ungraded. Preflight unverified is not proof of failure. No automatic LLM calls or grading occurred.",
     }
@@ -279,6 +357,40 @@ def main():
         )
     lines += [
         "",
+        "## Deep Read D02 / D03 rubric and blind comparison",
+        "",
+        "| Variant | Deep Read graded/total | Mean rubric score /10 | Rule failures | Critical cases |",
+        "|---|---:|---:|---:|---:|",
+    ]
+    for variant, s in summary.items():
+        score = f"{s['deep_read_score_mean_10']:.2f}" if s["deep_read_score_mean_10"] is not None else "n/a"
+        lines.append(
+            f"| {variant} | {s['deep_read_graded']}/{s['deep_read_total']} | {score} | "
+            f"{s['deep_read_failure_cases']} | {s['deep_read_critical_cases']} |"
+        )
+    lines += [
+        "",
+        f"Deep Read blind pairs: {deep_pairwise['graded']}/{deep_read_total}; "
+        f"with_skill wins {deep_pairwise['with_skill']}, {baseline} wins {deep_pairwise[baseline]}, "
+        f"ties {deep_pairwise['tie']}; missing {deep_read_total-deep_pairwise['graded']}.",
+        "",
+        "| Rule | with_skill failures/graded | baseline failures/graded | Paired reduced/regressed | Rubric delta /10 | Pairwise W/B/T |",
+        "|---|---:|---:|---:|---:|---:|",
+    ]
+    for rule, values in deep_by_rule.items():
+        a = values["variants"]["with_skill"]
+        b = values["variants"][baseline]
+        changes = values["paired_failure_changes"]
+        pair = values["pairwise"]
+        delta = values["paired_mean_delta_10"]
+        delta_text = f"{delta:+.2f}" if delta is not None else "n/a"
+        lines.append(
+            f"| {rule} | {a['failure_cases']}/{a['graded']} | {b['failure_cases']}/{b['graded']} | "
+            f"{changes['reduced']}/{changes['regressed']} | {delta_text} | "
+            f"{pair['with_skill']}/{pair[baseline]}/{pair['tie']} |"
+        )
+    lines += [
+        "",
         "## Limitations",
         "",
         "- No model generation or independent grading is performed by this aggregator.",
@@ -287,7 +399,11 @@ def main():
         "- Compare cost and latency only when timing data are available under comparable runtime conditions.",
     ]
     (root / "benchmark.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(f"Wrote {root / 'benchmark.json'} and benchmark.md; paired reviews: {pairwise['graded']}/{learning_total}")
+    print(
+        f"Wrote {root / 'benchmark.json'} and benchmark.md; "
+        f"Learning pairs: {pairwise['graded']}/{learning_total}; "
+        f"Deep Read pairs: {deep_pairwise['graded']}/{deep_read_total}"
+    )
 
 
 if __name__ == "__main__":
