@@ -21,8 +21,10 @@ def main():
     for name in manifest["cases"]:
         case = root / name
         metadata = read(case / "eval_metadata.json")
-        if "L" not in metadata["expected_route"]:
+        learning = "L" in metadata["expected_route"]
+        if not (learning or "deep_read_eval" in metadata):
             continue
+        contract = metadata["learning_eval"] if learning else metadata["deep_read_eval"]
         mapping = read(case / "pairwise" / "assignment.json")
         if set(mapping) != {"A", "B"} or set(mapping.values()) != {"with_skill", manifest["baseline"]}:
             raise SystemExit(f"{name}: invalid A/B assignment")
@@ -32,7 +34,7 @@ def main():
             if not source.is_file():
                 skipped += 1
                 continue
-            result, error = grade_learning(read(source), metadata["learning_eval"])
+            result, error = grade_learning(read(source), contract)
             if error:
                 raise SystemExit(f"{name} {side}: invalid independent grade: {error}")
             if dest.exists():
