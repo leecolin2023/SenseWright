@@ -45,17 +45,16 @@ def main():
     for case in cases:
         name = slug(case["name"])
         case_dir = iteration / name
-        metadata = {k: v for k, v in case.items() if k not in ("assertions",)}
-        if "L" not in case["expected_route"]:
-            metadata["assertions"] = case["assertions"]
+        metadata = dict(case)
         case_dir.mkdir(parents=True, exist_ok=True)
         dump(case_dir / "eval_metadata.json", metadata)
 
         for variant in ("with_skill", args.baseline):
             run_dir = case_dir / variant
             (run_dir / "outputs").mkdir(parents=True, exist_ok=True)
-            if "L" in case["expected_route"]:
-                contract = case["learning_eval"]
+            if "L" in case["expected_route"] or "deep_read_eval" in case:
+                learning = "L" in case["expected_route"]
+                contract = case["learning_eval"] if learning else case["deep_read_eval"]
                 grading = {
                     "reviewer": {"id": None, "kind": None, "independent": None, "blind_to_variant": None},
                     "criteria": [
@@ -75,17 +74,25 @@ def main():
                     "notes": None,
                 }
                 dump(run_dir / "grading.template.json", grading)
-                dump(run_dir / "preflight.template.json", {
-                    "status": "unverified",
-                    "trace_reference": None,
-                    "notes": "Only actual D/R isolation & L handoff trace supports verified status",
-                })
+                if learning:
+                    dump(run_dir / "preflight.template.json", {
+                        "status": "unverified",
+                        "trace_reference": None,
+                        "notes": "Only actual D/R isolation & L handoff trace supports verified status",
+                    })
+                # Combined D+R retains an optional, separate legacy check for Review.
+                if "deep_read_eval" in case and "assertions" in case:
+                    dump(run_dir / "review.grading.template.json", {
+                        "reviewer": {"id": None, "kind": None, "independent": None},
+                        "expectations": [{"text": item, "passed": None, "evidence": None}
+                                         for item in case["assertions"]],
+                    })
             else:
                 dump(run_dir / "grading.template.json", {
                     "reviewer": {"id": None, "kind": None, "independent": None},
                     "expectations": [{"text": item, "passed": None, "evidence": None} for item in case["assertions"]],
                 })
-        if "L" in case["expected_route"]:
+        if "L" in case["expected_route"] or "deep_read_eval" in case:
             pair = case_dir / "pairwise"
             pair.mkdir(exist_ok=True)
             variants = ["with_skill", args.baseline]
