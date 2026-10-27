@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 EVALS = ROOT / "evals"
 RULES = {f"R{i:02d}" for i in range(16)}
+DEEP_RULES = {"D02", "D03"}
 PREFLIGHT = {
     "required_before_L": ["D", "R"],
     "source_policy": "same_raw_input_independent_contexts",
@@ -68,13 +69,55 @@ def validate_learning(case, prefix, errors):
     return rule
 
 
+
+def validate_deep_read(case, prefix, errors):
+    contract = case.get("deep_read_eval")
+    if not isinstance(contract, dict):
+        errors.append(f"{prefix}: missing deep_read_eval")
+        return None
+    rule = contract.get("primary_rule")
+    if rule not in DEEP_RULES:
+        errors.append(f"{prefix}: deep_read primary_rule must be D02 or D03")
+    related = contract.get("related_rules")
+    if not isinstance(related, list) or any(r not in DEEP_RULES or r == rule for r in related) or len(related) != len(set(related)):
+        errors.append(f"{prefix}: invalid deep_read related_rules")
+    if contract.get("compression_mode") not in ("coverage_preserving", "cognitive_synthesis"):
+        errors.append(f"{prefix}: missing/invalid Deep Read compression_mode")
+    if not present_text(contract.get("failure_mode")):
+        errors.append(f"{prefix}: Deep Read failure_mode must name a concrete observable failure")
+    if contract.get("grading_policy") != "independent_evidence_based_0_1_2_per_criterion":
+        errors.append(f"{prefix}: unsupported Deep Read grading_policy")
+    if contract.get("pairwise_policy") != "blind_A_B_same_prompt_fixture_runtime":
+        errors.append(f"{prefix}: unsupported Deep Read pairwise_policy")
+    for field in ("critical_failures", "not_required"):
+        value = contract.get(field)
+        if not isinstance(value, list) or not value or not all(map(present_text, value)):
+            errors.append(f"{prefix}: invalid deep_read {field}")
+    rubric = contract.get("rubric")
+    weights = {"task_fit": 3, "cognitive_value": 5, "integrity": 2}
+    if not isinstance(rubric, list) or len(rubric) != len(weights):
+        errors.append(f"{prefix}: deep_read rubric must contain 3 criteria")
+    else:
+        ids = [entry.get("id") for entry in rubric if isinstance(entry, dict)]
+        if set(ids) != set(weights) or len(ids) != len(set(ids)):
+            errors.append(f"{prefix}: deep_read rubric IDs invalid")
+        for entry in rubric:
+            if not isinstance(entry, dict) or entry.get("id") not in weights or entry.get("weight") != weights.get(entry.get("id")) or not present_text(entry.get("criterion")):
+                errors.append(f"{prefix}: invalid deep_read rubric criterion/weight")
+    if "L" in case.get("expected_route", []):
+        errors.append(f"{prefix}: Deep Read standalone grading cannot be attached to D/R->L cases")
+    if "assertions" in case and "R" not in case.get("expected_route", []):
+        errors.append(f"{prefix}: pure Deep Read must use rubric, not legacy assertions")
+    return rule
+
+
 def main():
     errors = []
     data = load("evals.json")
     cases = data.get("evals", [])
     if data.get("eval_version") != "0.2":
         errors.append("evals.json: expected Eval V0.2")
-    ids, names, covered = set(), set(), set()
+    ids, names, covered, deep_covered, deep_modes = set(), set(), set(), set(), set()
     for case in cases:
         ident = case.get("id")
         prefix = f"eval {ident}"
@@ -104,9 +147,23 @@ def main():
         else:
             if "learning_eval" in case or "learning_preflight" in case:
                 errors.append(f"{prefix}: non-L case contains Learning contract")
-            assertions = case.get("assertions")
-            if not isinstance(assertions, list) or not assertions or not all(map(present_text, assertions)):
-                errors.append(f"{prefix}: non-L case needs assertions")
+            if "D" in route:
+                rule = validate_deep_read(case, prefix, errors)
+                if rule in DEEP_RULES:
+                    deep_covered.add(rule)
+                    if rule == "D03":
+                        deep_modes.add(case["deep_read_eval"]["compression_mode"])
+                # A combined D+R case retains legacy Review/cross-skill assertions.
+                if "R" in route:
+                    assertions = case.get("assertions")
+                    if not isinstance(assertions, list) or not assertions or not all(map(present_text, assertions)):
+                        errors.append(f"{prefix}: combined D+R case still needs Review assertions")
+            else:
+                if "deep_read_eval" in case:
+                    errors.append(f"{prefix}: non-D case contains Deep Read contract")
+                assertions = case.get("assertions")
+                if not isinstance(assertions, list) or not assertions or not all(map(present_text, assertions)):
+                    errors.append(f"{prefix}: non-D case needs assertions")
         for rel in case.get("files", []):
             if not (ROOT / rel).is_file():
                 errors.append(f"{prefix}: missing fixture {rel}")
@@ -126,6 +183,10 @@ def main():
             seen.add(unit.get("id"))
     if covered != RULES:
         errors.append("Learning R00–R15 primary-rule coverage incomplete: " + str(sorted(RULES - covered)))
+    if deep_covered != DEEP_RULES:
+        errors.append("Deep Read D02/D03 primary-rule coverage incomplete: " + str(sorted(DEEP_RULES - deep_covered)))
+    if deep_modes != {"coverage_preserving", "cognitive_synthesis"}:
+        errors.append("Deep Read D03 must test both compression contracts")
     trigger = load("triggering.json").get("queries", [])
     positive = sum(q.get("should_trigger") is True for q in trigger)
     negative = sum(q.get("should_trigger") is False for q in trigger)
@@ -140,9 +201,10 @@ def main():
             print("- " + error)
         return 1
     n_learning = sum("L" in c["expected_route"] for c in cases)
-    print(f"OK: {len(cases)} task evals ({n_learning} Learning); "
+    n_deep = sum("deep_read_eval" in c for c in cases)
+    print(f"OK: {len(cases)} task evals ({n_learning} Learning, {n_deep} Deep Read); "
           f"{len(trigger)} triggers ({positive} positive / {negative} negative); "
-          f"{len(covered)} primary Learning rules covered")
+          f"{len(covered)} primary Learning and {len(deep_covered)} Deep Read rules covered")
     return 0
 
 
