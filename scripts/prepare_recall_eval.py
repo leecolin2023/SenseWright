@@ -93,6 +93,13 @@ def pairwise(root):
         put_json(here / "pairwise" / "reader_questions.json", {
             "questions": [x["question"] for x in reference["probes"]]
         })
+        for side in ("A", "B"):
+            put_json(here / "pairwise" / f"{side}.reader_answers.template.json", {
+                "reader": {"id": None, "kind": None, "blind_to_variant": None,
+                           "source_blind": None},
+                "answers": [{"question": p["question"], "answer": None}
+                            for p in reference["probes"]],
+            })
         put_json(here / "pairwise" / "grading.template.json", {
             "reviewer": {"id": None, "kind": None, "independent": None,
                          "blind_to_variant": None},
