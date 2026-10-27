@@ -5,7 +5,7 @@
   "notes": "六个合成固定初稿；含应回查与无需回查的对照，原有 80 个任务 Eval 不变。expected_gate / source_anchors / probes 仅供独立判定，不交给被测生成模型。",
   "cases": [
     {
-      "id": "recall-d02-missing-bridge",
+      "id": "recall-01",
       "parent_eval_id": 1,
       "rule": "D02",
       "mode": "cognitive_synthesis",
@@ -30,7 +30,7 @@
       ]
     },
     {
-      "id": "recall-d02-already-explained",
+      "id": "recall-02",
       "parent_eval_id": 1,
       "rule": "D02",
       "mode": "cognitive_synthesis",
@@ -55,7 +55,7 @@
       ]
     },
     {
-      "id": "recall-d03-coverage-omission",
+      "id": "recall-03",
       "parent_eval_id": 20,
       "rule": "D03",
       "mode": "coverage_preserving",
@@ -80,7 +80,7 @@
       ]
     },
     {
-      "id": "recall-d03-coverage-complete",
+      "id": "recall-04",
       "parent_eval_id": 20,
       "rule": "D03",
       "mode": "coverage_preserving",
@@ -107,7 +107,7 @@
       ]
     },
     {
-      "id": "recall-d03-synthesis-missing-example",
+      "id": "recall-05",
       "parent_eval_id": 21,
       "rule": "D03",
       "mode": "cognitive_synthesis",
@@ -133,7 +133,7 @@
       ]
     },
     {
-      "id": "recall-d03-synthesis-already-understandable",
+      "id": "recall-06",
       "parent_eval_id": 21,
       "rule": "D03",
       "mode": "cognitive_synthesis",
