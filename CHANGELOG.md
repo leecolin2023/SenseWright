@@ -1,5 +1,12 @@
 # 更新记录（Changelog）
 
+## 2026-10-27 · Deep Read Eval V0.3：只检验 D02 / D03 两条最小干预规则
+
+- 原位适配此前 4 个 Deep Read 案例（#1、#4、#20、#21），保留其 ID、prompt、files、expected_route 与 fixtures；4 个案例分别聚焦 D02 的理解桥梁、D03 的完整覆盖与认知提炼。**全部 80 个 Eval 原案例及 57 个 Learning Rubric 保持原位。**
+- 新增 `deep_read_eval` 合同：具体可观察的 `failure_mode`、独立证据 Rubric（task_fit 3 / cognitive_value 5 / integrity 2）、重大失败和不强制项；刻意不检查是否采用固定模板、是否保留全部例子或有没有机械免责声明。
+- 将既有匿名 A/B 准备、独立评分、解盲、逐规则成对失败减少/恶化与基线对比支持到 Deep Read；Learning 独立指标不变，D+R 案例保留另外的 Review/职责隔离检查。
+- 追加冻结基线 `deep_read_v6_4_dual_contract` 与 `deep_read_v6_4_pre_two_rules`；离线合成测试覆盖 D02、D03 与两种压缩目标。**不将合成得分当成真实模型改进证据；尚未实际完成独立模型 A/B 评审。**
+
 ## 2026-10-27 · Learning Eval V0.2：规则失败模式驱动的任务评测（原位重构）
 
 - **没有删除、归档、重编号任何测试用例。** 保留原有 80 个任务、57 个 Learning 案例和现有 fixtures/triggering；将 57 个 Learning 案例直接改为 `primary_rule / failure_mode / task rubric / critical_failures / not_required`，R00–R15 均有对应主规则测试。非 Learning 测试沿用现有断言。
