@@ -1,5 +1,12 @@
 # 更新记录（Changelog）
 
+## 2026-10-27 · Deep Read 定向回查：D02 条件式修复 + Recall Eval V0.1
+
+- **Skill 保留 D02、D03 两条规则**：将定向回查写为 D02 下的可选修复，只在有重大、可定位、原文确能补足的理解缺口时启动；局部修复并立即停止，不因回查而强制加长文章。
+- **现有 80 个 Eval 案例与 Learning/Deep Read V0.3 评分不变**；另设 `evals/recall/`，用同一份冻结初稿测试 D02 解释桥梁和 D03 两种压缩模式。6 个场景覆盖应回查与不应回查各 3 个。
+- 新增 `validate_recall_evals.py`、`prepare_recall_eval.py`、`aggregate_recall_eval.py` 和 `test_recall_pipeline.py`，分别检查 fixture、隔离生成方与盲读方、聚合独立读者理解得分与误触发决策、用合成桩走通离线流程。CI 包含静态检查与离线测试。
+- **不声称已经运行真实模型多轮 A/B 或完成独立盲读。** 合成数据用于验证评测合同；效果须以实际模型输出、匿名读者重建能力及成本记录为依据。
+
 ## 2026-10-27 · Deep Read Eval V0.3：只检验 D02 / D03 两条最小干预规则
 
 - 原位适配此前 4 个 Deep Read 案例（#1、#4、#20、#21），保留其 ID、prompt、files、expected_route 与 fixtures；4 个案例分别聚焦 D02 的理解桥梁、D03 的完整覆盖与认知提炼。**全部 80 个 Eval 原案例及 57 个 Learning Rubric 保持原位。**
