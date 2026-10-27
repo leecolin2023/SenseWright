@@ -9,15 +9,44 @@
       "expected_route": [
         "D"
       ],
-      "expected_output": "忠实恢复作者从固定工作流问题、到不确定决策点、再到混合架构结论的推进，并保留公告例子的认知作用。",
+      "expected_output": "沿着固定工作流的浪费与误用→需要动态判断的决策点→混合架构的结论重建作者思路；保留“概括公告/判断可靠性”如何导致不同动作的具体对照。",
       "files": [
         "evals/fixtures/agent-workflow-argument.md"
       ],
-      "assertions": [
-        "输出忠实解释材料主线，没有把独立批评混入 Deep Read。",
-        "输出保留“概括公告 vs 判断可靠性”例子及其对论证的作用。",
-        "输出没有把材料未提供的外部事实写成作者结论。"
-      ]
+      "deep_read_eval": {
+        "primary_rule": "D02",
+        "related_rules": [],
+        "compression_mode": "cognitive_synthesis",
+        "failure_mode": "把“概括公告与核验公告”写成一个抽象例子标签，或直接跳到混合架构结论，使读者看不到两类任务为什么需要不同的下一步。",
+        "rubric": [
+          {
+            "id": "task_fit",
+            "weight": 3,
+            "criterion": "回答用户想知道的推理过程：固定流程何处过度执行、何种判断交给 Agent、最终为何保留 Workflow 与 Agent 的分工。"
+          },
+          {
+            "id": "cognitive_value",
+            "weight": 5,
+            "criterion": "具体呈现公告对照：只概括时多做外部检索可能浪费并污染忠实摘要；判断可靠性时外部核实可能必要；读者能从情境推导决策差异，而非只看到“有一个例子”。"
+          },
+          {
+            "id": "integrity",
+            "weight": 2,
+            "criterion": "不把作者主张变成未经原文支持的新架构结论，也不抢做独立 Review；自然表达，无冗长免责插话。"
+          }
+        ],
+        "critical_failures": [
+          "抹掉公告两种任务的动作差异，声称二者都必须走同一外部核实工作流。",
+          "将作者结论扭曲为 Agent 完全取代固定 Workflow。"
+        ],
+        "not_required": [
+          "不要求保留所有原文句子或固定章节。",
+          "不要求在类比后附加“仅是示例、并不证明”的免责声明。",
+          "不要求外部资料核验或另行提出模型评价。"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 2,
@@ -101,7 +130,7 @@
         "D",
         "R"
       ],
-      "expected_output": "D 与 R 组合：先忠实解释方案，再独立审阅关键问题；两个分支都以原材料为依据。",
+      "expected_output": "Deep Read 先保留草案离线知识助手的三个模块、一期实施顺序及其依据，不把 Review 的改进建议提前改写成原方案；Review 单独识别真正影响方案的风险与依据不足。",
       "files": [
         "evals/fixtures/enterprise-assistant-proposal.md"
       ],
@@ -109,7 +138,41 @@
         "输出能够区分“方案原本怎么说”和“独立审阅认为哪里需要改变”。",
         "忠实理解部分不提前混入审阅结论。",
         "若运行 transcript 可见上下文构造，Deep Read 与 Review 都应直接读取原始材料；Review 不得读取或消费 Deep Read 输出，Deep Read 也不得读取 Review 输出。"
-      ]
+      ],
+      "deep_read_eval": {
+        "primary_rule": "D02",
+        "related_rules": [],
+        "compression_mode": "cognitive_synthesis",
+        "failure_mode": "Deep Read 只罗列“导入、问答、办公执行”三个名词，缺少草案认为向量库+大模型足以先行、因而延后引用/权限/评测的实际理由；或提前把 Review 的批评写成草案事实。",
+        "rubric": [
+          {
+            "id": "task_fit",
+            "weight": 3,
+            "criterion": "Deep Read 独立说明草案打算建设什么：离线知识助手的三模块、一期与后续办公功能的安排。"
+          },
+          {
+            "id": "cognitive_value",
+            "weight": 5,
+            "criterion": "还原能让人理解方案的具体取舍和顺序：先导入全公司文档再根据反馈加权限，向量数据库+大模型降低幻觉的原文判断，以及指标选择；不是用“知识库方案”替代细节。"
+          },
+          {
+            "id": "integrity",
+            "weight": 2,
+            "criterion": "把草案自身判断与独立 Review 明确区分，不把审阅建议当成草案既定设计，也不要求无意义免责段落。"
+          }
+        ],
+        "critical_failures": [
+          "把“暂不设计引用和权限继承”改写成“已设计并上线来源引用与权限隔离”。",
+          "让 Deep Read 与 Review 合流，导致用户无法分辨原方案和审阅意见。"
+        ],
+        "not_required": [
+          "不要求逐句复述项目草案。",
+          "不要求 Deep Read 在解释每个假设时附加免责声明或主动核验。",
+          "不要求固定先摘要再逐条质疑的统一模板。"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 5,
@@ -940,17 +1003,44 @@
       "expected_route": [
         "D"
       ],
-      "expected_output": "Deep Read 选择 Coverage-Preserving：知识问答、会议纪要 Agent、Coding Assistant、使用率/组织 adoption、预算采购五个独立单元均可追踪，同时压缩各单元内部的重复案例和口语展开。",
+      "expected_output": "Coverage-Preserving：知识问答、会议纪要 Agent、Coding Assistant、组织使用率、预算采购五类独立议题以及各自关键决定、行动和限制均可定位，同时压缩重复举例。",
       "files": [
         "evals/fixtures/deep-read-dual-contract.md"
       ],
-      "assertions": [
-        "输出能够找到知识问答、会议纪要 Agent、Coding Assistant、使用率/组织 adoption、预算与采购五个独立认知单元，不因某项不属于主线而删除。",
-        "各单元的关键决定或后续动作仍被保留，例如权限/版本治理、纪要字段验收、沙箱与代码评审、流程重设计、价格谈判与替代方案比选。",
-        "同一议题内多个重复案例会被压缩为代表性说明，而不是把原文几乎换一种说法完整重述。",
-        "输出不会为了形成统一主题而把预算采购等独立事项静默并入“AI 治理”并使其失去可追踪性。",
-        "输出保持 Source Boundary，不把材料中没有的外部判断补成会议结论。"
-      ]
+      "deep_read_eval": {
+        "primary_rule": "D03",
+        "related_rules": [],
+        "compression_mode": "coverage_preserving",
+        "failure_mode": "为了生成更漂亮的统一主线，漏掉采购或组织 adoption 等独立议题，或把不同议题的行动混成统一的“加强 AI 治理”，导致后续会议纪要无法追踪任务。",
+        "rubric": [
+          {
+            "id": "task_fit",
+            "weight": 3,
+            "criterion": "完成用户的会议纪要前阅读目标：五个互相独立的议题均能定位，业务改善与未解决问题没有混淆。"
+          },
+          {
+            "id": "cognitive_value",
+            "weight": 5,
+            "criterion": "保留每项议题的决策与可执行信息：知识平台组处理版本/引用/权限及期限；纪要四类字段和完整性检查；研发隔离沙箱与代码评审；三个高频流程重设计；采购价格谈判与替代比选。重复的同类案例可概括。"
+          },
+          {
+            "id": "integrity",
+            "weight": 2,
+            "criterion": "保留相关决定的归属、条件及前后关系，不把预算误写为模型问题；覆盖不等于原话、案例或数字全部照抄。"
+          }
+        ],
+        "critical_failures": [
+          "遗漏预算采购或组织使用率这个独立议题及对应行动。",
+          "将至少两个独立的后续决定合并为无法分别执行、追踪的笼统治理口号。"
+        ],
+        "not_required": [
+          "不要求逐字转写、保留全部重复的同类例子。",
+          "不要求五个议题长度均等。",
+          "不要求为多议题强造一个根本原因。"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 21,
@@ -959,17 +1049,44 @@
       "expected_route": [
         "D"
       ],
-      "expected_output": "Deep Read 选择 Cognitive-Synthesis：跨单元提炼出能力收益已经出现，但生产化仍受权限/版本、可交接 Output 与验收、安全边界、组织流程和商业约束共同限制；保留少量关键案例帮助理解，而不是逐项复述五个议题。",
+      "expected_output": "Cognitive-Synthesis：从局部试点价值与生产化约束之间的关系提炼第二阶段的核心问题，保留能解释关键区别的案例；可合并低价值事项，但不能把不同约束全归因于模型能力。",
       "files": [
         "evals/fixtures/deep-read-dual-contract.md"
       ],
-      "assertions": [
-        "输出不是按五个原始章节逐项等篇幅复述，而是能进行跨单元归并和认知压缩。",
-        "输出保留至少一个承担解释功能的具体例子，例如纪要责任人/截止时间遗漏、旧制度版本与权限继承问题或生产环境隔离要求。",
-        "输出能区分“工具已经产生局部价值”和“第二阶段生产化仍需要治理、验收、流程与商业条件”这两个层次。",
-        "预算采购可以被降权，但不能被错误改写成模型能力或治理问题；若被省略，也不应导致对第二阶段约束形成相反理解。",
-        "输出不会强行宣称所有问题具有同一根因，也不会跨越 Source Boundary 引入外部事实。"
-      ]
+      "deep_read_eval": {
+        "primary_rule": "D03",
+        "related_rules": [],
+        "compression_mode": "cognitive_synthesis",
+        "failure_mode": "把认知提炼误当逐项章节缩写或极短高管摘要，缺乏跨议题关系和关键解释场景；或把权限、验收、安全、工作流程与采购统统抽象成“模型能力不够”。",
+        "rubric": [
+          {
+            "id": "task_fit",
+            "weight": 3,
+            "criterion": "直接回答试点暴露了什么、为何不能仅凭局部提效进入第二阶段，并呈现可解释的总体认识，而不是机械复制五个原始议题。"
+          },
+          {
+            "id": "cognitive_value",
+            "weight": 5,
+            "criterion": "形成跨单元理解：工具已有局部收益，但版本权限、可验收 Output、安全边界、流程 adoption 与采购条件分别限制推广；使用如“20 次纪要中 7 次遗漏责任人/截止时间”之类有情境的案例说明问题如何出现，而非只列名词。"
+          },
+          {
+            "id": "integrity",
+            "weight": 2,
+            "criterion": "可以省略低边际细节但不歪曲原文核心模型：不得声称工具完全没价值，也不能将采购、组织流程等不同约束硬归为模型能力不足。"
+          }
+        ],
+        "critical_failures": [
+          "把五项不同限制错误归为同一个原文未提出的根因，导致形成错误的核心认识。",
+          "删掉“已出现局部价值”与“仍需满足推广条件”的关键区分。"
+        ],
+        "not_required": [
+          "不要求逐项等篇幅覆盖所有原始会议行动。",
+          "不要求只给一句高管摘要或尽可能短。",
+          "不要求每个原始案例都出现，也不要求防御性免责声明。"
+        ],
+        "grading_policy": "independent_evidence_based_0_1_2_per_criterion",
+        "pairwise_policy": "blind_A_B_same_prompt_fixture_runtime"
+      }
     },
     {
       "id": 22,
