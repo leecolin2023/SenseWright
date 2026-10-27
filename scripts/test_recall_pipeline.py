@@ -32,16 +32,16 @@ def main():
         manifest = load(root / "manifest.json")
         assert len(manifest["cases"]) == 6
         assert set(manifest["cases"]) == {
-            "recall-d02-missing-bridge", "recall-d02-already-explained",
-            "recall-d03-coverage-omission", "recall-d03-coverage-complete",
-            "recall-d03-synthesis-missing-example", "recall-d03-synthesis-already-understandable",
+            "recall-01", "recall-02",
+            "recall-03", "recall-04",
+            "recall-05", "recall-06",
         }
         # No generated outputs or grades must be mistaken for real results.
         invoke("aggregate_recall_eval.py", root)
         blank = load(root / "recall-benchmark.json")
         assert blank["scored"] == 0 and blank["total"] == 6
-        positive = "recall-d02-missing-bridge"
-        negative = "recall-d03-coverage-complete"
+        positive = "recall-01"
+        negative = "recall-04"
         for name in (positive, negative):
             case = root / name
             packet = load(case / "input" / "generator_packet.json")
