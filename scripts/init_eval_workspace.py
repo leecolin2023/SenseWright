@@ -37,7 +37,7 @@ def main():
     iteration.mkdir(parents=True, exist_ok=True)
     manifest = {
         "iteration": args.iteration,
-        "eval_version": "0.2",
+        "eval_version": "0.3",
         "skill_name": "sensewright",
         "baseline": args.baseline,
         "cases": [],
