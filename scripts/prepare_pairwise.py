@@ -19,7 +19,9 @@ def main():
     for name in manifest["cases"]:
         case = root / name
         metadata = read_json(case / "eval_metadata.json")
-        if "L" not in metadata["expected_route"]:
+        learning = "L" in metadata["expected_route"]
+        deep_read = "deep_read_eval" in metadata
+        if not (learning or deep_read):
             continue
         pair_dir = case / "pairwise"
         assignment = read_json(pair_dir / "assignment.json")
@@ -36,19 +38,25 @@ def main():
             (pair_dir / f"{side}.grading.template.json").write_text(
                 json.dumps(template, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
             )
+        contract = metadata["learning_eval"] if learning else metadata["deep_read_eval"]
         judge_packet = {
+            "skill": "Learning" if learning else "Deep Read",
             "prompt": metadata["prompt"],
             "files": metadata["files"],
-            "failure_mode": metadata["learning_eval"]["failure_mode"],
-            "rubric": metadata["learning_eval"]["rubric"],
-            "critical_failures": metadata["learning_eval"]["critical_failures"],
-            "not_required": metadata["learning_eval"]["not_required"],
+            "failure_mode": contract["failure_mode"],
+            "rubric": contract["rubric"],
+            "critical_failures": contract["critical_failures"],
+            "not_required": contract["not_required"],
         }
+        if deep_read:
+            judge_packet["compression_mode"] = contract["compression_mode"]
+            if "R" in metadata["expected_route"]:
+                judge_packet["grading_scope"] = "Only grade the Deep Read part; Review is checked separately."
         (pair_dir / "judge_packet.json").write_text(
             json.dumps(judge_packet, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )
         prepared += 1
-    print(f"Prepared {prepared} blind Learning pairs; {missing} pairs missing a response")
+    print(f"Prepared {prepared} blind rubric pairs (Learning / Deep Read); {missing} pairs missing a response")
     print("Disclose only A.md, B.md, judge_packet.json, required fixtures and grading templates.")
     print("DO NOT disclose assignment.json, model identity, filenames indicating variants, or prior scores.")
 
