@@ -1,0 +1,162 @@
+{
+  "suite": "deep_read_targeted_recall",
+  "suite_version": "0.1",
+  "design": "frozen_first_draft_selective_repair",
+  "notes": "六个合成固定初稿；含应回查与无需回查的对照，原有 80 个任务 Eval 不变。expected_gate / source_anchors / probes 仅供独立判定，不交给被测生成模型。",
+  "cases": [
+    {
+      "id": "recall-d02-missing-bridge",
+      "parent_eval_id": 1,
+      "rule": "D02",
+      "mode": "cognitive_synthesis",
+      "source_file": "evals/fixtures/agent-workflow-argument.md",
+      "draft_file": "evals/recall/drafts/recall-agent-thin.md",
+      "expected_gate": "repair",
+      "failure_type": "missing_bridge",
+      "source_anchors": [
+        "概括这份公告",
+        "判断公告中的说法是否可靠"
+      ],
+      "reading_goal": "让读者理解为什么有些任务应走固定 Workflow、另一些需要 Agent 决策",
+      "probes": [
+        {
+          "question": "概括公告与核验公告为什么不该总走同一条固定流程？",
+          "key_points": [
+            "概括任务额外外部检索可能增加成本或污染忠实摘要",
+            "核验真实性时外部核实可能必要",
+            "因此选择下一步应取决于实际任务"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recall-d02-already-explained",
+      "parent_eval_id": 1,
+      "rule": "D02",
+      "mode": "cognitive_synthesis",
+      "source_file": "evals/fixtures/agent-workflow-argument.md",
+      "draft_file": "evals/recall/drafts/recall-agent-sufficient.md",
+      "expected_gate": "skip",
+      "failure_type": "unnecessary_rewrite",
+      "source_anchors": [
+        "概括这份公告",
+        "判断公告中的说法是否可靠"
+      ],
+      "reading_goal": "在理解已充分时避免强制回查或冗余扩写",
+      "probes": [
+        {
+          "question": "从两个公告任务举例说明 Workflow 和 Agent 的分工。",
+          "key_points": [
+            "任务内容不同导致检索需要不同",
+            "固定可验证步骤保留 Workflow",
+            "动态决策点交 Agent"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recall-d03-coverage-omission",
+      "parent_eval_id": 20,
+      "rule": "D03",
+      "mode": "coverage_preserving",
+      "source_file": "evals/fixtures/deep-read-dual-contract.md",
+      "draft_file": "evals/recall/drafts/recall-pilot-coverage-thin.md",
+      "expected_gate": "repair",
+      "failure_type": "missing_independent_unit",
+      "source_anchors": [
+        "## 5. 预算与采购",
+        "报价比试点阶段高约 20%"
+      ],
+      "reading_goal": "保留五类独立议题、决定与行动，能用于后续会议纪要",
+      "probes": [
+        {
+          "question": "采购方面形成什么后续要求，为什么与模型表现不同？",
+          "key_points": [
+            "二阶段报价上涨约20%",
+            "立项前价格谈判和替代方案比选",
+            "采购条件独立于模型效果"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recall-d03-coverage-complete",
+      "parent_eval_id": 20,
+      "rule": "D03",
+      "mode": "coverage_preserving",
+      "source_file": "evals/fixtures/deep-read-dual-contract.md",
+      "draft_file": "evals/recall/drafts/recall-pilot-coverage-sufficient.md",
+      "expected_gate": "skip",
+      "failure_type": "gratuitous_detail_restore",
+      "source_anchors": [
+        "## 1. 知识问答",
+        "## 5. 预算与采购"
+      ],
+      "reading_goal": "完整覆盖已有五项独立决定的初稿不应被无端扩成逐句复述",
+      "probes": [
+        {
+          "question": "试点复盘涉及哪些独立行动或决策？",
+          "key_points": [
+            "知识问答版本与权限治理",
+            "纪要验收字段",
+            "沙箱与审查",
+            "三个流程重设计",
+            "采购谈判与替代比选"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recall-d03-synthesis-missing-example",
+      "parent_eval_id": 21,
+      "rule": "D03",
+      "mode": "cognitive_synthesis",
+      "source_file": "evals/fixtures/deep-read-dual-contract.md",
+      "draft_file": "evals/recall/drafts/recall-pilot-synthesis-thin.md",
+      "expected_gate": "repair",
+      "failure_type": "abstract_without_explanatory_scene",
+      "source_anchors": [
+        "20 次抽查中有 7 次",
+        "旧版本制度",
+        "40 个试点团队中有 12 个"
+      ],
+      "reading_goal": "提炼二阶段为何不能直接推广，同时保留至少一个真正解释推广约束的具体场景",
+      "probes": [
+        {
+          "question": "为什么说会议纪要Agent能够提效，但还不能无条件推广？",
+          "key_points": [
+            "整理时间明显下降",
+            "20次抽查有7次遗漏责任人或截止时间",
+            "字段完整性检查决定输出能否交接"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recall-d03-synthesis-already-understandable",
+      "parent_eval_id": 21,
+      "rule": "D03",
+      "mode": "cognitive_synthesis",
+      "source_file": "evals/fixtures/deep-read-dual-contract.md",
+      "draft_file": "evals/recall/drafts/recall-pilot-synthesis-sufficient.md",
+      "expected_gate": "skip",
+      "failure_type": "unnecessary_expansion",
+      "source_anchors": [
+        "20 次抽查中有 7 次",
+        "## 5. 预算与采购"
+      ],
+      "reading_goal": "认知提炼稿已经保留足够场景与关键关系时，不应为了完整覆盖重写为会议纪要",
+      "probes": [
+        {
+          "question": "为什么第二阶段推广不能只依据试点局部提效？",
+          "key_points": [
+            "知识版本与权限",
+            "纪要行动项验收",
+            "安全与流程适配",
+            "采购限制独立于模型质量"
+          ]
+        }
+      ]
+    }
+  ]
+}
