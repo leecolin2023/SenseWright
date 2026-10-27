@@ -22,6 +22,19 @@ Deep Read 现在只有两条活跃规则：
 
 **重要限制：** 四个既有 D 案例可以验证数据管道和部分重要失败，但材料较短，尚不足以证明新规则对长篇、生动叙事材料的改善会稳定出现。特别是《宋徽宗联金灭辽》长稿所暴露的“故事被压成概念标签、解释厚度丢失、出现防御性插话”，当前短 fixture 只能覆盖其中一部分。下一阶段要通过真实多次执行以及更具判别力的长篇材料检验，不能把设计期案例直接当成模型效果证据。
 
+## 定向回查：条件式修复的独立实验
+
+Deep Read 的 **D02 可选定向回查**已引入 Skill：只有初稿丢失了重要且可从原文定位的理解桥梁，才定向读取原文并局部修复；初稿已足够时直接停止，不规定每篇必须回查。
+
+为避免与“初次生成质量”混淆，另设 [Recall Eval V0.1](recall/README.md)。它复用已有 Raw Source，但**固定初稿**，用 6 个应修复/应停止的正负例考察两条规则 D02/D03，且不改变原有 80 个案例：
+
+- 静态核验：`python scripts/validate_recall_evals.py`
+- 初始化隔离实验：`python scripts/prepare_recall_eval.py --iteration 1`
+- 候选修订提交后准备匿名阅读：`python scripts/prepare_recall_eval.py --iteration 1 --prepare-pairwise`
+- 独立盲读与人工/模型评审提交后汇总：`python scripts/aggregate_recall_eval.py .eval-recall-workspace/iteration-1`
+
+比较三项不同的结果：**是否该触发回查**、**匿名读者能否更准确地重建原文理解**、**有无不必要重写或额外成本**。参考答案与期待触发结果只给评审，不给生成方。没有实际回查输出与独立评分时一律显示 ungraded；合成 smoke test 不构成实际效果证明。
+
 ## 单案例评测合同
 
 Learning 与 Deep Read 均使用以下字段：`primary_rule`、`related_rules`、`failure_mode`、`rubric`、`critical_failures`、`not_required`、`grading_policy`、`pairwise_policy`。Deep Read 额外具有 `compression_mode`，取 `coverage_preserving` 或 `cognitive_synthesis`。
