@@ -20,3 +20,9 @@ jobs:
 
       - name: Smoke-test Learning and Deep Read rubric / blind pairwise pipeline
         run: python scripts/test_eval_pipeline.py
+
+      - name: Validate targeted Deep Read recall fixtures
+        run: python scripts/validate_recall_evals.py
+
+      - name: Smoke-test selective recall preparation and independent scoring pipeline
+        run: python scripts/test_recall_pipeline.py
