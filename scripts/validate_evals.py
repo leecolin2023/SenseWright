@@ -115,8 +115,8 @@ def main():
     errors = []
     data = load("evals.json")
     cases = data.get("evals", [])
-    if data.get("eval_version") != "0.2":
-        errors.append("evals.json: expected Eval V0.2")
+    if data.get("eval_version") != "0.3":
+        errors.append("evals.json: expected Eval V0.3")
     ids, names, covered, deep_covered, deep_modes = set(), set(), set(), set(), set()
     for case in cases:
         ident = case.get("id")
